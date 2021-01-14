@@ -1,1 +1,2 @@
 #hello
+print("hello world")
