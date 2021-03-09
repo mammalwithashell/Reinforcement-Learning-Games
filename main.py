@@ -4,18 +4,18 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.behaviors import ToggleButtonBehavior as TB
 from kivy.config import Config
 from kivy.utils import platform 
-from kivy.core.window import Window
 
 
+# Desktop config
 if platform in ["win", "macosx", "linux"]:
     Config.set('graphics', 'resizable', False)
-    # fix the width of the window  
+    # fix the width and height of the window  
     Config.set('graphics', 'width', '500') 
-    
-    # fix the height of the window  
     Config.set('graphics', 'height', '500') 
     
-    
+# Mobile config
+if platform in ["ios","android"]:
+    pass
     
 """ 
 Builder is used to load in the design .kv files
@@ -25,15 +25,15 @@ platform is used to determine the os:
 """
 
 # 
-from tiktactoe import TicTacToeScreen
-
-
+from game_logic.tiktactoe import TicTacToeScreen
+from game_logic.connect4 import Connect4Screen
+from game_logic.dotsandboxes import DotAndBoxesScreen
 
 # Load in gui 
-Builder.load_file("gui.kv")
-Builder.load_file("tiktactoe.kv")
-
-
+Builder.load_file("design/gui.kv")
+Builder.load_file("design/tiktactoe.kv")
+Builder.load_file("design/connect4.kv")
+Builder.load_file("design/dotsandboxes.kv")
 
 class TitleScreen(Screen):
     def load_game(self):
@@ -46,16 +46,7 @@ class TitleScreen(Screen):
         game_screen = self.manager.get_screen(game_tb.text)
         game_screen.load_settings(diff_tb.text, match_tb.text)
         self.manager.current =  game_tb.text
-    xvcxv
-
-
-
-class DotAndBoxesScreen(Screen):
-    pass
-
-class Connect4Screen(Screen):
-    def on_touch_down(self):
-
+    
 class RootWidget(ScreenManager):
     pass
 
