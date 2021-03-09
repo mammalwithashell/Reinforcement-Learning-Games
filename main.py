@@ -46,7 +46,7 @@ class TitleScreen(Screen):
         game_screen = self.manager.get_screen(game_tb.text)
         game_screen.load_settings(diff_tb.text, match_tb.text)
         self.manager.current =  game_tb.text
-
+    xvcxv
 
 
 
@@ -54,7 +54,7 @@ class DotAndBoxesScreen(Screen):
     pass
 
 class Connect4Screen(Screen):
-    pass
+    def on_touch_down(self):
 
 class RootWidget(ScreenManager):
     pass
