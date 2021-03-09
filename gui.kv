@@ -1,0 +1,59 @@
+<GameButton@ToggleButton>:
+    group: "game"
+
+<MatchButton@ToggleButton>:
+    group: "match"
+
+<DifficultyButton@ToggleButton>:
+    group: "difficulty"
+
+
+<TitleScreen>
+    GridLayout:
+        cols: 1
+        Label: 
+            text: "Games"
+        GridLayout:
+            cols: 3
+            GameButton:
+                text: "Tic-Tac-Toe"
+                
+            GameButton:
+                text: "Connect 4"
+            GameButton:
+                text: "Dots and Boxes"
+
+
+        Label: 
+            text: "Match Type"
+        GridLayout:
+            cols: 2
+            MatchButton:
+                text: "Single Match"
+            MatchButton:
+                text: "League Match"
+        Label:
+            text: "Difficulty"
+        GridLayout:
+            cols: 3
+            DifficultyButton: 
+                text: "Easy"
+            DifficultyButton: 
+                text: "Medium"
+            DifficultyButton: 
+                text: "Hard"
+        Button:
+            text: "Play Game"
+            on_press: root.load_game()
+
+
+
+<RootWidget>:
+    TitleScreen:
+        name: "title"
+    TicTacToeScreen:
+        name: "Tic-Tac-Toe"
+    Connect4Screen:
+        name: "Connect 4"
+    DotAndBoxesScreen:
+        name: "Dots and Boxes"
