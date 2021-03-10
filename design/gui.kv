@@ -6,48 +6,59 @@
 
 <DifficultyButton@ToggleButton>:
     group: "difficulty"
+    
 
 
 <TitleScreen>
+    id: title_screen
     GridLayout:
         cols: 1
         Label: 
+            id: game_label
             text: "Games"
         GridLayout:
             cols: 3
             GameButton:
+                id: ttt
                 text: "Tic-Tac-Toe"
-                
+                on_press: title_screen.game_choice = "" if self.state == "normal" else self.text
             GameButton:
-            
+                id: c4
                 text: "Connect 4"
+                on_press: title_screen.game_choice = "" if self.state == "normal" else self.text
             GameButton:
+                id: db
                 text: "Dots and Boxes"
-
+                on_press: title_screen.game_choice = "" if self.state == "normal" else self.text
         Label: 
+            id: match_label
             text: "Match Type"
         GridLayout:
             cols: 2
             MatchButton:
                 text: "Single Match"
+                on_press: title_screen.match_style = "" if self.state == "normal" else self.text
             MatchButton:
                 text: "League Match"
+                on_press: title_screen.match_style = "" if self.state == "normal" else self.text
+
         Label:
+            id: diff
             text: "Difficulty"
         GridLayout:
             cols: 3
             DifficultyButton: 
                 text: "Easy"
+                on_press: title_screen.diff_choice = "" if self.state == "normal" else self.text
             DifficultyButton: 
                 text: "Medium"
+                on_press: title_screen.diff_choice = "" if self.state == "normal" else self.text
             DifficultyButton: 
                 text: "Hard"
+                on_press: title_screen.diff_choice = "" if self.state == "normal" else self.text
         Button:
             text: "Play Game"
             on_press: root.load_game()
-
-
-
 <RootWidget>:
     TitleScreen:
         name: "title"
@@ -55,5 +66,5 @@
         name: "Tic-Tac-Toe"
     Connect4Screen:
         name: "Connect 4"
-    DotAndBoxesScreen:
+    DotsAndBoxesScreen:
         name: "Dots and Boxes"

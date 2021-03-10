@@ -4,7 +4,17 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.behaviors import ToggleButtonBehavior as TB
 from kivy.config import Config
 from kivy.utils import platform 
+from kivy.properties import StringProperty
+from kivy.uix.popup import Popup 
+from kivy.uix.button import Button
+from kivy.uix.label import Label
 
+""" 
+Builder is used to load in the design .kv files
+
+platform is used to determine the os:
+    A string identifying the current operating system. It is one of: ‘win’, ‘linux’, ‘android’, ‘macosx’, ‘ios’ or ‘unknown’.
+"""
 
 # Desktop config
 if platform in ["win", "macosx", "linux"]:
@@ -17,17 +27,11 @@ if platform in ["win", "macosx", "linux"]:
 if platform in ["ios","android"]:
     pass
     
-""" 
-Builder is used to load in the design .kv files
 
-platform is used to determine the os:
-    A string identifying the current operating system. It is one of: ‘win’, ‘linux’, ‘android’, ‘macosx’, ‘ios’ or ‘unknown’.
-"""
-
-# 
+# Import the Screens for the individual games
 from game_logic.tiktactoe import TicTacToeScreen
 from game_logic.connect4 import Connect4Screen
-from game_logic.dotsandboxes import DotAndBoxesScreen
+from game_logic.dotsandboxes import DotsAndBoxesScreen
 
 # Load in gui 
 Builder.load_file("design/gui.kv")
@@ -36,20 +40,29 @@ Builder.load_file("design/connect4.kv")
 Builder.load_file("design/dotsandboxes.kv")
 
 class TitleScreen(Screen):
+    diff_choice = StringProperty()
+    game_choice = StringProperty()
+    match_style = StringProperty()
+    
     def load_game(self):
-        # get a list of the difficulty toggle buttons
-        diff_tb = [t for t in TB.get_widgets('difficulty') if t.state=='down'][0]
-        game_tb = [t for t in TB.get_widgets('game') if t.state=='down'][0]
-        match_tb = [t for t in TB.get_widgets('match') if t.state=='down'][0]
+        """Function to swap to the game screen and pass the game variables to the appropriate screen. Displays an error message if any of the settings are not selected
+        """
+        # Show error message if any of the toggles are not picked        
+        if not self.diff_choice or not self.game_choice or not self.match_style:
+            content = Button(text="Dismiss")
+            error = Popup(title="Select one of each option", content=content, size=(40, 60))
+            content.bind(on_press=error.dismiss)
+            error.open()
+            return
         
         # load game settings and swap screens
-        game_screen = self.manager.get_screen(game_tb.text)
-        game_screen.load_settings(diff_tb.text, match_tb.text)
-        self.manager.current =  game_tb.text
+        game_screen = self.manager.get_screen(self.game_choice)
+        game_screen.load_settings(self.diff_choice, self.match_style)
+        self.manager.current = self.game_choice
+
     
 class RootWidget(ScreenManager):
     pass
-
 
 class GameApp(App):
     title = "Reinforcement Learning Game"
