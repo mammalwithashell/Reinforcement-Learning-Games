@@ -12,6 +12,12 @@ from collections import defaultdict
 
 class Connect4Screen(Screen):
     board_grid = ObjectProperty(None)
+    button_one = ObjectProperty(None)
+    button_two = ObjectProperty(None)
+    button_three = ObjectProperty(None)
+    button_four = ObjectProperty(None)
+    button_five = ObjectProperty(None)
+    
     def load_settings(self, diff, match):
         print(self, diff, match)
         self.board = [
@@ -48,6 +54,7 @@ class Connect4Screen(Screen):
 
 
             self.board_env.board[choice] = self.board_env.turn # should check if valid
+            self.board_env.available_actions(True)
             self.board_env.kivy_obj.redraw_board()
             if self.board_env.winner(self.board_env.turn):
                 self.board_env.print_board()
@@ -134,12 +141,25 @@ class Connect4Screen(Screen):
             # note, returns other player even if playerA is playing itself
             return not self.current_player
 
-        def available_actions(self):
+        def available_actions(self, change_buttons=False):
             movelist = []
+            buttons = {
+                0: self.kivy_obj.button_one,
+                1: self.kivy_obj.button_two,
+                2: self.kivy_obj.button_three,
+                3: self.kivy_obj.button_four,
+                4: self.kivy_obj.button_five
+            }
             for i in range(5):
                 if self.board[i] == '-':
                     movelist.append(i)
+                    if change_buttons:
+                        buttons[i].visible = True
+                        buttons[i].disabled = False
                 else:
+                    if change_buttons:
+                        buttons[i].visible = False
+                        buttons[i].disabled = True
                     continue
             return movelist
 
@@ -237,6 +257,9 @@ class Connect4Screen(Screen):
             self.piece = 'X'
             self.opponent = 'O'
             self.redraw_board()
+
+        # running this to unhide any disabled buttons
+        self.board_env.available_actions(True)
 
     def select_difficulty(self, diff):
         diffdict = {'Easy': r'game_logic/connect4games/easy.txt',

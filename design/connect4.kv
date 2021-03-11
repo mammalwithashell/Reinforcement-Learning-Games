@@ -1,6 +1,12 @@
 <Connect4Screen>
     id: title_screen
     board_grid: board_grid
+    button_one: button_one
+    button_two: button_two
+    button_three: button_three
+    button_four: button_four
+    button_five: button_five
+
     GridLayout:
         cols: 1
         GridLayout:
@@ -8,14 +14,19 @@
             size_hint_y: None
             height: 200
             Button:
+                id: button_one
                 on_press: root.place_piece(0, 'Player')
             Button:
+                id: button_two
                 on_press: root.place_piece(1, 'Player')
             Button:
+                id: button_three
                 on_press: root.place_piece(2, 'Player')
             Button:
+                id: button_four
                 on_press: root.place_piece(3, 'Player')
             Button:
+                id: button_five
                 on_press: root.place_piece(4, 'Player')
         GridLayout:
             id: board_grid
