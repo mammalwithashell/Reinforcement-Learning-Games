@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 from kivy.uix.button import Button
 from kivy.graphics import *
+from kivy.uix.popup import Popup 
 
 import random
 import copy
@@ -50,6 +51,7 @@ class Connect4Screen(Screen):
             if self.board_env.winner(self.board_env.turn):
                 self.board_env.print_board()
                 print(self.board_env.turn, "won!")
+                self.game_end()
                 return "You won!" if self.piece == self.board_env.turn else "You lost :("
 
             # switch players
@@ -238,7 +240,6 @@ class Connect4Screen(Screen):
                     'Hard': r'game_logic/connect4games/hard.txt'}
         return diffdict[diff]
 
-
     def place_piece(self, num, player):
         # playing user's choice then letting AI play if game isn't over
         result = self.play_game(num)
@@ -271,5 +272,15 @@ class Connect4Screen(Screen):
                         Ellipse(pos=(i * circle_width + circle_width / 6, j * circle_width * 0.75  + circle_width / 6), size=(circle_width* 2/3, circle_width * 2/3))
                     #Line(circle=(i * circle_width + circle_width/2, j * circle_width + circle_width / 2, circle_width/2))
     
+    def game_end(self):
+        content = Button(text="Dismiss")
+        message = "You won!" if self.piece == self.board_env.turn else "You lost :("
+        game_end_popup = Popup(title=message, content=content, size=(40, 60))
+        def bind_to_popup(inner_self):
+            game_end_popup.dismiss()
+            self.menu()
+        content.bind(on_press=bind_to_popup)
+        game_end_popup.open()
+
     def menu(self):
         self.manager.current = "title"
