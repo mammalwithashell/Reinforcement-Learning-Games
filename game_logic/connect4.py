@@ -25,6 +25,7 @@ class Connect4Screen(Screen):
 
     def play_game(self, num=None):
         # returns the winning player or None if a tie
+        print(self.board_env.is_full())
         if (not self.board_env.is_full() ):
 
             # ************ HUMAN-PLAYABLE MODIFICATION
@@ -53,6 +54,9 @@ class Connect4Screen(Screen):
                 print(self.board_env.turn, "won!")
                 self.game_end()
                 return "You won!" if self.piece == self.board_env.turn else "You lost :("
+            elif self.board_env.is_full(): 
+                # tie game
+                self.game_end(True)
 
             # switch players
             self.board_env.turn = 'X' if self.board_env.turn == 'O' else 'O' # switch turn
@@ -272,9 +276,11 @@ class Connect4Screen(Screen):
                         Ellipse(pos=(i * circle_width + circle_width / 6, j * circle_width * 0.75  + circle_width / 6), size=(circle_width* 2/3, circle_width * 2/3))
                     #Line(circle=(i * circle_width + circle_width/2, j * circle_width + circle_width / 2, circle_width/2))
     
-    def game_end(self):
+    def game_end(self, tie=False):
         content = Button(text="Dismiss")
         message = "You won!" if self.piece == self.board_env.turn else "You lost :("
+        if tie:
+            message = "Tie game."
         game_end_popup = Popup(title=message, content=content, size=(40, 60))
         def bind_to_popup(inner_self):
             game_end_popup.dismiss()
