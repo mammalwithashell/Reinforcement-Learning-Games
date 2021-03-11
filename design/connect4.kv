@@ -1,1 +1,23 @@
 <Connect4Screen>
+    id: title_screen
+    board_grid: board_grid
+    GridLayout:
+        cols: 1
+        GridLayout:
+            cols: 7
+            size_hint_y: None
+            height: 200
+            Button:
+                on_press: root.place_piece(0, 'Player')
+            Button:
+                on_press: root.place_piece(1, 'Player')
+            Button:
+                on_press: root.place_piece(2, 'Player')
+            Button:
+                on_press: root.place_piece(3, 'Player')
+            Button:
+                on_press: root.place_piece(4, 'Player')
+        GridLayout:
+            id: board_grid
+            cols: 1
+            padding: 10, 0, 10, 10
