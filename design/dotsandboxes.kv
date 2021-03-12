@@ -1,2 +1,30 @@
 <DotsAndBoxesScreen>:
+    id: d&b_screen
+    game_grid: game_grid
+
+    GridLayout:
+        cols: 1
+        GridLayout:
+            cols: 3
+            size_hint_y: None
+            height: 100
+            Button:
+                text: "Menu"
+                on_press: root.menu()
+            BoxLayout:
+                orientation: 'vertical'
+                Label:
+                    text: "Difficulty Setting: " + root.difficulty_setting
+                Label:
+                    text: "Your Score: " + str(root.score)
+                Label:
+                    text: "AI Score: " + str(root.ai_score)
+                Label:
+                    text: "Your Turn: " + str(root.turn)
+            Button:
+                text: "Restart Game"
+                on_press: root.setup()
+        GridLayout:
+            id: game_grid
+            cols: 1
 

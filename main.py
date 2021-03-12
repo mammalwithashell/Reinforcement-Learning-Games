@@ -1,6 +1,6 @@
 from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.uix.behaviors import ToggleButtonBehavior as TB
 from kivy.config import Config
 from kivy.utils import platform 
@@ -18,7 +18,7 @@ platform is used to determine the os:
 
 # Desktop config
 if platform in ["win", "macosx", "linux"]:
-    Config.set('graphics', 'resizable', False)
+    Config.set('graphics', 'resizable', True)
     # fix the width and height of the window  
     Config.set('graphics', 'width', '500') 
     Config.set('graphics', 'height', '500') 
@@ -27,17 +27,17 @@ if platform in ["win", "macosx", "linux"]:
 if platform in ["ios","android"]:
     pass
     
+# Load in gui 
+Builder.load_file("design/gui.kv")
+Builder.load_file("design/tiktactoe.kv")
+Builder.load_file("design/connect4.kv")
+Builder.load_file("design/dotsandboxes.kv")
 
 # Import the Screens for the individual games
 from game_logic.tiktactoe import TicTacToeScreen
 from game_logic.connect4 import Connect4Screen
 from game_logic.dotsandboxes import DotsAndBoxesScreen
 
-# Load in gui 
-Builder.load_file("design/gui.kv")
-Builder.load_file("design/tiktactoe.kv")
-Builder.load_file("design/connect4.kv")
-Builder.load_file("design/dotsandboxes.kv")
 
 class TitleScreen(Screen):
     diff_choice = StringProperty()
@@ -58,6 +58,7 @@ class TitleScreen(Screen):
         # load game settings and swap screens
         game_screen = self.manager.get_screen(self.game_choice)
         game_screen.load_settings(self.diff_choice, self.match_style)
+        self.manager.transition = SlideTransition(direction="left")
         self.manager.current = self.game_choice
 
     
