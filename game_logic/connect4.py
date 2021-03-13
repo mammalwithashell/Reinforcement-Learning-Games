@@ -1,8 +1,10 @@
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
-from kivy.uix.button import Button
+from kivy.uix.button import Button, ButtonBehavior
 from kivy.graphics import *
 from kivy.uix.popup import Popup 
+from kivy.core.window import Window
+from kivy.uix.image import Image
 
 import random
 import copy
@@ -55,7 +57,7 @@ class Connect4Screen(Screen):
 
             self.board_env.board[choice] = self.board_env.turn # should check if valid
             self.board_env.available_actions(True)
-            self.board_env.kivy_obj.redraw_board()
+            self.board_env.kivy_obj.redraw_board_opt_2()
             if self.board_env.winner(self.board_env.turn):
                 self.board_env.print_board()
                 print(self.board_env.turn, "won!")
@@ -256,7 +258,7 @@ class Connect4Screen(Screen):
         else:
             self.piece = 'X'
             self.opponent = 'O'
-            self.redraw_board()
+            self.redraw_board_opt_2()
 
         # running this to unhide any disabled buttons
         self.board_env.available_actions(True)
@@ -281,10 +283,22 @@ class Connect4Screen(Screen):
         print(board_str)
         for i in range(0, len(board_str)):
             self.board[4 - int(i / 5)][i % 5] = None if board_str[i] == '-' else board_str[i]
-        
+
+    def redraw_board_opt_2(self):
+        self.update_board()
+        self.board_grid.clear_widgets()
+        for j in range(0, 5):
+            for i in range(0, 5):
+                if self.board[4-j][i] == self.piece:
+                    self.board_grid.add_widget(Image(source="images/connect4/bestchipyellow.png"))
+                elif self.board[4-j][i] == self.opponent:
+                    self.board_grid.add_widget(Image(source="images/connect4/bestchipred.png"))
+                else:
+                    self.board_grid.add_widget(Image(source="", color=(0,0,0)))
+
     def redraw_board(self):
         self.update_board()
-        circle_width = 1000 / 5
+        circle_width = Window.size[0] / 5
         for j in range(0, 5):
             for i in range(0, 5):
                 with self.board_grid.canvas:

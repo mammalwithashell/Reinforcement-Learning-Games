@@ -18,7 +18,7 @@ platform is used to determine the os:
 
 # Desktop config
 if platform in ["win", "macosx", "linux"]:
-    Config.set('graphics', 'resizable', False)
+    Config.set('graphics', 'resizable', True)
     # fix the width and height of the window  
     Config.set('graphics', 'width', '500') 
     Config.set('graphics', 'height', '500') 
