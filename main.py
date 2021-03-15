@@ -38,7 +38,7 @@ from game_logic.tiktactoe import TicTacToeScreen
 from game_logic.connect4 import Connect4Screen
 from game_logic.dotsandboxes import DotsAndBoxesScreen
 
-
+# Main window screen
 class TitleScreen(Screen):
     diff_choice = StringProperty()
     game_choice = StringProperty()
@@ -61,7 +61,7 @@ class TitleScreen(Screen):
         self.manager.transition = SlideTransition(direction="left")
         self.manager.current = self.game_choice
 
-    
+# Class to manage all the screens and load the homescreen
 class RootWidget(ScreenManager):
     pass
 
