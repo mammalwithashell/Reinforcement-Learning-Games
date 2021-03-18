@@ -1,3 +1,6 @@
+<Dot@Ellipse>:
+    size: 10, 10
+
 <DotsAndBoxesScreen>:
     id: d&b_screen
     game_grid: game_grid
@@ -24,7 +27,43 @@
             Button:
                 text: "Restart Game"
                 on_press: root.setup()
-        GridLayout:
+        RelativeLayout:
             id: game_grid
-            cols: 1
+            canvas:
+                Ellipse:
+                    group: "dot0"
+                    pos: int(game_grid.width * .04)-10, int(game_grid.height * .04)-10
+                    size: 10, 10
+                Ellipse:
+                    group: "dot1"
+                    pos: int(game_grid.width / 2)-10, int(game_grid.height * .04)-10
+                    size: 10, 10
+                Ellipse:
+                    group: "dot2"
+                    pos: int(game_grid.width * .96)-10, int(game_grid.height * .04)-10
+                    size: 10, 10
+                Ellipse:
+                    group: "dot3"
+                    pos: int(game_grid.width * .04)-10, int(game_grid.height /2)-10
+                    size: 10, 10
+                Ellipse:
+                    group: "dot4"
+                    pos: int(game_grid.width / 2)-10, int(game_grid.height /2)-10
+                    size: 10, 10
+                Ellipse:
+                    group: "dot5"
+                    pos: int(game_grid.width * .96)-10, int(game_grid.height /2)-10
+                    size: 10, 10
+                Ellipse:
+                    group: "dot6"
+                    pos: int(game_grid.width * .04)-10, int(game_grid.height * .96)-10
+                    size: 10, 10
+                Ellipse:
+                    group: "dot7"
+                    pos: int(game_grid.width / 2)-10, int(game_grid.height * .96)-10
+                    size: 10, 10
+                Ellipse:
+                    group: "dot8"
+                    pos: int(game_grid.width * .96)-10, int(game_grid.height * .96)-10
+                    size: 10, 10
 
