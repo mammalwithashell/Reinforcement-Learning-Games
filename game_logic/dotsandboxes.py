@@ -60,6 +60,7 @@ class DotsAndBoxesScreen(Screen):
         grace = int(self.dots[0].size[0] * 2)
         for i, dot in enumerate(self.dots):
             dotx, doty = [int(i) for i in dot.pos]
+            # if touch is within a box twice the radius of the dot, we draw
             if int(touch.x) in range(dotx - grace, dotx + grace) and int(touch.y) in range(doty - grace, doty + grace):
                 self.start_dot = i
                 break
@@ -70,11 +71,12 @@ class DotsAndBoxesScreen(Screen):
         grace = int(self.dots[0].size[0] * 2)
         for i, dot in enumerate(self.dots):
             dotx, doty = [int(i) for i in dot.pos]
+            # if touch is within a box twice the radius of the dot, we draw
             if int(touch.x) in range(dotx - grace, dotx + grace) and int(touch.y) in range(doty - grace, doty + grace) and i in self.accepted_lines[self.start_dot]:
-                
                 with self.game_grid.canvas:
                     # save line to lines property to be updated on_size
                     points = list(self.dots[self.start_dot].pos) + list(dot.pos)
+                    # add half dot radius to x and y for the line because the dot position is measured from bottom right of dots me
                     points = [i + 5 for i in points]
                     line = Line(points=points)
                     self.lines.append((line, self.start_dot, i))
