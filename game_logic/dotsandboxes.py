@@ -51,6 +51,22 @@ class DotsAndBoxesScreen(Screen):
             7: [4, 6, 8],
             8: [7, 5]
         }
+        
+        # Map dots to lines in the board environment
+        self.actual_lines = {
+            (1, 2): 11,
+            (0, 1): 10,
+            (2, 5): 9,
+            (1, 4): 8,
+            (0, 3): 7,
+            (4, 5): 6,
+            (4, 3): 5,
+            (5, 8): 4,
+            (4, 7): 3,
+            (3, 6): 2,
+            (8, 7): 1,
+            (6, 7): 0
+        }
         self.dots = [self.game_grid.canvas.get_group(f"dot{i}")[0] for i in range(9)]
         self.difficulty_setting = diff
         self.match = match
@@ -80,6 +96,13 @@ class DotsAndBoxesScreen(Screen):
                     points = [i + 5 for i in points]
                     line = Line(points=points)
                     self.lines.append((line, self.start_dot, i))
+                    
+                    # try except pairs to return line choice
+                    try:
+                        self.actual_lines[(self.start_dot, i)]
+                    except KeyError:
+                        self.actual_lines[(i, self.start_dot)]
+                        
         return super().on_touch_up(touch)
     
     def new_line_dimensions(self, start, end):
