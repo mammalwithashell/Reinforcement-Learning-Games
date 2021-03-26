@@ -3,6 +3,13 @@ from kivy.graphics import Ellipse, Line
 from kivy.properties import NumericProperty, ObjectProperty, StringProperty, BooleanProperty, ListProperty
 from kivy.core.window import Window
 
+# Import AI stuff
+from .dotsandboxesAI.boardenvironment import BoardEnvironment
+from .dotsandboxesAI.agent import Agent
+from .dotsandboxesAI.leagueenvironment import LeagueEnvironment
+
+
+
 """
 TODO
 
@@ -24,7 +31,6 @@ class DotsAndBoxesScreen(Screen):
         for line, start, end in self.lines:
             self.game_grid.canvas.remove(line)
         self.lines = []
-
             
     def menu(self):
         self.manager.transition = SlideTransition(direction="right")
@@ -70,6 +76,8 @@ class DotsAndBoxesScreen(Screen):
         self.dots = [self.game_grid.canvas.get_group(f"dot{i}")[0] for i in range(9)]
         self.difficulty_setting = diff
         self.match = match
+        
+        # Load different settings based on game type
         if self.match == "Single Match":
             pass
         else:
