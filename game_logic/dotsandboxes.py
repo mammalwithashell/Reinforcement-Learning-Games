@@ -70,6 +70,11 @@ class DotsAndBoxesScreen(Screen):
         self.dots = [self.game_grid.canvas.get_group(f"dot{i}")[0] for i in range(9)]
         self.difficulty_setting = diff
         self.match = match
+        if self.match == "Single Match":
+            pass
+        else:
+            # League Match
+            pass
     
     def on_touch_down(self, touch):
         # find what dot the mouse was over and save it to the start_dot property
@@ -105,10 +110,8 @@ class DotsAndBoxesScreen(Screen):
                         
         return super().on_touch_up(touch)
     
-    def new_line_dimensions(self, start, end):
-        points = list(self.dots[start].pos) + list(self.dots[end].pos)
-        return [i + 5 for i in points]
-    
+    def play_game(self):
+        pass
     
     """def on_size(self, instance, value):
         for line, start, end in self.lines:

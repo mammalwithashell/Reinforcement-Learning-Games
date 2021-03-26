@@ -1,17 +1,11 @@
 import random
-import matplotlib
-import copy
-import numpy as np
-import time
-from collections import defaultdict
-import os
-
 
 class BoardEnvironment:
     """ this class creates an environment for agents to interact with"""
 
-    def __init__(self):
+    def __init__(self, kivy_obj):
         "initialize board"
+        self.kivy_obj = kivy_obj
 
     def set_players(self, playerA):
         " connects players with the environment "
@@ -34,11 +28,7 @@ class BoardEnvironment:
 
     def print_board(self, board_string=None):
         "print more readable board either from supplied board string or the current board"
-        if not board_string:
-            B = self.board
-        else:
-            B = board_string
-
+        B = self.board if not board_string else board_string
         print('*',B[0],'*',B[1],'*')
         print(B[2],B[12],B[3],B[13],B[4])
         print('*',B[5],'*',B[6],'*')
@@ -74,7 +64,6 @@ class BoardEnvironment:
                 print("Draw a line between two dots")
                 movelist = self.available_actions()
                 self.print_board()
-
 
                 x = int(input())
                 while(x not in movelist):
@@ -150,106 +139,3 @@ class BoardEnvironment:
         print("*",str(5),"*",str(6),"*")
         print(str(7)," ",str(8)," ",str(9))
         print("*",str(10),"*",str(11),"*")
-
-
-
-class Agent:
-    """ this class is a generic Q-Learning reinforcement learning agent for discrete states and fixed actions
-    represented as strings"""
-    def __init__(self, environment, difficulty, learning_rate = 0.5, discount_factor = 0.95, epsilon = 0.2):
-        self.environment = environment
-        tempdict = ''
-        with open(difficulty, 'r') as f:
-            for i in f.readlines():
-                tempdict = i
-        tempdict = eval(tempdict)
-        self.Q = defaultdict(lambda: 0.0, tempdict)
-        self.learning_rate = learning_rate
-        self.discount_factor = discount_factor
-        self.epsilon = epsilon # Fraction of time making a random choice for epsilon policy
-        self.reset_past()
-
-    def reset_past(self):
-        self.past_action = None
-        self.past_state = None
-
-    def select_action(self):
-        print("selecting action...")
-        available_actions = self.environment.available_actions()
-        Q_vals = [self.Q[(self.environment.get_state(), x)] for x in available_actions]
-        #randomly pick one of the maximum values
-        max_val = max(Q_vals) # will often be 0 in the beginning
-        max_pos = [i for i, j in enumerate(Q_vals) if j == max_val]
-        max_indices = [available_actions[x] for x in max_pos]
-        choice = random.choice(max_indices)
-        self.past_state = self.environment.get_state()
-        self.past_action = choice
-        return choice
-
-    def reward(self, reward_value):
-        # finding the best expected reward
-        available_actions = self.environment.available_actions()
-        next_Q_vals = [self.Q[(self.environment.get_state(), x)] for x in available_actions]
-        max_next_Q = max(next_Q_vals) if next_Q_vals else 0 # will often be 0 in the beginning
-        td_target = reward_value + self.discount_factor * max_next_Q
-        reward_pred_error = td_target - self.Q[(self.past_state,self.past_action)]
-        if (self.past_state or self.past_action):
-            self.Q[(self.past_state,self.past_action)] += self.learning_rate * reward_pred_error
-
-
-import sys
-class RepeatedGames:
-    def __init__(self, environment, playerA, playerB):
-        self.environment = environment
-        self.playerA = playerA
-        self.playerB = playerB
-        self.reset_history()
-
-    def reset_history(self):
-        self.history = []
-
-    def play_game(self):
-        winner = self.environment.play_game()
-        if (winner == self.playerA):
-            self.history.append('A')
-        elif (winner == self.playerB):
-            self.history.append('B')
-        else:
-            self.history.append('-')
-
-    def play_games(self, games_to_play):
-        for i in range(games_to_play):
-            self.play_game()
-            sys.stdout.write("\r")
-            sys.stdout.write("{:2d} games played.".format(i))
-            sys.stdout.flush()
-        print(self.history[-games_to_play:].count('A'),'games won by player A')
-        #print(self.history[-games_to_play:].count('B'),'games won by player B')
-        print(self.history[-games_to_play:].count('-'),'ties')
-        win_rate=self.history[-games_to_play:].count('A')/len(self.history[-games_to_play:])*100
-        print("Winning rate: {}".format(win_rate))
-
-def select_difficulty():
-    x = 0
-    diffdict = {1: r'easy.txt',
-                2: r'medium.txt',
-                3: r'hard.txt'}
-    while(x > 3 or x < 1):
-        print("Select a difficulty:")
-        print("1: Easy")
-        print("2: Medium")
-        print("3: Hard")
-        x = int(input())
-
-    return diffdict[x]
-
-if __name__ == "__main__":
-    print(os.getcwd())
-    board = BoardEnvironment()
-    A = Agent(board, select_difficulty())
-    board.set_players(A)
-    board.instructions()
-    board.play_game()
-
-#tournament = RepeatedGames(board,A,B)
-#tournament.play_games(100)
