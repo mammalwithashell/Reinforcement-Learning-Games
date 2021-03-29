@@ -5,107 +5,137 @@ from kivy.graphics import *
 from kivy.uix.popup import Popup 
 from kivy.core.window import Window
 from kivy.uix.image import Image
-from os import system
 from kivy.uix.gridlayout import GridLayout
 
 import random as rand
 import copy
-import numpy as np
 import time
 import threading
-from collections import defaultdict
 
+# Gameplay opponent
 from .connect4AI.Agent import Agent
+
+# Board game environment
 from .connect4AI.BoardEnvironment import BoardEnvironment
+
+# League betting environment
 from .connect4AI.LeagueEnvironment import LeagueEnvironment
 
-def select_difficulty(auto=False):
-    x = 0
-    diffdict = {1: r'game_logic/connect4AI/qtables/easy.txt',
-                2: r'game_logic/connect4AI/qtables/medium.txt',
-                3: r'game_logic/connect4AI/qtables/hard.txt'}
-    if not auto:
-      while(x > 3 or x < 1):
-          print("Select a difficulty:")
-          print("1: Easy")
-          print("2: Medium")
-          print("3: Hard")
-          x = int(input())
-
-    else:
-        x = rand.randint(1, 3)
-
-    return diffdict[x]
-
-
+# Kivy class that manages Connect4 visuals
 class Connect4Screen(Screen):
+
+    # Kivy objects
+    # Grid that holds connect4 pieces
     board_grid = ObjectProperty(None)
+    # Buttons that user clicks to place pieces
     button_one = ObjectProperty(None)
     button_two = ObjectProperty(None)
     button_three = ObjectProperty(None)
     button_four = ObjectProperty(None)
     button_five = ObjectProperty(None)
     
+    # Scoreboard for league betting
     scoreboard = ObjectProperty(None)
+    # User half of scoreboard
     user_data = ObjectProperty(None)
+    # AI half of scoreboard
     ai_data = ObjectProperty(None)
 
+    '''
+        description
+            displays a popup menu for selecting betting options. this function
+            allows the LeagueEnvironment class to get input from the user
+
+        parameters
+            options: list of text options for popup menu
+            message: text that will display at top of popup menu
+            func: a function that will be called with the selected option
+            AI_choice: the AI's choice for this turn is passed to 'func'
+                with the User's choice
+            cols: number of columns for the popup menu
+    '''
     def bet_options(self, options, message, func, AI_choice, cols=1):
-        print("HEY")
+        # creating grid for popup menu
         content = GridLayout(cols=cols)
+        # returning early if no options were passed to this function
         if len(options) == 0:
             return False
+        # adding a button for each option with the option's text
         for option in options:
             content.add_widget(Button(text=option))
+        # creating a popup with 'message' and 'content'
         option_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+        # function that will be called when a button is clicked
         def option_button(inner_self):
+            # dismiss popup
             option_popup.dismiss()
+            # grabbing the selected option
             result = inner_self.text
+            # calling 'func' with the selected option and the AI's option
             func(result, AI_choice)
-            #wait_event.set()
+        # binding option_button button to each option
         for child in content.children:
             child.bind(on_press=option_button)
+        # opening popup
         option_popup.open()
 
-
-    
+    '''
+        deescription
+            the connect4 game's setup function
+        parameters
+            diff: the difficulty selected at the main menu
+            match: the type of game being played (single or league)
+    '''
     def load_settings(self, diff, match):
-        print(self, diff, match)
         self.match_type = match
+
+        # creating and saving board environment that will be used for the
+        # duration of the game
         self.board_env = BoardEnvironment(self)
 
+        # setting up league match
         if self.match_type == 'League Match':
             self.first_league_run = True
+
+            # creating league environment that will be used for the duration of 
+            # the game
             league = LeagueEnvironment(self.board_env, self)
 
+            # these three arrays will hold the four possible sets of agents
+            # each set has a name, board agent, and league agent
             player_names = []
             board_agents = []
             league_agents = []
 
             player_names.append('learning strategy and tactics')
-            board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
+            board_agents.append(Agent(self.board_env, self.auto_select_difficulty(), 'max'))
             league_agents.append(Agent(league, 'game_logic/connect4AI/qtables/league.txt', 'max'))
 
             player_names.append('learning tactics only')
-            board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
+            board_agents.append(Agent(self.board_env, self.auto_select_difficulty(), 'max'))
             league_agents.append(Agent(league, 'game_logic/connect4AI/qtables/league.txt', 'random'))
 
             player_names.append('learning strategy only')
-            board_agents.append(Agent(self.board_env, select_difficulty(True), 'random'))
+            board_agents.append(Agent(self.board_env, self.auto_select_difficulty(), 'random'))
             league_agents.append(Agent(league, 'game_logic/connect4AI/qtables/league.txt', 'max'))
 
             player_names.append('no learning')
-            board_agents.append(Agent(self.board_env, select_difficulty(True), 'random'))
+            board_agents.append(Agent(self.board_env, self.auto_select_difficulty(), 'random'))
             league_agents.append(Agent(league, 'game_logic/connect4AI/qtables/league.txt', 'random'))
 
+            # saving names, league agents, and board agents to 'league'
             league.set_players(player_names, league_agents, board_agents)
+            # saving 'league' to this class
             self.league_env = league
+            # making betting scoreboard visible
             self.scoreboard.size_hint_y = None
             self.scoreboard.height = 200
             for child in self.scoreboard.children:
                 child.size_hint_y = None
                 child.height = 200
+        # setting up single game
         else:
+            # hiding betting scoreboard
             self.scoreboard.size_hint_y = None
             self.scoreboard.height = 0
             for child in self.scoreboard.children:
@@ -113,7 +143,7 @@ class Connect4Screen(Screen):
                 child.height = 0
                 child.text = ""
 
-
+        # 2D array that holds the location of connect4 pieces
         self.board = [
             [None, None, None, None, None],
             [None, None, None, None, None],
@@ -121,42 +151,42 @@ class Connect4Screen(Screen):
             [None, None, None, None, None],
             [None, None, None, None, None],
         ]
+
+        # starting connect4 gameplay
         self.start_game(diff)
 
+    '''
+        description
+            main function that controls gameplay
+        parameters
+            num: the user's choice
+    '''
     def play_game(self, num=None):
-        # returns the winning player or None if a tie
-        print(self.board_env.is_full())
-        if (not self.board_env.is_full() ):
+        # returns the winning player or None if there is a tie game
+        if (not self.board_env.is_full()):
 
             # ************ HUMAN-PLAYABLE MODIFICATION
+            # AI selects its move
             if(self.board_env.current_player):
                 choice = self.board_env.playerA.select_action(self.board_env.board)
+            # User selects their move
             else:
-                #print("Your board piece is ", self.board_env.turn)
-                #print("Select a board piece from the options below:")
-                movelist = self.board_env.available_actions()
-                self.board_env.print_options()
-                #x = int(input())
-                x = num + 1
-                while(x < 1 or x > 5 or (x-1) not in movelist):
-                    print("Invalid choice. Please select another board piece.")
-                    x = int(input())
-                print()
-                choice = self.board_env.get_lowest_column(int(x) - 1)
+                choice = self.board_env.get_lowest_column(num)
             # *********************************************
 
-
-
-            self.board_env.board[choice] = self.board_env.turn # should check if valid
+            # placing the current player's piece in their chosen location
+            self.board_env.board[choice] = self.board_env.turn 
+            # disabling and hiding buttons for unavailable actions
             self.board_env.available_actions(True)
-            self.board_env.kivy_obj.redraw_board_opt_2()
+            # redrawing game board
+            self.board_env.kivy_obj.redraw_board()
+
+            # check if current player just won the game
             if self.board_env.winner(self.board_env.turn):
-                #self.board_env.print_board()
-                print(self.board_env.turn, "won!")
                 self.game_end()
-                return "You won!" if self.piece == self.board_env.turn else "You lost :("
+                return True
+            # handling tie game
             elif self.board_env.is_full(): 
-                # tie game
                 self.game_end(True)
 
             # switch players
@@ -166,78 +196,108 @@ class Connect4Screen(Screen):
         # it's a tie
         return None
 
+    '''
+        description
+            begins connect4 game
+        parameters
+            diff: difficulty of game
+    '''
     def start_game(self, diff):
+        # saving difficulty of game
         self.chosen_difficulty = diff
 
+        # if this is a league match, calling betting functionality
         if self.match_type == 'League Match':
             self.league_env.play_pair(self.first_league_run)
-            #popup_options(['Return to menu'], "Game over")
             self.first_league_run = False
 
+        # creating gameplay agent with difficulty 'diff'
         A = Agent(self.board_env, self.select_difficulty(diff))
 
+        # 'set_players' will return True if AI has the first turn
+        # if True, allowing AI to make first move
         if self.board_env.set_players(A):
             self.piece = 'O'
             self.opponent = 'X'
             self.play_game()
+        # else, just updating the board display
         else:
             self.piece = 'X'
             self.opponent = 'O'
-            self.redraw_board_opt_2()
+            self.redraw_board()
 
-        # running this to unhide any disabled buttons
+        # unhiding any disabled buttons
         self.board_env.available_actions(True)
 
+    '''
+        returns qtable for input difficulty 'diff'
+    '''
     def select_difficulty(self, diff):
         diffdict = {'Easy': r'game_logic/connect4AI/qtables/easy.txt',
                     'Medium': r'game_logic/connect4AI/qtables/medium.txt',
                     'Hard': r'game_logic/connect4AI/qtables/hard.txt'}
         return diffdict[diff]
 
-    def place_piece(self, num, player):
+    '''
+        randomly selecting a difficulty and loading its qtable
+    '''
+    def auto_select_difficulty(self):
+        x = 0
+        diffdict = {1: r'game_logic/connect4AI/qtables/easy.txt',
+                    2: r'game_logic/connect4AI/qtables/medium.txt',
+                    3: r'game_logic/connect4AI/qtables/hard.txt'}
+
+        x = rand.randint(1, 3)
+        return diffdict[x]
+
+    '''
+        description
+            this function is called by the buttons on the gameboard.
+            it places a piece in the column selected by the user and 
+            allows the AI to place a piece afterwards
+        parameters
+            num: number corresponding to the column selected by the user
+    '''
+    def place_piece(self, num):
         # playing user's choice then letting AI play if game isn't over
         result = self.play_game(num)
         if result == False:
             self.play_game()
-        else:
-            print(result)
-        return False
+        return
 
+    '''
+        updating board 2D array using board_str
+    '''
     def update_board(self):
         board_str = self.board_env.board
-        print(board_str)
         for i in range(0, len(board_str)):
             self.board[4 - int(i / 5)][i % 5] = None if board_str[i] == '-' else board_str[i]
 
-    def redraw_board_opt_2(self):
+    '''
+        updating game board display
+    '''
+    def redraw_board(self):
         self.update_board()
+        # clearing out widgets that made up the previous board display
         self.board_grid.clear_widgets()
         for j in range(0, 5):
             for i in range(0, 5):
+                # adding yellow piece if current space belongs to user
                 if self.board[4-j][i] == self.piece:
                     self.board_grid.add_widget(Image(source="images/connect4/bestchipyellow.png"))
+                # adding red piece if current space belongs to AI
                 elif self.board[4-j][i] == self.opponent:
                     self.board_grid.add_widget(Image(source="images/connect4/bestchipred.png"))
+                # adding blank image for empty space
                 else:
                     self.board_grid.add_widget(Image(source="", color=(0,0,0)))
 
-    def redraw_board(self):
-        self.update_board()
-        circle_width = Window.size[0] / 5
-        for j in range(0, 5):
-            for i in range(0, 5):
-                with self.board_grid.canvas:
-                    Color(1,1,1)
-                    if self.board[j][i] == self.piece:
-                        Color(1,1,0)
-                        Ellipse(source="images/connect4/bestchipyellow.png", pos=(i * circle_width + circle_width / 6, j * circle_width * 0.75 + circle_width / 6), size=(circle_width* 2/3, circle_width * 2/3))
-                    elif self.board[j][i] == self.opponent:
-                        Color(1,0,0)
-                        Ellipse(source="images/connect4/bestchipred.png", pos=(i * circle_width + circle_width / 6, j * circle_width * 0.75  + circle_width / 6), size=(circle_width* 2/3, circle_width * 2/3))
-                    else:
-                        Ellipse(pos=(i * circle_width + circle_width / 6, j * circle_width * 0.75  + circle_width / 6), size=(circle_width* 2/3, circle_width * 2/3))
-                    #Line(circle=(i * circle_width + circle_width/2, j * circle_width + circle_width / 2, circle_width/2))
-    
+    '''
+        description
+            called when league series ends and displays final league betting info
+        parameters
+            message: message sent by LeageEnvironment with final betting info
+    '''
     def series_end(self, message):
         content = GridLayout(cols=1)
         content.add_widget(Button(text="Return to menu"))
@@ -248,6 +308,12 @@ class Connect4Screen(Screen):
         content.children[0].bind(on_press=end_game_button)
         series_end_popup.open()
 
+    '''
+        description
+            called when game ends and says who won
+        parameters
+            tie: will be true if this is a tie game
+    '''
     def game_end(self, tie=False):
         content = GridLayout(cols=1)
         if self.match_type != 'League Match':
@@ -259,10 +325,13 @@ class Connect4Screen(Screen):
         if tie:
             message = "Tie game."
         game_end_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+
+        # returns user to main menu
         def end_game_button(inner_self):
             game_end_popup.dismiss()
             self.menu()
 
+        # resets game board for next match in league series
         def play_on(inner_self):
             self.league_env.play_pair_pt_2(self.piece == self.board_env.turn, tie=tie)
             game_end_popup.dismiss()

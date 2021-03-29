@@ -27,14 +27,6 @@ class BoardEnvironment:
 	#return board state
 	def get_state(self):
 		return "".join(self.board)
-	#helper function to show which columns are available for selection
-	def print_options(self):
-		temp_board = copy.copy(self.board)
-		for col in range(5):
-			bottom = self.get_lowest_column(col)
-			if(bottom != -1):
-				temp_board[bottom] = col + 1
-				
 	#return the lowest board piece available for the selected column
 	def get_lowest_column(self, i):
 		if(self.board[i] == '-'):
