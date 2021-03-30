@@ -4,3 +4,4 @@ game_logic/__pycache__/*
 .vscode/*
 workspace.code-workspace
 kivy_env/*
+game_logic/connect4AI/__pycache__/*

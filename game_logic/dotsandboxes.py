@@ -2,11 +2,11 @@ from kivy.uix.screenmanager import Screen, SlideTransition
 from kivy.graphics import Ellipse, Line
 from kivy.properties import NumericProperty, ObjectProperty, StringProperty, BooleanProperty, ListProperty
 from kivy.core.window import Window
-
+import random as rand
 # Import AI stuff
-from .dotsandboxesAI.boardenvironment import BoardEnvironment
-from .dotsandboxesAI.agent import Agent
-from .dotsandboxesAI.leagueenvironment import LeagueEnvironment
+from .dotsandboxesAI.BoardEnvironment import BoardEnvironment
+from .dotsandboxesAI.Agent import Agent
+from .dotsandboxesAI.LeagueEnvironment import LeagueEnvironment
 
 
 
@@ -17,6 +17,24 @@ TODO
 * Clean up UI
 * League Functionality
 """
+
+def select_difficulty(auto=False):
+    x = 0
+    diffdict = {1: r'game_logic/connect4AI/qtables/easy.txt',
+                2: r'game_logic/connect4AI/qtables/medium.txt',
+                3: r'game_logic/connect4AI/qtables/hard.txt'}
+    if not auto:
+        while(x > 3 or x < 1):
+            print("Select a difficulty:")
+            print("1: Easy")
+            print("2: Medium")
+            print("3: Hard")
+            x = int(input())
+
+    else:
+        x = rand.randint(1, 3)
+
+    return diffdict[x]
 
 class DotsAndBoxesScreen(Screen):
     score = NumericProperty()
@@ -82,7 +100,36 @@ class DotsAndBoxesScreen(Screen):
             pass
         else:
             # League Match
-            pass
+            self.first_league_run = True
+            league = LeagueEnvironment(self.board_env, self)
+
+            player_names = []
+            board_agents = []
+            league_agents = []
+
+            player_names.append('learning strategy and tactics')
+            board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
+            league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'max'))
+
+            player_names.append('learning tactics only')
+            board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
+            league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'random'))
+
+            player_names.append('learning strategy only')
+            board_agents.append(Agent(self.board_env, select_difficulty(True), 'random'))
+            league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'max'))
+
+            player_names.append('no learning')
+            board_agents.append(Agent(self.board_env, select_difficulty(True), 'random'))
+            league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'random'))
+
+            league.set_players(player_names, league_agents, board_agents)
+            self.league_env = league
+            self.scoreboard.size_hint_y = None
+            self.scoreboard.height = 200
+            for child in self.scoreboard.children:
+                child.size_hint_y = None
+                child.height = 200
     
     def on_touch_down(self, touch):
         # find what dot the mouse was over and save it to the start_dot property
