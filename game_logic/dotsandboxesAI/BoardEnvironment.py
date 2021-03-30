@@ -1,5 +1,5 @@
-import random
-
+import random as random
+import copy
 class BoardEnvironment:
     """ this class creates an environment for agents to interact with"""
 

@@ -20,9 +20,10 @@ TODO
 
 def select_difficulty(auto=False):
     x = 0
-    diffdict = {1: r'game_logic/connect4AI/qtables/easy.txt',
-                2: r'game_logic/connect4AI/qtables/medium.txt',
-                3: r'game_logic/connect4AI/qtables/hard.txt'}
+    diffdict = {1: r'game_logic/dotsandboxesAI/qtables/easy.txt',
+                2: r'game_logic/dotsandboxesAI/qtables/medium.txt',
+                3: r'game_logic/dotsandboxesAI/qtables/hard.txt',
+                4: r'game_logic/dotsandboxesAI/qtables/league.txt'}
     if not auto:
         while(x > 3 or x < 1):
             print("Select a difficulty:")
@@ -43,7 +44,8 @@ class DotsAndBoxesScreen(Screen):
     difficulty_setting = StringProperty("")
     match = StringProperty("")
     turn = BooleanProperty(True)
-    
+    board_env = BoardEnvironment
+    scoreboard = StringProperty("")
     
     def setup(self):    
         for line, start, end in self.lines:
