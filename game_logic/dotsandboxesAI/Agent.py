@@ -4,7 +4,11 @@ import random
 class Agent:
     """ this class is a generic Q-Learning reinforcement learning agent for discrete states and fixed actions
     represented as strings"""
-    def __init__(self, environment, difficulty, learning_rate = 0.5, discount_factor = 0.95, epsilon = 0.2):
+    """def __bool__(self):
+        return """
+    
+    
+    def __init__(self, difficulty, environment=None, learning_rate = 0.5, discount_factor = 0.95, epsilon = 0.2):
         self.environment = environment
         tempdict = ''
         with open(difficulty, 'r') as f:

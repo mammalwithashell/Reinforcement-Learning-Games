@@ -5,6 +5,7 @@ from kivy.uix.behaviors import ToggleButtonBehavior as TB
 from kivy.config import Config
 from kivy.utils import platform 
 from kivy.properties import StringProperty
+from kivy.uix.label import Label
 from kivy.uix.popup import Popup 
 from kivy.uix.button import Button
 from kivy.uix.label import Label
