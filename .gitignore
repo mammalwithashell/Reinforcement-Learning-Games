@@ -6,3 +6,5 @@ workspace.code-workspace
 kivy_env/*
 */__pycache__/*
 */*/__pycache__/*
+game_logic/connect4AI/__pycache__/*
+game_logic/dotsandboxesAI/__pycache__/*
