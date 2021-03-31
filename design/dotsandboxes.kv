@@ -7,6 +7,9 @@
 <DotsAndBoxesScreen>:
     id: d&b_screen
     game_grid: game_grid
+    scoreboard: scoreboard
+    user_data: user_data
+    ai_data: ai_data
 
     GridLayout:
         cols: 1
@@ -70,6 +73,17 @@
                     pos: int(game_grid.width * dot_right_bound)-dot_size, int(game_grid.height * dot_right_bound)-dot_size
                     size: dot_size, dot_size
 
+        GridLayout:
+            id: scoreboard
+            cols: 2
+            Label:
+                id: user_data
+                text: "Left side"
+            Label:
+                id: ai_data
+                text: "Right side"
+
                     
 
 
+               

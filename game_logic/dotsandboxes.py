@@ -50,7 +50,7 @@ def select_difficulty(auto=False):
         x = rand.randint(1, 3)
 
     return diffdict[x]
-
+                                                                             
 class DotsAndBoxesScreen(Screen):
     score = NumericProperty()
     ai_score = NumericProperty()
@@ -60,9 +60,10 @@ class DotsAndBoxesScreen(Screen):
     turn = BooleanProperty(True)
     piece = StringProperty("")
     lines = []
-    
+
     # dictionary mapping box scores to their image widget
-    captured_boxes = []
+    captured_boxes = []            
+    scoreboard = ObjectProperty(None)                      
     user_data = ObjectProperty(None)
     ai_data = ObjectProperty(None)
     
@@ -149,11 +150,12 @@ class DotsAndBoxesScreen(Screen):
         
         self.difficulty_setting = diff
         self.match = match
-        
+        agent = Agent(f"game_logic/dotsandboxesAI/qtables/{self.difficulty_setting.lower()}.txt")
+        self.board_env = BoardEnvironment(self, agent)   
+            
         # Load different settings based on game type
         if self.match == "Single Match":
-            agent = Agent(f"game_logic/dotsandboxesAI/qtables/{self.difficulty_setting.lower()}.txt")
-            self.board_env = BoardEnvironment(self, agent)
+           
             self.board_env.reset()
             
             # self.board_env.set_players(agent)
@@ -168,20 +170,20 @@ class DotsAndBoxesScreen(Screen):
             league_agents = []
 
             player_names.append('learning strategy and tactics')
-            board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
-            league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'max'))
+            board_agents.append(Agent(select_difficulty(True), self.board_env))                                             
+            league_agents.append(Agent('game_logic/dotsandboxesAI/qtables/league.txt', league))
+                        
+            #player_names.append('learning tactics only')
+            #board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
+            #league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'random'))
 
-            player_names.append('learning tactics only')
-            board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
-            league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'random'))
+            #player_names.append('learning strategy only')
+            #board_agents.append(Agent(self.board_env, select_difficulty(True), 'random'))
+            #league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'max'))
 
-            player_names.append('learning strategy only')
-            board_agents.append(Agent(self.board_env, select_difficulty(True), 'random'))
-            league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'max'))
-
-            player_names.append('no learning')
-            board_agents.append(Agent(self.board_env, select_difficulty(True), 'random'))
-            league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'random'))
+            #player_names.append('no learning')
+            #board_agents.append(Agent(self.board_env, select_difficulty(True), 'random'))
+            #league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'random'))
 
             league.set_players(player_names, league_agents, board_agents)
             self.league_env = league
@@ -201,6 +203,31 @@ class DotsAndBoxesScreen(Screen):
                 self.start_dot = i
                 break
         return super().on_touch_down(touch)
+
+    def bet_options(self, options, message, func, AI_choice, cols=1):                                 
+        # creating grid for popup menu
+        content = GridLayout(cols=cols)                                                                                                                                        
+        # returning early if no options were passed to this function
+        if len(options) == 0:
+            return False
+        # adding a button for each option with the option's text
+        for option in options:
+            content.add_widget(Button(text=option))
+        # creating a popup with 'message' and 'content'
+        option_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+        # function that will be called when a button is clicked
+        def option_button(inner_self):
+            # dismiss popup
+            option_popup.dismiss()
+            # grabbing the selected option
+            result = inner_self.text
+            # calling 'func' with the selected option and the AI's option
+            func(result, AI_choice)
+        # binding option_button button to each option
+        for child in content.children:
+            child.bind(on_press=option_button)
+        # opening popup
+        option_popup.open()                   
     
     def check_dot_pair(self, start, end):
         """Gives back the line index based on the pair of dots in kivy regardless of order from (dict) self.actual_lines
