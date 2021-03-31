@@ -1,4 +1,5 @@
 import random
+import copy
 
 from . import Agent
 # Import the agent object

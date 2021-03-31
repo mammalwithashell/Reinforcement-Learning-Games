@@ -35,9 +35,9 @@ TODO
 
 def select_difficulty(auto=False):
     x = 0
-    diffdict = {1: r'game_logic/connect4AI/qtables/easy.txt',
-                2: r'game_logic/connect4AI/qtables/medium.txt',
-                3: r'game_logic/connect4AI/qtables/hard.txt'}
+    diffdict = {1: r'game_logic/dotsandboxesAI/qtables/easy.txt',
+                2: r'game_logic/dotsandboxesAI/qtables/medium.txt',
+                3: r'game_logic/dotsandboxesAI/qtables/hard.txt'}
     if not auto:
         while(x > 3 or x < 1):
             print("Select a difficulty:")
@@ -63,6 +63,8 @@ class DotsAndBoxesScreen(Screen):
     
     # dictionary mapping box scores to their image widget
     captured_boxes = []
+    user_data = ObjectProperty(None)
+    ai_data = ObjectProperty(None)
     
     
     # a dictionary mapping dot numbers to acceptable dots to be paired with
