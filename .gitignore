@@ -3,3 +3,6 @@ __pycache__/*
 game_logic/__pycache__/*
 .vscode/*
 workspace.code-workspace
+kivy_env/*
+*/__pycache__/*
+*/*/__pycache__/*
