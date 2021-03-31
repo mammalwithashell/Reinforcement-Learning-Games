@@ -1,0 +1,75 @@
+#:set dot_size 30
+#:set dot_right_bound .85
+#:set dot_left_bound .15
+
+
+
+<DotsAndBoxesScreen>:
+    id: d&b_screen
+    game_grid: game_grid
+
+    GridLayout:
+        cols: 1
+        GridLayout:
+            cols: 3
+            size_hint_y: None
+            height: 100
+            Button:
+                text: "Menu"
+                on_press: root.menu()
+            BoxLayout:
+                orientation: 'vertical'
+                Label:
+                    text: "Difficulty Setting: " + root.difficulty_setting
+                Label:
+                    text: "Your Score: " + str(root.score)
+                Label:
+                    text: "AI Score: " + str(root.ai_score)
+                Label:
+                    text: "Your Piece is " + root.piece
+            Button:
+                text: "Restart Game"
+                on_press: root.restart()
+        RelativeLayout:
+            id: game_grid
+            canvas:
+                Ellipse:
+                    group: "dot0"
+                    pos: int(game_grid.width * dot_left_bound)-dot_size, int(game_grid.height * dot_left_bound)-dot_size
+                    size: dot_size, dot_size
+                Ellipse:
+                    group: "dot1"
+                    pos: int(game_grid.width / 2)-dot_size, int(game_grid.height * dot_left_bound)-dot_size
+                    size: dot_size, dot_size
+                Ellipse:
+                    group: "dot2"
+                    pos: int(game_grid.width * dot_right_bound)-dot_size, int(game_grid.height * dot_left_bound)-dot_size
+                    size: dot_size, dot_size
+                Ellipse:
+                    group: "dot3"
+                    pos: int(game_grid.width * dot_left_bound)-dot_size, int(game_grid.height /2)-dot_size
+                    size: dot_size, dot_size
+                Ellipse:
+                    group: "dot4"
+                    pos: int(game_grid.width / 2)-dot_size, int(game_grid.height /2)-dot_size
+                    size: dot_size, dot_size
+                Ellipse:
+                    group: "dot5"
+                    pos: int(game_grid.width * dot_right_bound)-dot_size, int(game_grid.height /2)-dot_size
+                    size: dot_size, dot_size
+                Ellipse:
+                    group: "dot6"
+                    pos: int(game_grid.width * dot_left_bound)-dot_size, int(game_grid.height * dot_right_bound)-dot_size
+                    size: dot_size, dot_size
+                Ellipse:
+                    group: "dot7"
+                    pos: int(game_grid.width / 2)-dot_size, int(game_grid.height * dot_right_bound)-dot_size
+                    size: dot_size, dot_size
+                Ellipse:
+                    group: "dot8"
+                    pos: int(game_grid.width * dot_right_bound)-dot_size, int(game_grid.height * dot_right_bound)-dot_size
+                    size: dot_size, dot_size
+
+                    
+
+

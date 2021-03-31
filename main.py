@@ -31,8 +31,8 @@ if platform in ["ios","android"]:
 # Load in gui 
 Builder.load_file("design/gui.kv")
 Builder.load_file("design/tiktactoe.kv")
-#Builder.load_file("design/connect4.kv")
-#Builder.load_file("design/dotsandboxes.kv")
+Builder.load_file("design/connect4.kv")
+Builder.load_file("design/dotsandboxes.kv")
 
 # Import the Screens for the individual games
 from game_logic.tiktactoe import TicTacToeScreen
@@ -73,5 +73,3 @@ class GameApp(App):
 
 if __name__ == '__main__':
     GameApp().run()
-# ----------kivy--------------------------------------------------------------------------------------------------------------------------
-

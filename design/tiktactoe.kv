@@ -1,111 +1,24 @@
-#authors: Nikki Meyer and Brian Little
 <TicTacToeScreen>:
-   main_menu: main_menu
-   scorebox: scorebox
-   exit_button: exit_button
-   square1: square1
-   square2: square2
-   square3: square3
-   square4: square4
-   square5: square5
-   square6: square6
-   square7: square7
-   square8: square8
-   square9: square9
-   secondlast_button:secondlast_button
-   massage_box: massage_box
-   last_button: last_button
-
-   GridLayout:
-      cols: 3
-      rows: 5
-      size: root.width, root.height
-
-      Button:
-         id: main_menu
-         text: "main"
-         font_size: 50
-         on_press: root.press_main()
-      
-      Label:
-         id: scorebox
-         text: ""
-         font_size: 20
-      
-      Button:
-         id: exit_button
-         text: "exit"
-         font_size: 50
-         on_press: root.press_exit()
-
-      Button:
-         id: square1
-         text: "1"
-         font_size: 50
-         on_press: root.press1()
-      
-      Button:
-         id: square2
-         text: "2"
-         font_size: 50
-         on_press: root.press2()
-
-      Button:
-         id: square3
-         text: "3"
-         font_size: 50
-         on_press: root.press3()
-
-      Button:
-         id: square4
-         text: "4"
-         font_size: 50
-         on_press: root.press4()
-      
-      Button:
-         id: square5
-         text: "5"
-         font_size: 50
-         on_press: root.press5()
-
-      Button:
-         id: square6
-         text: "6"
-         font_size: 50
-         on_press: root.press6()
-
-      Button:
-         id: square7
-         text: "7"
-         font_size: 50
-         on_press: root.press7()
-
-      Button:
-         id: square8
-         text: "8"
-         font_size: 50
-         on_press: root.press8()
-
-      Button:
-         id: square9
-         text: "9"
-         font_size: 50
-         on_press: root.press9()
-
-      Button:
-         id: secondlast_button
-         text: ""
-         font_size: 50
-         on_press: root.secondlast()
-
-      Label:
-         id: massage_box
-         text: ""
-         font_size: 20
-      
-      Button:
-         id: last_button
-         text: ""
-         font_size: 50
-         on_press: root.last()
+    canvas.before:
+        # used to set the background color
+        Color:
+            rgba: (0,1,1,1)
+        Ellipse:
+            pos: 100, 100
+            size: 200, 201
+            angle_start: 0
+            angle_end: 360
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 1, 0, 0, 1
+            Line:
+                # x1, y1, x2, y2
+                points: 50, 50, 50, 1000
+                width: 2
+            Color:
+                rgba: 50, 0, 0, 1
+            Line:
+                points: 100, 50, 100, 1000
+                width: 2
 
