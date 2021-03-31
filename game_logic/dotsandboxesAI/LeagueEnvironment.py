@@ -68,7 +68,7 @@ class LeagueEnvironment:
 
     def available_actions(self, first):
         if first:
-            return ['quit', 'single bet', 'double bet', 'triple bet']
+            return ['quit', 'single capture', 'double capture', 'triple capture']
         else:
             return ['quit', 'call']    
 
@@ -119,25 +119,25 @@ class LeagueEnvironment:
     '''
     
     def play_pair_pt_1_5(self, player_choice, AI_choice=''):
-        # getting AI's bet if AI_choice is an empty string
+        # getting AI's capture if AI_choice is an empty string
         if AI_choice == '':
             AI_choice = self.league_agents[self.AI].select_action(False)
         # handling case where user or AI quits
         if AI_choice == 'quit' or player_choice == 'quit':
             message = f'''
                     {'You' if player_choice == 'quit' else 'AI'} quit\n
-                    You had {self.Player_boxes} boxes\n
-                    AI had {self.AI_boxes} boxes
+                    You had {self.Player_boxes} boxes captured\n
+                    AI had {self.AI_boxes} boxes captured
                     '''
             # calling 'series_end' in kivy screen object
             self.kivy_obj.series_end(message)
             return
         # handling case where user or AI made a bet and other player is called
-        elif AI_choice == 'single bet' or player_choice == 'single bet':
+        elif AI_choice == 'single capture' or player_choice == 'single capture':
             self.boxes_mul = 1
-        elif AI_choice == 'double bet' or player_choice == 'double bet':
+        elif AI_choice == 'double capture' or player_choice == 'double capture':
             self.boxes_mul = 2
-        elif AI_choice == 'triple bet' or player_choice == 'triple bet':
+        elif AI_choice == 'triple capture' or player_choice == 'triple capture':
             self.boxes_mul = 3
 
         # formatting the scorboard data
@@ -146,7 +146,7 @@ class LeagueEnvironment:
         User bet: {player_choice}
         '''
         self.kivy_obj.ai_data.txt = f'''
-        AI Chips: {self.AI_boxes}\n
+        AI Boxes: {self.AI_boxes}\n
         AI bet: {AI_choice}
         '''
 
@@ -178,11 +178,11 @@ class LeagueEnvironment:
             self.Player_boxes -= self.min_bid*self.boxes_mul
 
         # if a player runs out of lines, end the league series
-        if self.AI_lines <= 0 or self.Player_lines <= 0:
+        if self.AI_boxes <= 0 or self.Player_boxes <= 0:
             message = f'''
-                {'AI' if self.AI_chips <= 0 else 'You'} ran out of chips\n
-                You had {self.Player_chips} chips\n
-                AI had {self.AI_chips} chips
+                {'AI' if self.AI_boxes <= 0 else 'You'} ran out of lines\n
+                You had {self.Player_boxes} boxes captured\n
+                AI had {self.AI_boxes} boxes captured
                 '''
             self.kivy_obj.series_end(message)
 
@@ -200,8 +200,8 @@ class LeagueEnvironment:
         choice_list = self.available_actions(first)
 
         # creating message that will be displayed to user 
-        message = f"You currently have {self.Player_lines} chips and {self.Player_wins} {'wins' if self.Player_Wins != 1 else 'win'}.\n"
-        message += f"Your opponent has {self.AI_wins} {'wins' if self.AI_wins != 1 else 'win'}.\n"
+        message = f"You currently have {self.Player_boxes} boxes captured and {self.Player_wins} {'wins' if self.Player_Wins != 1 else 'win'}.\n"
+        message += f"Your opponent has {self.AI_wins} boxes captured and {'wins' if self.AI_wins != 1 else 'win'}.\n"
         if AI_choice:
                 message += f"Opponent chose {AI_choice}\n"
                 message += '\nSelect your next move'
