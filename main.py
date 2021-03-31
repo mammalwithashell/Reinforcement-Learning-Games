@@ -8,7 +8,8 @@ from kivy.properties import StringProperty
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup 
 from kivy.uix.button import Button
-from kivy.uix.label import Label
+import os, sys
+from kivy.resources import resource_add_path, resource_find
 
 """ 
 Builder is used to load in the design .kv files
@@ -35,9 +36,9 @@ Builder.load_file("design/connect4.kv")
 Builder.load_file("design/dotsandboxes.kv")
 
 # Import the Screens for the individual games
+from game_logic.dotsandboxes import DotsAndBoxesScreen
 from game_logic.tiktactoe import TicTacToeScreen
 from game_logic.connect4 import Connect4Screen
-from game_logic.dotsandboxes import DotsAndBoxesScreen
 
 # Main window screen
 class TitleScreen(Screen):
@@ -72,4 +73,7 @@ class GameApp(App):
         return RootWidget()
 
 if __name__ == '__main__':
+    # this is fore building the app
+    if hasattr(sys, '_MEIPASS'):
+        resource_add_path(os.path.join(sys._MEIPASS))
     GameApp().run()
