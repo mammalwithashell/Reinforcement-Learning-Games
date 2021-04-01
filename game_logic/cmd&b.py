@@ -7,7 +7,7 @@ def main():
     """
     
     board = BoardEnvironment()
-    A = Agent(board, select_difficulty())
+    A = Agent(select_difficulty(), board)
     board.set_players(A)
     board.instructions()
     board.play_game()

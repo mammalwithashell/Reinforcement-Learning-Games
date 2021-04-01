@@ -13,3 +13,4 @@ hard.txt
 medium.txt
 build/*
 dist/*
+game_logic/dotsandboxesAI/__pycache__/*
