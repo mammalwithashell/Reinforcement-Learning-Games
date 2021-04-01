@@ -217,6 +217,10 @@ class BoardEnvironment:
                 score.append(boxes[quad])
                 if self.kivy_obj is not None:
                     self.kivy_obj.draw_captured_box(box_index, self.turn)
+                    if self.turn == self.kivy_obj.piece:
+                        self.kivy_obj.score += len(score)
+                    else:
+                        self.kivy_obj.ai_score += len(score)
         return score
 
     def is_full(self):

@@ -98,7 +98,7 @@ class LeagueEnvironment:
             if first_run:
                 AI_choice = 'quit'
                 while AI_choice == "quit":
-                 AI_choice = self.league_agents[self.Ai].select_action(True)
+                    AI_choice = self.league_agents[self.Ai].select_action(True)
             else:
                 AI_choice = self.league_agents[self.Ai].select_action(True)
 
