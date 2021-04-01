@@ -73,15 +73,17 @@
                     pos: int(game_grid.width * dot_right_bound)-dot_size, int(game_grid.height * dot_right_bound)-dot_size
                     size: dot_size, dot_size
 
-    GridLayout:
-        id: scoreboard
-        cols: 2
-        Label:
-            id: user_data
-            text: "Player"
-        Label:
-            id: ai_data
-            text: "AI"
+        GridLayout:
+            id: scoreboard
+            cols: 2
+            size_hint_y: None
+            height: 50
+            Label:
+                id: user_data
+                text: "Player"
+            Label:
+                id: ai_data
+                text: "AI"
 
                     
 

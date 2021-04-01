@@ -6,6 +6,7 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup 
 from kivy.uix.label import Label
 from kivy.uix.image import Image
+from kivy.uix.gridlayout import GridLayout
 
 import random as rand
 
@@ -50,7 +51,7 @@ def select_difficulty(auto=False):
         x = rand.randint(1, 3)
 
     return diffdict[x]
-                                                                             
+
 class DotsAndBoxesScreen(Screen):
     score = NumericProperty()
     ai_score = NumericProperty()
@@ -147,19 +148,20 @@ class DotsAndBoxesScreen(Screen):
         """
         
         self.dots = [self.game_grid.canvas.get_group(f"dot{i}")[0] for i in range(9)]
-        
+
         self.difficulty_setting = diff
         self.match = match
         agent = Agent(f"game_logic/dotsandboxesAI/qtables/{self.difficulty_setting.lower()}.txt")
         self.board_env = BoardEnvironment(self, agent)   
-            
+
         # Load different settings based on game type
         if self.match == "Single Match":
-           
+
             self.board_env.reset()
-            
+
             # self.board_env.set_players(agent)
             self.board_env.print_board()
+            self.scoreboard.height = 0
         else:
             # League Match
             self.first_league_run = True
@@ -170,9 +172,9 @@ class DotsAndBoxesScreen(Screen):
             league_agents = []
 
             player_names.append('learning strategy and tactics')
-            board_agents.append(Agent(select_difficulty(True), self.board_env))                                             
+            board_agents.append(Agent(select_difficulty(True), self.board_env))
             league_agents.append(Agent('game_logic/dotsandboxesAI/qtables/league.txt', league))
-                        
+
             #player_names.append('learning tactics only')
             #board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
             #league_agents.append(Agent(league, 'game_logic/dotsandboxesAI/qtables/league.txt', 'random'))
@@ -187,11 +189,12 @@ class DotsAndBoxesScreen(Screen):
 
             league.set_players(player_names, league_agents, board_agents)
             self.league_env = league
-            self.scoreboard.size_hint_y = None
             self.scoreboard.height = 200
             for child in self.scoreboard.children:
                 child.size_hint_y = None
                 child.height = 200
+
+        self.scoreboard.size_hint_y = None
     
     def on_touch_down(self, touch):
         # find what dot the mouse was over and save it to the start_dot property
