@@ -98,69 +98,29 @@ class DotsAndBoxesScreen(Screen):
         (6, 7): 0
     }
     
-    def restart(self):  
-        """This function is run whenever the "Restart Game" Button is pressed
-        """
-        if self.lines:
-            for line, start, end in self.lines:
-                self.game_grid.canvas.remove(line)
-        self.lines = []    
+    def on_pre_enter(self, *args):
         self.board_env.reset()
-        self.board_env.print_board()
-        self.clear_captured_boxes() 
-        
-    def box_line(self, line_instruction):
-        """Return points of line based on the instruction group names
-
-        Args:
-            line_instruction (kivy.instruction): Reference to the BoxLine object in the .kv file
-
-        Returns:
-            list: The points that the line needs to be drawn x1,y1,x2,y2
-        """
-        
-        dots = {value:key for key, value in self.actual_lines.items()}
-        return list(dots[line_instruction](0).pos) + list(dots[line_instruction](1).pos)
-            
-    def menu(self):
-        """Swap screen back to title screen
-        """
-        if self.lines:
-            for line, start, end in self.lines:
-                self.game_grid.canvas.remove(line)
-        self.manager.transition = SlideTransition(direction="right")
-        self.manager.current = "title"
-        self.clear_captured_boxes()
-    
-    def clear_captured_boxes(self):
-        """Remove caputured box icons from screen to
-        """ 
-        
-        print(self.captured_boxes)
-        for i in self.captured_boxes:
-            del i
-        self.captured_boxes = []
+        return super().on_pre_enter(*args)
     
     def load_settings(self, diff, match):
         """ 
+        Called whenever this screen is loaded
         self.lines is a list of tuples containing
         a line instruction object
         the start dot number
         the end dot number
         """
         
-        # self.dots = [self.game_grid.ids[f"dot{i}"] for i in range(9)]
-
         self.difficulty_setting = diff
         self.match = match
         agent = Agent(f"game_logic/dotsandboxesAI/qtables/{self.difficulty_setting.lower()}.txt")
         self.board_env = BoardEnvironment(self, agent)   
+        self.scoreboard.size_hint_y = None
 
         # Load different settings based on game type
         if self.match == "Single Match":
 
-            self.board_env.reset()
-
+            self.piece = self.board_env.turn
             # self.board_env.set_players(agent)
             self.board_env.print_board()
             self.scoreboard.height = 0
@@ -196,58 +156,35 @@ class DotsAndBoxesScreen(Screen):
                 child.size_hint_y = None
                 child.height = 200
 
-        self.scoreboard.size_hint_y = None
+        
+    def menu(self):
+        """Swap screen back to title screen
+        """
+        
+        self.clear_game_screen()
+        self.manager.transition = SlideTransition(direction="right")
+        self.manager.current = "title"
+        
     
+    def restart(self):  
+        """This function is run whenever the "Restart Game" Button is pressed
+        """
+        self.clear_game_screen()
+        self.lines = []    
+        self.board_env.reset()
+        self.piece = self.board_env.turn
+        self.board_env.print_board()
+        self.score, self.ai_score = 0, 0
+        
+        
     def on_touch_down(self, touch):
         # find what dot the mouse was over and save it to the start_dot property
-        grace = int(self.dots[0].size[0] * 3)
         for i, dot in enumerate(self.dots):
-            dotx, doty = [int(i) for i in dot.pos]
             # if touch is within a box twice the radius of the dot, we draw
             if self.dots[i].collide_point(*touch.pos):
                 self.start_dot = i
                 break
         return super().on_touch_down(touch)
-
-    def bet_options(self, options, message, func, AI_choice, cols=1):                                 
-        # creating grid for popup menu
-        content = GridLayout(cols=cols)                                                                                                                                        
-        # returning early if no options were passed to this function
-        if len(options) == 0:
-            return False
-        # adding a button for each option with the option's text
-        for option in options:
-            content.add_widget(Button(text=option))
-        # creating a popup with 'message' and 'content'
-        option_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
-        # function that will be called when a button is clicked
-        def option_button(inner_self):
-            # dismiss popup
-            option_popup.dismiss()
-            # grabbing the selected option
-            result = inner_self.text
-            # calling 'func' with the selected option and the AI's option
-            func(result, AI_choice)
-        # binding option_button button to each option
-        for child in content.children:
-            child.bind(on_press=option_button)
-        # opening popup
-        option_popup.open()                   
-    
-    def check_dot_pair(self, start, end):
-        """Gives back the line index based on the pair of dots in kivy regardless of order from (dict) self.actual_lines
-
-        Args:
-            start (int): start dot index
-            end (int): end dot index
-
-        Returns:
-            int: The index that cooresponds to a line in the BoardEnvironment's representation of the game board
-        """
-        try:
-            return self.actual_lines[(start, end)]
-        except KeyError:
-            return self.actual_lines[(end, start)]
     
     def on_touch_up(self, touch):
         # find what dot the mouse is over on mouse release and draw the appropriate line
@@ -321,10 +258,24 @@ class DotsAndBoxesScreen(Screen):
         Args:
             choice (int): Choice decided by the AI. 
         """
+        actual_lines = {
+            (1, 2): 11,
+            (0, 1): 10,
+            (2, 5): 9,
+            (1, 4): 8,
+            (0, 3): 7,
+            (4, 5): 6,
+            (4, 3): 5,
+            (5, 8): 4,
+            (4, 7): 3,
+            (3, 6): 2,
+            (8, 7): 1,
+            (6, 7): 0
+        }
         
         # Reverse the dictionary of lines and dots and find the dots based on the ai choice
-        dots = {value:key for key, value in self.actual_lines.items()}
-        dots = dots[choice] # get the entry in the dictionary that maps the line indexes to the dot indexes
+        line_choice_dots = {value:key for key, value in actual_lines.items()}
+        dots = line_choice_dots[choice] # get the entry in the dictionary that maps the line indexes to the dot indexes
         
         with self.game_grid.canvas:
             # save line to lines property to be updated on_size
@@ -354,13 +305,23 @@ class DotsAndBoxesScreen(Screen):
         avg_x /= 4
         avg_y /= 4
         #print("Averages", avg_x, avg_y)
-        
         color = "red" if turn == "X" else "blue"
-        with self.canvas:
-            image = Image(source=f"./images/dotsandboxes/{color}_{turn}.png", center = (avg_x, avg_y))
-            self.captured_boxes.append(image)
-        
-
+        captured_box = Image(source=f"./images/dotsandboxes/{color}_{turn}.png", pos_hint={"center_x": avg_x/self.width, "center_y": avg_y/self.height})
+        self.captured_boxes.append(captured_box)         
+        self.add_widget(captured_box)
+    
+    def clear_game_screen(self):
+        """Remove caputured box icons from screen to
+        """ 
+        # clear lines
+        if self.lines:
+            for line, _, _ in self.lines:
+                self.game_grid.canvas.remove(line)
+            
+        # clear captured boxes
+        for box in self.captured_boxes:
+            box.parent.remove_widget(box)
+        self.captured_boxes = []
         
     def is_full(self):
         """Display pop up when the board fills
@@ -374,7 +335,7 @@ class DotsAndBoxesScreen(Screen):
         """
         
         
-        winner_popup = Popup()
+        winner_popup = Popup(size_hint=(0.5, 0.3))
         # self.board.score_board is a dictionary of str:int with keys "X" and "O"
         other_piece = "X" if self.piece == "O" else "O"
         if self.board_env.score_board[self.piece] > self.board_env.score_board[other_piece]:
@@ -388,9 +349,43 @@ class DotsAndBoxesScreen(Screen):
         winner_popup.add_widget(content)
         winner_popup.open()
     
+    def bet_options(self, options, message, func, AI_choice, cols=1):                                 
+        # creating grid for popup menu
+        content = GridLayout(cols=cols)                                                                                                                                        
+        # returning early if no options were passed to this function
+        if len(options) == 0:
+            return False
+        # adding a button for each option with the option's text
+        for option in options:
+            content.add_widget(Button(text=option))
+        # creating a popup with 'message' and 'content'
+        option_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+        # function that will be called when a button is clicked
+        def option_button(inner_self):
+            # dismiss popup
+            option_popup.dismiss()
+            # grabbing the selected option
+            result = inner_self.text
+            # calling 'func' with the selected option and the AI's option
+            func(result, AI_choice)
+        # binding option_button button to each option
+        for child in content.children:
+            child.bind(on_press=option_button)
+        # opening popup
+        option_popup.open()                   
     
+    def check_dot_pair(self, start, end):
+        """Gives back the line index based on the pair of dots in kivy regardless of order from (dict) self.actual_lines
 
-    """def on_size(self, instance, value):
-        for line, start, end in self.lines:
-            self.game_grid.canvas.remove(line)"""
+        Args:
+            start (int): start dot index
+            end (int): end dot index
+
+        Returns:
+            int: The index that cooresponds to a line in the BoardEnvironment's representation of the game board
+        """
+        try:
+            return self.actual_lines[(start, end)]
+        except KeyError:
+            return self.actual_lines[(end, start)]
     

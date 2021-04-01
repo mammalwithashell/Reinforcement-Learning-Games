@@ -4,7 +4,6 @@ import copy
 from . import Agent
 # Import the agent object
 
-# TODO Currently the turn method doesnt let the 
 """
 This file can be run as "python BoardEnvironment.py"
 
@@ -18,9 +17,9 @@ def select_difficulty():
         None: 
     """
     x = 0
-    diffdict = {1: r'easy.txt',
-                2: r'medium.txt',
-                3: r'hard.txt'}
+    diffdict = {1: r'game_logic\\dotsandboxesAI\\qtables\\easy.txt',
+                2: r'game_logic\\dotsandboxesAI\\qtables\\medium.txt',
+                3: r'game_logic\\dotsandboxesAI\\qtables\\hard.txt'}
     while(x > 3 or x < 1):
         print("Select a difficulty:")
         print("1: Easy")
@@ -56,9 +55,11 @@ class BoardEnvironment:
         """
         self.kivy_obj = kivy_obj
         self.agent = agent
-        agent.environment = self
+        if self.agent:
+            agent.environment = self
+            self.reset()
         self.agent_turn = None
-        self.reset()
+        
 
     def set_players(self, agent):
         " connects players with the environment "
@@ -217,10 +218,10 @@ class BoardEnvironment:
                 score.append(boxes[quad])
                 if self.kivy_obj is not None:
                     self.kivy_obj.draw_captured_box(box_index, self.turn)
-                    if self.turn == self.kivy_obj.piece:
-                        self.kivy_obj.score += len(score)
-                    else:
-                        self.kivy_obj.ai_score += len(score)
+        if self.turn == self.kivy_obj.piece:
+            self.kivy_obj.score += len(score)
+        else:
+            self.kivy_obj.ai_score += len(score)
         return score
 
     def is_full(self):
