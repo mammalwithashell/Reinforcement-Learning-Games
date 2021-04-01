@@ -1,6 +1,6 @@
 #:set dot_size 30
-#:set dot_right_bound .85
-#:set dot_left_bound .15
+#:set dot_right_bound .95
+#:set dot_left_bound .05
 
 
 
@@ -10,7 +10,7 @@
     scoreboard: scoreboard
     user_data: user_data
     ai_data: ai_data
-
+    dots: [dot0, dot1, dot2, dot3, dot4, dot5, dot6, dot7, dot8]
     GridLayout:
         cols: 1
         GridLayout:
@@ -33,46 +33,96 @@
             Button:
                 text: "Restart Game"
                 on_press: root.restart()
-        RelativeLayout:
-            id: game_grid
-            canvas:
-                Ellipse:
-                    group: "dot0"
-                    pos: int(game_grid.width * dot_left_bound)-dot_size, int(game_grid.height * dot_left_bound)-dot_size
-                    size: dot_size, dot_size
-                Ellipse:
-                    group: "dot1"
-                    pos: int(game_grid.width / 2)-dot_size, int(game_grid.height * dot_left_bound)-dot_size
-                    size: dot_size, dot_size
-                Ellipse:
-                    group: "dot2"
-                    pos: int(game_grid.width * dot_right_bound)-dot_size, int(game_grid.height * dot_left_bound)-dot_size
-                    size: dot_size, dot_size
-                Ellipse:
-                    group: "dot3"
-                    pos: int(game_grid.width * dot_left_bound)-dot_size, int(game_grid.height /2)-dot_size
-                    size: dot_size, dot_size
-                Ellipse:
-                    group: "dot4"
-                    pos: int(game_grid.width / 2)-dot_size, int(game_grid.height /2)-dot_size
-                    size: dot_size, dot_size
-                Ellipse:
-                    group: "dot5"
-                    pos: int(game_grid.width * dot_right_bound)-dot_size, int(game_grid.height /2)-dot_size
-                    size: dot_size, dot_size
-                Ellipse:
-                    group: "dot6"
-                    pos: int(game_grid.width * dot_left_bound)-dot_size, int(game_grid.height * dot_right_bound)-dot_size
-                    size: dot_size, dot_size
-                Ellipse:
-                    group: "dot7"
-                    pos: int(game_grid.width / 2)-dot_size, int(game_grid.height * dot_right_bound)-dot_size
-                    size: dot_size, dot_size
-                Ellipse:
-                    group: "dot8"
-                    pos: int(game_grid.width * dot_right_bound)-dot_size, int(game_grid.height * dot_right_bound)-dot_size
-                    size: dot_size, dot_size
 
+        
+        
+        GridLayout:
+            id: game_grid
+            rows: 3
+            padding: [10, 10, 10, 10]
+            spacing: [10, 10]
+            GridLayout:
+                id:row2
+                rows:1
+                Image:
+                    id: dot6
+                    source: "images\dotsandboxes\dot.png"
+                    Label:
+                        text: "[color=ff3333]6[/color]"
+                        pos: self.parent.center
+                        markup: True
+                    
+                Image:
+                    id: dot7
+                    source: "images\dotsandboxes\dot.png"
+                    Label:
+                        text: "[color=ff3333]7[/color]"
+                        pos: self.parent.center
+                        markup: True
+
+                Image:
+                    id: dot8
+                    source: "images\dotsandboxes\dot.png"
+                    Label:
+                        text: "[color=ff3333]8[/color]"
+                        pos: self.parent.center
+                        markup: True
+
+            GridLayout:
+                id:row1
+                rows:1
+                Image:
+                    id: dot3
+                    source: "images\dotsandboxes\dot.png"
+                    Label:
+                        text: "[color=ff3333]3[/color]"
+                        pos: self.parent.center
+                        markup: True
+
+
+                Image:
+                    id: dot4
+                    source: "images\dotsandboxes\dot.png"
+                    Label:
+                        text: "[color=ff3333]4[/color]"
+                        pos: self.parent.center
+                        markup: True
+
+                Image:
+                    id: dot5
+                    source: "images\dotsandboxes\dot.png"
+                    Label:
+                        text: "[color=ff3333]5[/color]"
+                        pos: self.parent.center
+                        text_color:
+                        markup: True
+            GridLayout:
+                rows:1
+                id: row0
+                Image:
+                    id: dot0
+                    source: "images\dotsandboxes\dot.png"
+                    Label:
+                        text: "[color=ff3333]0[/color]"
+                        pos: self.parent.center
+                        markup: True
+
+                Image:
+                    id: dot1
+                    source: "images\dotsandboxes\dot.png"
+                    Label:
+                        text: "[color=ff3333]1[/color]"
+                        pos: self.parent.center
+                        markup: True
+
+                Image:
+                    id: dot2
+                    source: "images\dotsandboxes\dot.png"
+                    Label:
+                        text: "[color=ff3333]2[/color]"
+                        pos: self.parent.center
+                        markup: True
+            
         GridLayout:
             id: scoreboard
             cols: 2
@@ -84,8 +134,3 @@
             Label:
                 id: ai_data
                 text: "AI"
-
-                    
-
-
-               

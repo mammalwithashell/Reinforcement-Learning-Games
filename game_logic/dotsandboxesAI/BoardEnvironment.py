@@ -134,7 +134,7 @@ class BoardEnvironment:
                 choice = self.agent.select_action()
 
 
-                self.kivy_obj.draw_ai_turn(choice)
+                self.kivy_obj.draw_ai_turn(choice, self.turn)
                 print("Choice", choice)
             else:
                 ai = False

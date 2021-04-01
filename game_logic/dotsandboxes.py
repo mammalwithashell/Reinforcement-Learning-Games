@@ -61,7 +61,7 @@ class DotsAndBoxesScreen(Screen):
     turn = BooleanProperty(True)
     piece = StringProperty("")
     lines = []
-
+    dots = ListProperty()
     # dictionary mapping box scores to their image widget
     captured_boxes = []            
     scoreboard = ObjectProperty(None)                      
@@ -107,8 +107,7 @@ class DotsAndBoxesScreen(Screen):
         self.lines = []    
         self.board_env.reset()
         self.board_env.print_board()
-        if self.captured_boxes != []:
-            self.clear_captured_boxes() 
+        self.clear_captured_boxes() 
         
     def box_line(self, line_instruction):
         """Return points of line based on the instruction group names
@@ -136,8 +135,11 @@ class DotsAndBoxesScreen(Screen):
     def clear_captured_boxes(self):
         """Remove caputured box icons from screen to
         """ 
-        for box in self.captured_boxes:
-            box.remove_from_cache()
+        
+        print(self.captured_boxes)
+        for i in self.captured_boxes:
+            del i
+        self.captured_boxes = []
     
     def load_settings(self, diff, match):
         """ 
@@ -147,7 +149,7 @@ class DotsAndBoxesScreen(Screen):
         the end dot number
         """
         
-        self.dots = [self.game_grid.canvas.get_group(f"dot{i}")[0] for i in range(9)]
+        # self.dots = [self.game_grid.ids[f"dot{i}"] for i in range(9)]
 
         self.difficulty_setting = diff
         self.match = match
@@ -202,7 +204,7 @@ class DotsAndBoxesScreen(Screen):
         for i, dot in enumerate(self.dots):
             dotx, doty = [int(i) for i in dot.pos]
             # if touch is within a box twice the radius of the dot, we draw
-            if int(touch.x) in range(dotx - grace, dotx + grace) and int(touch.y) in range(doty - grace, doty + grace):
+            if self.dots[i].collide_point(*touch.pos):
                 self.start_dot = i
                 break
         return super().on_touch_down(touch)
@@ -255,10 +257,9 @@ class DotsAndBoxesScreen(Screen):
             if self.check_for_dot_click(touch, dot_index, dot_obj):
                 with self.game_grid.canvas:
                     # save line to lines property to be updated on_size
-                    points = list(self.dots[self.start_dot].pos) + list(dot_obj.pos)
+                    points = list(self.dots[self.start_dot].center) + list(dot_obj.center)
                     # add half dot radius to x and y for the line because the dot position is measured from bottom left corner of dots (the radius of the dot is 10)
-                    points = [i + 15 for i in points]
-                    Color(1, 0, 0)
+                    Color(1, 0, 0) if self.board_env.turn == "X" else Color(0,0,1)
                     self.lines.append((Line(points=points, width=3), self.start_dot, dot_index))
                 
                 # Add line to board environment
@@ -295,12 +296,26 @@ class DotsAndBoxesScreen(Screen):
                 # change turn bool
                 # self.turn = not self.turn
                 self.start_dot = None
-                
-                    
-        
         return super().on_touch_up(touch)
     
-    def draw_ai_turn(self, choice):
+    def check_for_dot_click(self, touch, dot_index, dot_obj):
+        """Check if the user clicked a second dot valid with the current dot
+
+        Args:
+            touch (Touch): Kivy touch object
+            dot_index (int): Index of dot we are checking
+            dot_obj (kivy.Instruction): The object in memory that represents the dot drawing
+
+        Returns:
+            bool: Returns true if the dot that the user lets go of the mouse over is a valid pair with the dot from click
+        """        
+        
+        
+        
+        # warning monster bool
+        return self.dots[dot_index].collide_point(*touch.pos) and self.start_dot is not None and dot_index in self.accepted_lines[self.start_dot] and self.check_dot_pair(dot_index, self.start_dot) in self.board_env.available_actions()
+    
+    def draw_ai_turn(self, choice, turn):
         """Draw the line based on AI turn. This function is called with the board environment method play_game_turn
 
         Args:
@@ -313,11 +328,11 @@ class DotsAndBoxesScreen(Screen):
         
         with self.game_grid.canvas:
             # save line to lines property to be updated on_size
-            points = list(self.dots[dots[0]].pos) + list(self.dots[dots[1]].pos)
+            points = list(self.dots[dots[0]].center) + list(self.dots[dots[1]].center)
             # add half dot radius to x and y for the line because the dot position is measured from bottom left corner of dots (the radius of the dot is 10)
             # The amount added to i should be half of the dot_size set in the dotsandboxes.kv file
-            Color(0, 0, 1)
-            points = [i + 15 for i in points]
+            Color(1, 0, 0) if turn == "X" else Color(0,0,1)
+
             line = Line(points=points, width=3)
             self.lines.append((line, dots[0], dots[1]))
             
@@ -333,19 +348,18 @@ class DotsAndBoxesScreen(Screen):
         
         avg_x, avg_y = 0, 0
         for dot_index in boxes[box_index]:
-            print(self.dots[dot_index].pos[0], self.dots[dot_index].pos[1])
-            avg_x += self.dots[dot_index].pos[0]
-            avg_y += self.dots[dot_index].pos[1]
+            #print(self.dots[dot_index].pos[0], self.dots[dot_index].pos[1])
+            avg_x += self.dots[dot_index].center_x
+            avg_y += self.dots[dot_index].center_y
         avg_x /= 4
         avg_y /= 4
-        print("Averages", avg_x, avg_y)
+        #print("Averages", avg_x, avg_y)
         
         color = "red" if turn == "X" else "blue"
         with self.canvas:
-            image = Image(source=f"./images/dotsandboxes/{color}_{turn}.png", pos = (avg_x, avg_y))
-        
-            print("Pose",image.pos)
+            image = Image(source=f"./images/dotsandboxes/{color}_{turn}.png", center = (avg_x, avg_y))
             self.captured_boxes.append(image)
+        
 
         
     def is_full(self):
@@ -374,24 +388,7 @@ class DotsAndBoxesScreen(Screen):
         winner_popup.add_widget(content)
         winner_popup.open()
     
-    def check_for_dot_click(self, touch, dot_index, dot_obj):
-        """Check if the user clicked a second dot valid with the current dot
-
-        Args:
-            touch (Touch): Kivy touch object
-            dot_index (int): Index of dot we are checking
-            dot_obj (kivy.Instruction): The object in memory that represents the dot drawing
-
-        Returns:
-            bool: Returns true if the dot that the user lets go of the mouse over is a valid pair with the dot from click
-        """        
-        
-        grace_ratio = 1
-        grace = int(self.dots[0].size[0] * grace_ratio)
-        dotx, doty = [int(i) for i in dot_obj.pos]
-        
-        # warning monster bool
-        return (int(touch.x) in range(dotx - grace, dotx + grace) and int(touch.y) in range(doty - grace, doty + grace) and self.start_dot is not None and dot_index in self.accepted_lines[self.start_dot] and self.check_dot_pair(dot_index, self.start_dot) in self.board_env.available_actions())
+    
 
     """def on_size(self, instance, value):
         for line, start, end in self.lines:

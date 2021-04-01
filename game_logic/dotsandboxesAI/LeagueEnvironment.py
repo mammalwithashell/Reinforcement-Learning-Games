@@ -140,7 +140,7 @@ class LeagueEnvironment:
         elif AI_choice == 'triple capture' or player_choice == 'triple capture':
             self.boxes_mul = 3
 
-        # formatting the scorboard data
+        # formatting the scoreboard data
         self.kivy_obj.user_data.text = f'''
         User lines: {self.Player_boxes}\n
         User bet: {player_choice}
@@ -196,7 +196,7 @@ class LeagueEnvironment:
     '''
 
     def league_choice(self, first, AI_choice = ''):
-         # getting actions available to user
+        # getting actions available to user
         choice_list = self.available_actions(first)
 
         # creating message that will be displayed to user 
@@ -209,5 +209,5 @@ class LeagueEnvironment:
         # calling function in kivy screen object that will display popup to user and get their input
         self.kivy_obj.bet_options(choice_list, message, self.play_pair_pt_1_5, AI_choice)
         return
- 
+
 
