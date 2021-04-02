@@ -4,7 +4,7 @@ import os
 
 block_cipher = None
 
-
+# pathex gets path from os
 a = Analysis(['main.py'],
              pathex=[os.getcwd()],
              binaries=[],
@@ -19,7 +19,11 @@ a = Analysis(['main.py'],
              noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
+
+# Tree('design') gets adds the .kv files
 exe = EXE(pyz, Tree('design'),
+          Tree('images'),
+          Tree('game_logic'),
           a.scripts,
           a.binaries,
           a.zipfiles,
