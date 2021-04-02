@@ -1,10 +1,12 @@
+from kivy_deps import sdl2, glew
+import os
 # -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['C:\\Users\\james\\OneDrive\\School\\Spring 2021\\CSCE 4901 Senior Capstone\\WJNKCW'],
+             pathex=[os.getcwd()],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -17,13 +19,13 @@ a = Analysis(['main.py'],
              noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
-exe = EXE(pyz,
+exe = EXE(pyz, Tree('design'),
           a.scripts,
           a.binaries,
           a.zipfiles,
           a.datas,
-          [],
-          name='reinforement',
+          *[Tree(p) for p in (sdl2.dep_bins + glew.dep_bins)],
+          name='reinforcement',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
