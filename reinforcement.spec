@@ -1,14 +1,20 @@
 from kivy_deps import sdl2, glew
-import os
+
 # -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
 
-# pathex gets path from os
+added_files = [
+    ("images", "images"),
+    ("design\*.kv", "design")
+    ("game_logic\\dotsandboxesAI\\qtables\\*.txt, "game_logic\\dotsandboxesAI\\qtables\\"),
+    ("game_logic\\dotsandboxesAI\\qtables\\*.txt, "game_logic\\dotsandboxesAI\\qtables\\")
+]
+
 a = Analysis(['main.py'],
-             pathex=[os.getcwd()],
+             pathex=['C:\\Users\\james\\OneDrive\\School\\Spring 2021\\CSCE 4901 Senior Capstone\\WJNKCW'],
              binaries=[],
-             datas=[],
+             datas=added_files,
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -19,11 +25,7 @@ a = Analysis(['main.py'],
              noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
-
-# Tree('design') gets adds the .kv files
-exe = EXE(pyz, Tree('design'),
-          Tree('images'),
-          Tree('game_logic'),
+exe = EXE(pyz,
           a.scripts,
           a.binaries,
           a.zipfiles,
