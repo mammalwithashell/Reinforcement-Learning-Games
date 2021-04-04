@@ -36,6 +36,9 @@ class LeagueEnvironment:
         self.board.set_players(self.board_agents[self.Ai])
         self.league_agents[self.Ai].reset_past()
 
+        # setting or setting board
+        self.first = self.board.reset()
+
         # setting initial conditions for betting
         self.AI_wins = 0
         self.AI_boxes = 4
@@ -98,6 +101,7 @@ class LeagueEnvironment:
             if first_run:
                 AI_choice = 'quit'
                 while AI_choice == "quit":
+                    #print(self.AI, self.league_agents[self.AI])
                     AI_choice = self.league_agents[self.Ai].select_action(True)
             else:
                 AI_choice = self.league_agents[self.Ai].select_action(True)
@@ -121,7 +125,7 @@ class LeagueEnvironment:
     def play_pair_pt_1_5(self, player_choice, AI_choice=''):
         # getting AI's capture if AI_choice is an empty string
         if AI_choice == '':
-            AI_choice = self.league_agents[self.AI].select_action(False)
+            AI_choice = self.league_agents[self.Ai].select_action(False)
         # handling case where user or AI quits
         if AI_choice == 'quit' or player_choice == 'quit':
             message = f'''
@@ -200,7 +204,7 @@ class LeagueEnvironment:
         choice_list = self.available_actions(first)
 
         # creating message that will be displayed to user 
-        message = f"You currently have {self.Player_boxes} boxes captured and {self.Player_wins} {'wins' if self.Player_Wins != 1 else 'win'}.\n"
+        message = f"You currently have {self.Player_boxes} boxes captured and {self.Player_wins} {'wins' if self.Player_wins != 1 else 'win'}.\n"
         message += f"Your opponent has {self.AI_wins} boxes captured and {'wins' if self.AI_wins != 1 else 'win'}.\n"
         if AI_choice:
                 message += f"Opponent chose {AI_choice}\n"
