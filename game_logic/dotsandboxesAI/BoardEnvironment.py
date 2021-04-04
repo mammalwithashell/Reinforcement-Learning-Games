@@ -98,8 +98,10 @@ class BoardEnvironment:
             self.agent_turn = True
             if self.kivy_obj is not None:
                 self.play_game_turn()
+            return True
         else:
             self.agent_turn = False
+            return False
 
     def print_board(self, board_string=None):
         "print more readable board either from supplied board string or the current board"
