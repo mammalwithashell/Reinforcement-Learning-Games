@@ -38,9 +38,9 @@ class LeagueEnvironment:
 
         # setting initial conditions for betting
         self.AI_wins = 0
-        self.AI_boxes = 100
+        self.AI_boxes = 4
         self.Player_wins = 0
-        self.Player_boxes = 100
+        self.Player_boxes = 4
         self.ties = 0
         self.state_perspective = 'A'
         self.line_mul = 1
