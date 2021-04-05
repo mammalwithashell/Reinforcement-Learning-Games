@@ -146,7 +146,7 @@ class LeagueEnvironment:
 
         # formatting the scoreboard data
         self.kivy_obj.user_data.text = f'''
-        User lines: {self.Player_boxes}\n
+        User Boxes: {self.Player_boxes}\n
         User bet: {player_choice}
         '''
         self.kivy_obj.ai_data.txt = f'''

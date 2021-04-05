@@ -151,6 +151,7 @@ class DotsAndBoxesScreen(Screen):
 
             league.set_players(player_names, league_agents, board_agents)
             self.league_env = league
+            self.league_env.play_pair(self.first_league_run)
             self.scoreboard.height = 200
             for child in self.scoreboard.children:
                 child.size_hint_y = None
