@@ -65,7 +65,7 @@ class TitleScreen(Screen):
         self.manager.transition = SlideTransition(direction="left")
         self.manager.current = self.game_choice
 
-# Class to manage all the screens and load the homescreen
+# Class to manage all the screens and load the homescreen (intentionally left blank)
 class RootWidget(ScreenManager):
     pass
 
