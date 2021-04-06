@@ -112,7 +112,7 @@ class DotsAndBoxesScreen(Screen):
             None: Used to reset the board before entering the screen
         """
         self.board_env.reset()
-        self.clear_screen()
+        self.clear_game_screen()
         return super().on_pre_enter(*args)
     
     def load_settings(self, diff, match):

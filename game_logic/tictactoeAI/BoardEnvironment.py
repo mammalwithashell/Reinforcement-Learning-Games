@@ -21,7 +21,7 @@ class BoardEnvironment:
             # if the current_player value is false, then the AI should go first
             choice = self.AI.select_action()
             self.board[choice] = self.turn
-            self.kivy_obj.draw_turn(choice)
+            self.kivy_obj.draw_turn(choice+1)
             self.turn = "O"
         return self.current_player
 
