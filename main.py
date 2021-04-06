@@ -75,7 +75,7 @@ class GameApp(App):
         return RootWidget()
 
 if __name__ == '__main__':
-    # this is for building the app
     if hasattr(sys, '_MEIPASS'):
+        # This if statement adds the temporary file location to the relative path of the resources (images, .kv, etc)
         resource_add_path(os.path.join(sys._MEIPASS))
     GameApp().run()
