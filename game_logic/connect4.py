@@ -170,38 +170,38 @@ class Connect4Screen(Screen):
     '''
     def play_game(self, num=None):
         # returns the winning player or None if there is a tie game
-        if (not self.board_env.is_full()):
+        if self.board_env.is_full():
 
-            # ************ HUMAN-PLAYABLE MODIFICATION
-            # AI selects its move
-            if(self.board_env.current_player):
-                choice = self.board_env.playerA.select_action(self.board_env.board)
-            # User selects their move
-            else:
-                choice = self.board_env.get_lowest_column(num)
-            # *********************************************
+            # it's a tie
+            return None
+        # ************ HUMAN-PLAYABLE MODIFICATION
+        # AI selects its move
+        if(self.board_env.current_player):
+            choice = self.board_env.playerA.select_action(self.board_env.board)
+        # User selects their move
+        else:
+            choice = self.board_env.get_lowest_column(num)
+        # *********************************************
 
-            # placing the current player's piece in their chosen location
-            self.board_env.board[choice] = self.board_env.turn 
-            # disabling and hiding buttons for unavailable actions
-            self.board_env.available_actions(True)
-            # redrawing game board
-            self.board_env.kivy_obj.redraw_board()
+        # placing the current player's piece in their chosen location
+        self.board_env.board[choice] = self.board_env.turn
+        # disabling and hiding buttons for unavailable actions
+        self.board_env.available_actions(True)
+        # redrawing game board
+        self.board_env.kivy_obj.redraw_board()
 
-            # check if current player just won the game
-            if self.board_env.winner(self.board_env.turn):
-                self.game_end()
-                return True
-            # handling tie game
-            elif self.board_env.is_full(): 
-                self.game_end(True)
+        # check if current player just won the game
+        if self.board_env.winner(self.board_env.turn):
+            self.game_end()
+            return True
+        # handling tie game
+        elif self.board_env.is_full(): 
+            self.game_end(True)
 
-            # switch players
-            self.board_env.turn = 'X' if self.board_env.turn == 'O' else 'O' # switch turn
-            self.board_env.current_player = self.board_env.other_player()
-            return False
-        # it's a tie
-        return None
+        # switch players
+        self.board_env.turn = 'X' if self.board_env.turn == 'O' else 'O' # switch turn
+        self.board_env.current_player = self.board_env.other_player()
+        return False
 
     '''
         description
@@ -277,7 +277,7 @@ class Connect4Screen(Screen):
     '''
     def update_board(self):
         board_str = self.board_env.board
-        for i in range(0, len(board_str)):
+        for i in range(len(board_str)):
             self.board[4 - int(i / 5)][i % 5] = None if board_str[i] == '-' else board_str[i]
 
     '''
@@ -287,8 +287,8 @@ class Connect4Screen(Screen):
         self.update_board()
         # clearing out widgets that made up the previous board display
         self.board_grid.clear_widgets()
-        for j in range(0, 5):
-            for i in range(0, 5):
+        for j in range(5):
+            for i in range(5):
                 # adding yellow piece if current space belongs to user
                 if self.board[4-j][i] == self.piece:
                     self.board_grid.add_widget(Image(source=get_path("images/connect4/bestchipyellow.png")))
