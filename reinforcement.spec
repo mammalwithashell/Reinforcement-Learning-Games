@@ -5,23 +5,16 @@ from kivy_deps import sdl2, glew
 block_cipher = None
 
 added_files = [
-	( 'design/connect4.kv', './design/' ),
-	( 'design/dotsandboxes.kv', './design/' ),
-	( 'design/tiktactoe.kv', './design/' ),
-    ( 'design/gui.kv', './design/' ),
+	( 'design/*', './design/' ),
 
-	( 'game_logic/connect4AI/qtables/easy.txt', './game_logic/connect4AI/qtables/' ),
-	( 'game_logic/connect4AI/qtables/medium.txt', './game_logic/connect4AI/qtables/' ),
-	( 'game_logic/connect4AI/qtables/hard.txt', './game_logic/connect4AI/qtables/' ),
-	( 'game_logic/connect4AI/qtables/league.txt', './game_logic/connect4AI/qtables/' ),
+	( 'game_logic/connect4AI/qtables/*', './game_logic/connect4AI/qtables/' ),
+	( 'game_logic/dotsandboxesAI/qtables/*', './game_logic/dotsandboxesAI/qtables/' ),
+	#( 'game_logic/tiktactoeAI/qtables/*', './game_logic/tiktactoeAI/qtables/' ),
 
-	( 'game_logic/dotsandboxesAI/qtables/easy.txt', './game_logic/dotsandboxesAI/qtables/' ),
-	( 'game_logic/dotsandboxesAI/qtables/medium.txt', './game_logic/dotsandboxesAI/qtables/' ),
-	( 'game_logic/dotsandboxesAI/qtables/hard.txt', './game_logic/dotsandboxesAI/qtables/' ),
-	( 'game_logic/dotsandboxesAI/qtables/league.txt', './game_logic/dotsandboxesAI/qtables/' ),
-
+    # ( 'images/tiktactoe/*', './images/tiktactoe' ),
     ( 'images/connect4/*', './images/connect4' ),
-    ( 'images/dotsandboxes/*', './images/dotsandboxes' ),
+    ( 'images/dotsandboxes/*', './images/dotsandboxes' )
+
 
 ]
 
