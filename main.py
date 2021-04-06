@@ -10,6 +10,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.button import Button
 import os, sys
 from kivy.resources import resource_add_path, resource_find
+from game_logic.utils import get_path
 
 """ 
 Builder is used to load in the design .kv files
@@ -30,10 +31,10 @@ if platform in ["ios","android"]:
     pass
     
 # Load in gui 
-Builder.load_file("design/gui.kv")
-Builder.load_file("design/tiktactoe.kv")
-Builder.load_file("design/connect4.kv")
-Builder.load_file("design/dotsandboxes.kv")
+Builder.load_file(get_path("design/gui.kv"))
+Builder.load_file(get_path("design/tiktactoe.kv"))
+Builder.load_file(get_path("design/connect4.kv"))
+Builder.load_file(get_path("design/dotsandboxes.kv"))
 
 # Import the Screens for the individual games
 from game_logic.dotsandboxes import DotsAndBoxesScreen

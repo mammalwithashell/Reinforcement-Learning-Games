@@ -1,5 +1,8 @@
 import random as rand
 from collections import defaultdict
+
+from ..utils import get_path
+
 class Agent:
 	#constructor to create the agent. Environment is either board or league class, difficulty is the file to load in the Q table (if applicable)
 	#policy is either max or random (determines if using the Q table or not), Q is an optional pre-loaded Q table (put in to reduce load times significantly)
@@ -41,7 +44,7 @@ class Agent:
 			choice = rand.choice(max_indices)
 		self.past_state = self.environment.get_state()
 		#only do this on the board level, returns the lowest available board piece for the selected column
-		if(self.difficulty != 'game_logic/connect4AI/qtables/league.txt'):
+		if(self.difficulty != get_path('game_logic/connect4AI/qtables/league.txt')):
 			choice = self.environment.get_lowest_column(choice)
 		self.past_action = choice
 		return choice

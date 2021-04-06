@@ -7,6 +7,10 @@ from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
 
+import os, sys
+from kivy.resources import resource_add_path, resource_find
+from .utils import get_path
+
 import random as rand
 import copy
 import time
@@ -107,21 +111,24 @@ class Connect4Screen(Screen):
             board_agents = []
             league_agents = []
 
+            league_qtable = 'game_logic/connect4AI/qtables/league.txt'
+            league_qtable = get_path(league_qtable)
+
             player_names.append('learning strategy and tactics')
-            board_agents.append(Agent(self.board_env, self.auto_select_difficulty(), 'max'))
-            league_agents.append(Agent(league, 'game_logic/connect4AI/qtables/league.txt', 'max'))
+            board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'max'))
+            league_agents.append(Agent(league, league_qtable, 'max'))
 
             player_names.append('learning tactics only')
-            board_agents.append(Agent(self.board_env, self.auto_select_difficulty(), 'max'))
-            league_agents.append(Agent(league, 'game_logic/connect4AI/qtables/league.txt', 'random'))
+            board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'max'))
+            league_agents.append(Agent(league, league_qtable, 'random'))
 
             player_names.append('learning strategy only')
-            board_agents.append(Agent(self.board_env, self.auto_select_difficulty(), 'random'))
-            league_agents.append(Agent(league, 'game_logic/connect4AI/qtables/league.txt', 'max'))
+            board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'random'))
+            league_agents.append(Agent(league, league_qtable, 'max'))
 
             player_names.append('no learning')
-            board_agents.append(Agent(self.board_env, self.auto_select_difficulty(), 'random'))
-            league_agents.append(Agent(league, 'game_logic/connect4AI/qtables/league.txt', 'random'))
+            board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'random'))
+            league_agents.append(Agent(league, league_qtable, 'random'))
 
             # saving names, league agents, and board agents to 'league'
             league.set_players(player_names, league_agents, board_agents)
@@ -212,7 +219,7 @@ class Connect4Screen(Screen):
             self.first_league_run = False
 
         # creating gameplay agent with difficulty 'diff'
-        A = Agent(self.board_env, self.select_difficulty(diff))
+        A = Agent(self.board_env, get_path(self.select_difficulty(diff)))
 
         # 'set_players' will return True if AI has the first turn
         # if True, allowing AI to make first move
@@ -284,10 +291,10 @@ class Connect4Screen(Screen):
             for i in range(0, 5):
                 # adding yellow piece if current space belongs to user
                 if self.board[4-j][i] == self.piece:
-                    self.board_grid.add_widget(Image(source="images/connect4/bestchipyellow.png"))
+                    self.board_grid.add_widget(Image(source=get_path("images/connect4/bestchipyellow.png")))
                 # adding red piece if current space belongs to AI
                 elif self.board[4-j][i] == self.opponent:
-                    self.board_grid.add_widget(Image(source="images/connect4/bestchipred.png"))
+                    self.board_grid.add_widget(Image(source=get_path("images/connect4/bestchipred.png")))
                 # adding blank image for empty space
                 else:
                     self.board_grid.add_widget(Image(source="", color=(0,0,0)))
