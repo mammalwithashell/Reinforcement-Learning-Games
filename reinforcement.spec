@@ -40,6 +40,7 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
+          [('W ignore', None, 'OPTION')], # suppossedly stops the virus warning
           a.binaries,
           a.zipfiles,
           a.datas,

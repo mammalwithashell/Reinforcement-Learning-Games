@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build Windows with PyInstaller
+    - name: Build for Windows with PyInstaller
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: .

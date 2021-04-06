@@ -7,7 +7,6 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
-
 import random as rand
 
 
@@ -16,6 +15,7 @@ import random as rand
 from .dotsandboxesAI.BoardEnvironment import BoardEnvironment
 from .dotsandboxesAI.Agent import Agent
 from .dotsandboxesAI.LeagueEnvironment import LeagueEnvironment
+from .utils import get_path
 
 from time import sleep
 
@@ -113,7 +113,7 @@ class DotsAndBoxesScreen(Screen):
         
         self.difficulty_setting = diff
         self.match = match
-        agent = Agent(f"game_logic/dotsandboxesAI/qtables/{self.difficulty_setting.lower()}.txt")
+        agent = Agent(get_path(f"game_logic/dotsandboxesAI/qtables/{self.difficulty_setting.lower()}.txt"))
         self.board_env = BoardEnvironment(self, agent)   
         self.scoreboard.size_hint_y = None
 
@@ -134,8 +134,8 @@ class DotsAndBoxesScreen(Screen):
             league_agents = []
 
             player_names.append('learning strategy and tactics')
-            board_agents.append(Agent(select_difficulty(True), self.board_env))
-            league_agents.append(Agent('game_logic/dotsandboxesAI/qtables/league.txt', league))
+            board_agents.append(Agent(get_path(select_difficulty(True)), self.board_env))
+            league_agents.append(Agent(get_path('game_logic/dotsandboxesAI/qtables/league.txt'), league))
 
             #player_names.append('learning tactics only')
             #board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
