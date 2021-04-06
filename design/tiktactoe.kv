@@ -1,24 +1,124 @@
 <TicTacToeScreen>:
-    canvas.before:
-        # used to set the background color
-        Color:
-            rgba: (0,1,1,1)
-        Ellipse:
-            pos: 100, 100
-            size: 200, 201
-            angle_start: 0
-            angle_end: 360
-    FloatLayout:
-        canvas:
-            Color:
-                rgba: 1, 0, 0, 1
-            Line:
-                # x1, y1, x2, y2
-                points: 50, 50, 50, 1000
-                width: 2
-            Color:
-                rgba: 50, 0, 0, 1
-            Line:
-                points: 100, 50, 100, 1000
-                width: 2
+   main_menu: main_menu
+   scorebox: scorebox
+   exit_button: exit_button
+
+   secondlast_button:secondlast_button
+   massage_box: massage_box
+   last_button: last_button
+   square_list: [ square1, square2, square3, square4, square5, square6, square7, square8, square9]
+   GridLayout:
+      rows: 3
+      size: root.width, root.height
+      GridLayout:
+         rows: 1
+         size_hint_y: None
+         height: 100
+         Button:
+            id: main_menu
+            text: "main"
+            font_size: 50
+            on_press: root.press_main()
+         
+         Label:
+            id: scorebox
+            text: ""
+            font_size: 20
+         
+         Button:
+            id: exit_button
+            text: "reset"
+            font_size: 50
+            on_press: root.reset_game()
+
+      GridLayout:
+         cols:3
+         canvas.before:
+            Rectangle:
+               pos: self.pos
+               size: self.size
+               source: "images\tictactoe\white.png"
+         TicTacToeSquare:
+            id: square1
+            button_number: 1
+            font_size: 50
+            on_press: root.press(self.button_number)
+
+         TicTacToeSquare:
+            id: square2
+            button_number: 2
+            font_size: 50
+            on_press: root.press(self.button_number)
+
+
+         TicTacToeSquare:
+            id: square3
+            button_number: 3
+            font_size: 50
+            on_press: root.press(self.button_number)
+
+
+
+         TicTacToeSquare:
+            id: square4
+            button_number: 4
+            font_size: 50
+            on_press: root.press(self.button_number)
+
+
+         TicTacToeSquare:
+            id: square5
+            button_number: 5
+            font_size: 50
+            on_press: root.press(self.button_number)
+
+         
+         TicTacToeSquare:
+            id: square6
+            button_number: 6
+            font_size: 50
+            on_press: root.press(self.button_number)
+
+         
+         TicTacToeSquare:
+            id: square7
+            button_number: 7
+            font_size: 50
+            on_press: root.press(self.button_number)
+
+         
+         TicTacToeSquare:
+            id: square8
+            button_number:8
+            font_size: 50
+            on_press: root.press(self.button_number)
+
+         
+         TicTacToeSquare:
+            id: square9
+            button_number: 9
+            text: "Monkey"
+            font_size: 50
+            on_press: root.press(self.button_number)
+
+      GridLayout:
+         rows: 1
+         size_hint_y: None
+         height: 100
+         Button:
+            id: secondlast_button
+            text: ""
+            font_size: 50
+            on_press: root.secondlast()
+
+         Label:
+            id: massage_box
+            text: ""
+            font_size: 20
+         
+         Button:
+            id: last_button
+            text: ""
+            font_size: 50
+            on_press: root.last()
 
