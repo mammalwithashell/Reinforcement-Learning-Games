@@ -16,7 +16,7 @@ jobs:
     - name: PyInstaller Windows
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
-        path: main.py
+        path: .
         spec: reinforcement.spec
 
     - uses: actions/upload-artifact@v2

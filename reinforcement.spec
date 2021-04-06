@@ -5,14 +5,27 @@ from kivy_deps import sdl2, glew
 block_cipher = None
 
 added_files = [
-    ("images", "images"),
-    ("design\*.kv", "design")
-    ("game_logic\\dotsandboxesAI\\qtables\\*.txt, "game_logic\\dotsandboxesAI\\qtables\\"),
-    ("game_logic\\dotsandboxesAI\\qtables\\*.txt, "game_logic\\dotsandboxesAI\\qtables\\")
+	( 'design/connect4.kv', './design/' ),
+	( 'design/dotsandboxes.kv', './design/' ),
+	( 'design/tiktactoe.kv', './design/' ),
+    ( 'design/gui.kv', './design/' ),
+
+	( 'game_logic/connect4AI/qtables/easy.txt', './game_logic/connect4AI/qtables/' ),
+	( 'game_logic/connect4AI/qtables/medium.txt', './game_logic/connect4AI/qtables/' ),
+	( 'game_logic/connect4AI/qtables/hard.txt', './game_logic/connect4AI/qtables/' ),
+	( 'game_logic/connect4AI/qtables/league.txt', './game_logic/connect4AI/qtables/' ),
+
+	( 'game_logic/dotsandboxesAI/qtables/easy.txt', './game_logic/dotsandboxesAI/qtables/' ),
+	( 'game_logic/dotsandboxesAI/qtables/medium.txt', './game_logic/dotsandboxesAI/qtables/' ),
+	( 'game_logic/dotsandboxesAI/qtables/hard.txt', './game_logic/dotsandboxesAI/qtables/' ),
+	( 'game_logic/dotsandboxesAI/qtables/league.txt', './game_logic/dotsandboxesAI/qtables/' ),
+
+    ( 'images/connect4/*', './images/connect4' ),
+    ( 'images/dotsandboxes/*', './images/dotsandboxes' ),
+
 ]
 
 a = Analysis(['main.py'],
-             pathex=['C:\\Users\\james\\OneDrive\\School\\Spring 2021\\CSCE 4901 Senior Capstone\\WJNKCW'],
              binaries=[],
              datas=added_files,
              hiddenimports=[],
@@ -38,4 +51,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=False )
