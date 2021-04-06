@@ -23,3 +23,10 @@ jobs:
       with:
         name: reinforcement learning app
         path: dist/windows/
+
+    - uses: actions/checkout@master
+    - name: ncipollo/release-action@v1
+      with:
+        artifacts: "dist/windows/*"
+        name: "reinforcement_learning_gui"
+        token: ${{ secrets.GITHUB_TOKEN }}
