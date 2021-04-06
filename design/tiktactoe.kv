@@ -15,6 +15,7 @@
    secondlast_button:secondlast_button
    massage_box: massage_box
    last_button: last_button
+   square_list: [square1, square2, square3, square4, square5, square6, square7, square8, square9]
 
    GridLayout:
       cols: 3
@@ -34,7 +35,7 @@
       
       Button:
          id: exit_button
-         text: "exit"
+         text: "reset"
          font_size: 50
          on_press: root.press_exit()
 
@@ -42,55 +43,55 @@
          id: square1
          text: "1"
          font_size: 50
-         on_press: root.press1()
+         on_press: root.press(self.text)
       
       Button:
          id: square2
          text: "2"
          font_size: 50
-         on_press: root.press2()
+         on_press: root.press(self.text)
 
       Button:
          id: square3
          text: "3"
          font_size: 50
-         on_press: root.press3()
+         on_press: root.press(self.text)
 
       Button:
          id: square4
          text: "4"
          font_size: 50
-         on_press: root.press4()
+         on_press: root.press(self.text)
       
       Button:
          id: square5
          text: "5"
          font_size: 50
-         on_press: root.press5()
+         on_press: root.press(self.text)
 
       Button:
          id: square6
          text: "6"
          font_size: 50
-         on_press: root.press6()
+         on_press: root.press(self.text)
 
       Button:
          id: square7
          text: "7"
          font_size: 50
-         on_press: root.press7()
+         on_press: root.press(self.text)
 
       Button:
          id: square8
          text: "8"
          font_size: 50
-         on_press: root.press8()
+         on_press: root.press(self.text)
 
       Button:
          id: square9
          text: "9"
          font_size: 50
-         on_press: root.press9()
+         on_press: root.press(self.text)
 
       Button:
          id: secondlast_button

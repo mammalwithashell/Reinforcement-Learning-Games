@@ -4,8 +4,9 @@ from collections import defaultdict
 
 class BoardEnvironment:
 
-    def __init__(self):
+    def __init__(self, kivy_obj):
         "init board"
+        self.kivy_obj = kivy_obj
 
     def set_players(self, AI):
         self.AI = AI
@@ -81,6 +82,44 @@ class BoardEnvironment:
 
         return None
 
+    def play_game_turn(self, square_number):
+        #user press button to assigne X/O to board in board_env
+        self.board[square_number - 1] = self.turn
+        print(self.board)
+        #check for winner with current turn X/O
+        if self.winner(self.turn):
+            print(self.turn + " is the winner")
+            #self.kivy_obj.winner()
+            self.print_board()
+            #end game
+            return None
+
+            #if the board in board_env has spaces available
+        if( not self.is_full() ):
+            #AI plays
+            choice = self.AI.select_action(None)
+            
+            self.kivy_obj.turn = self.kivy_obj.turn + 1
+            #add choice to board in tictactoe.py
+            print(choice)
+            self.kivy_obj.buttonlist.append(choice)
+            print(self.kivy_obj.buttonlist)
+            #add character to board in board_env
+            self.board[choice-1] = 'X' if self.turn == 'O' else 'O'
+            print(self.board)
+            for i, square_button in enumerate(self.kivy_obj.square_list):
+                # if i is 
+                if i == (choice-1):
+                    square_button.text = 'X' if self.turn == 'O' else 'O'
+                    square_button.color = [0, 1, 0, 1] if self.turn == "O" else [0, 1, 1, 1]
+                    #self.kivy_obj.buttonlist.append(choice + 1)
+                    break
+                    
+
+
+
+
+    #returns true if there's a winner or false for no winner but not who is winner
     def winner(self, check_for = ['X', 'O']):
         straight_lines = ((0,1,2),(3,4,5),(6,7,8),(0,3,6),
                           (1,4,7),(2,5,8),(0,4,8),(2,4,6))

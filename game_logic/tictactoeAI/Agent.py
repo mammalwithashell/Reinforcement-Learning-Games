@@ -8,7 +8,7 @@ class Agent:
         self.policy = policy
         self.Q = ''
         if policy == 'max':
-            with open(difficulty, 'r') as f:
+            with open(f"game_logic\\tictactoeAI\\qtables\\{difficulty.lower()}.txt", 'r') as f:
                 for i in f.readlines():
                     self.Q = i
             self.Q = eval(self.Q)

@@ -115,7 +115,7 @@ class LeagueEnvironment:
         return choice_list[p_input]
 
 
-def select_difficulty(select = False):
+""" def select_difficulty(select = False):
     x = 0
     diffdict = {1 : r'easy.txt',
                 2 : r'medium.txt',
@@ -131,4 +131,4 @@ def select_difficulty(select = False):
     else:
         x = rand.randint(1, 3)
 
-    return diffdict[x]
+    return diffdict[x] """

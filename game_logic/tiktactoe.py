@@ -7,7 +7,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, ListProperty
 
 import random as rand
 from os import system
@@ -48,28 +48,33 @@ class TicTacToeScreen(Screen):
     square7 = ObjectProperty(None)
     square8 = ObjectProperty(None)
     square9 = ObjectProperty(None)
+    square_list = ListProperty(None)
     secondlast_button = ObjectProperty(None)
     massage_box = ObjectProperty(None)
     last_button = ObjectProperty(None)
 
     buttonlist = []
-    count = 1
+    square_number = 0
+    turn = 1
+    
 
-    def alternate_turn(self):
-        self.count = self.count + 1
-        self.turn = self.count%2
 #----------------------------------------------------------------------------------------------------------
-    #load single or league match from main screen
+    
     def load_settings(self, diff, match):
 
         self.difficulty_setting = diff
         self.match = match
-        
+        self.board_env = BoardEnvironment(self)
+        self.board_env.reset()
+
         if self.match == "Single Match":
-            pass
+            # Set agent difficultiy and assign agent to board
+            agent = Agent(self.board_env, diff)
+            self.board_env.set_players(agent)
         else:
             self.first_league_run = True
             league = LeagueEnvironment(self.board_env, self)
+
 
             player_names = []
             board_agents = []
@@ -93,135 +98,108 @@ class TicTacToeScreen(Screen):
 
             league.set_players(player_names, league_agents, board_agents)
 
-
+ 
 #----------------------------------------------------------------------------------------------------------
     def press_main(self):
-        quit()
-    def press_exit(self):
-        quit()
-    
-    def press1(self):
-        self.square_number = 1
-        if (self.square_number not in self.buttonlist):
-            self.alternate_turn()
-            if self.turn == 0:
-                self.square1.text = 'X'
-                self.square1.color = [0, 1, 0, 1]
-                #https://www.december.com/html/spec/colorrgbadec.html
-                self.buttonlist.append(1)
-            else:
-                self.square1.text = 'O'
-                self.square1.color = [0, 1, 1, 1]
-                self.buttonlist.append(1)
-    
-    def press2(self):
-        self.square_number = 2
-        if (self.square_number not in self.buttonlist):
-            self.alternate_turn()
-            if self.turn == 0:
-                self.square2.text = 'X'
-                self.square2.color = [0, 1, 0, 1]
-                self.buttonlist.append(2)
-            else:
-                self.square2.text = 'O'
-                self.square2.color = [0, 1, 1, 1]
-                self.buttonlist.append(2)
-    
-    def press3(self):
-        self.square_number = 3
-        if (self.square_number not in self.buttonlist):
-            self.alternate_turn()
-            if self.turn == 0:
-                self.square3.text = 'X'
-                self.square3.color = [0, 1, 0, 1]
-                self.buttonlist.append(3)
-            else:
-                self.square3.text = 'O'
-                self.square3.color = [0, 1, 1, 1]
-                self.buttonlist.append(3)
-    
-    def press4(self):
-        self.square_number = 4
-        if (self.square_number not in self.buttonlist):
-            self.alternate_turn()
-            if self.turn == 0:
-                self.square4.text = 'X'
-                self.square4.color = [0, 1, 0, 1]
-                self.buttonlist.append(4)
-            else:
-                self.square4.text = 'O'
-                self.square4.color = [0, 1, 1, 1]
-                self.buttonlist.append(4)
-    
-    def press5(self):
-        self.square_number = 5
-        if (self.square_number not in self.buttonlist):
-            self.alternate_turn()
-            if self.turn == 0:
-                self.square5.text = 'X'
-                self.square5.color = [0, 1, 0, 1]
-                self.buttonlist.append(5)
-            else:
-                self.square5.text = 'O'
-                self.square5.color = [0, 1, 1, 1]
-                self.buttonlist.append(5)
+        self.manager.transition = SlideTransition(direction="right")
+        self.manager.current = "title"
 
-    def press6(self):
-        self.square_number = 6
-        if (self.square_number not in self.buttonlist):
-            self.alternate_turn()
-            if self.turn == 0:
-                self.square6.text = 'X'
-                self.square6.color = [0, 1, 0, 1]
-                self.buttonlist.append(6)
-            else:
-                self.square6.text = 'O'
-                self.square6.color = [0, 1, 1, 1]
-                self.buttonlist.append(6)
+    def press_exit(self):
+        self.board_env.board.clear()
+        self.buttonlist.clear()
+        self.square1.text = '1'
+        self.square1.color = [1, 1, 1, 1]
+        self.square2.text = '2'
+        self.square2.color = [1, 1, 1, 1]
+        self.square3.text = '3'
+        self.square3.color = [1, 1, 1, 1]
+        self.square4.text = '4'
+        self.square4.color = [1, 1, 1, 1]
+        self.square5.text = '5'
+        self.square5.color = [1, 1, 1, 1]
+        self.square6.text = '6'
+        self.square6.color = [1, 1, 1, 1]
+        self.square7.text = '7'
+        self.square7.color = [1, 1, 1, 1]
+        self.square8.text = '8'
+        self.square8.color = [1, 1, 1, 1]
+        self.square9.text = '9'
+        self.square9.color = [1, 1, 1, 1]
     
-    def press7(self):
-        self.square_number = 7
+    def press(self, num):
+        self.turn = self.turn + 1
+        self.square_number = num
+        print(num)
+        if ((self.turn % 2) == 0):
+            self.x_o = 'X'
+        else:
+            self.x_o = 'O'
+        #can't press button if square number in buttonlist
         if (self.square_number not in self.buttonlist):
-            self.alternate_turn()
-            if self.turn == 0:
-                self.square7.text = 'X'
-                self.square7.color = [0, 1, 0, 1]
-                self.buttonlist.append(7)
-            else:
-                self.square7.text = 'O'
-                self.square7.color = [0, 1, 1, 1]
-                self.buttonlist.append(7)
+            self.buttonlist.append(int(self.square_number))
+            if (int(self.square_number) == 1):
+                #self.square1.disabled = True
+                self.square1.text = self.x_o
+                if (self.x_o == 'X'):
+                    self.square1.color = [0, 1, 0, 1]
+                else:
+                    self.square1.color = [0, 1, 1, 1]
+                #https://www.december.com/html/spec/colorrgbadec.html 
+            if (int(self.square_number) == 2):
+                self.square2.text = self.x_o
+                if (self.x_o == 'X'):
+                    self.square2.color = [0, 1, 0, 1]
+                else:
+                    self.square2.color = [0, 1, 1, 1]
+            if (int(self.square_number) == 3):
+                self.square3.text = self.x_o
+                if (self.x_o == 'X'):
+                    self.square3.color = [0, 1, 0, 1]
+                else:
+                    self.square3.color = [0, 1, 1, 1]
+            if (int(self.square_number) == 4):
+                self.square4.text = self.x_o
+                if (self.x_o == 'X'):
+                    self.square4.color = [0, 1, 0, 1]
+                else:
+                    self.square4.color = [0, 1, 1, 1]  
+            if (int(self.square_number) == 5):
+                self.square5.text = self.x_o
+                if (self.x_o == 'X'):
+                    self.square5.color = [0, 1, 0, 1]
+                else:
+                    self.square5.color = [0, 1, 1, 1]
+            if (int(self.square_number) == 6):
+                self.square6.text = self.x_o
+                if (self.x_o == 'X'):
+                    self.square6.color = [0, 1, 0, 1]
+                else:
+                    self.square6.color = [0, 1, 1, 1] 
+            if (int(self.square_number) == 7):
+                self.square7.text = self.x_o
+                if (self.x_o == 'X'):
+                    self.square7.color = [0, 1, 0, 1]
+                else:
+                    self.square7.color = [0, 1, 1, 1] 
+            if (int(self.square_number) == 8):
+                self.square8.text = self.x_o
+                if (self.x_o == 'X'):
+                    self.square7.color = [0, 1, 0, 1]
+                else:
+                    self.square7.color = [0, 1, 1, 1]
+            if (int(self.square_number) == 9):
+                self.square9.text = self.x_o
+                if (self.x_o == 'X'):
+                    self.square9.color = [0, 1, 0, 1]
+                else:
+                    self.square9.color = [0, 1, 1, 1]  
+            self.board_env.play_game_turn(int(num))
     
-    def press8(self):
-        self.square_number = 8
-        if (self.square_number not in self.buttonlist):
-            self.alternate_turn()
-            if self.turn == 0:
-                self.square8.text = 'X'
-                self.square8.color = [0, 1, 0, 1]
-                self.buttonlist.append(8)
-            else:
-                self.square8.text = 'O'
-                self.square8.color = [0, 1, 1, 1]
-                self.buttonlist.append(8)
-    
-    def press9(self):
-        self.square_number = 9
-        if (self.square_number not in self.buttonlist):
-            self.alternate_turn()
-            if self.turn == 0:
-                self.square9.text = 'X'
-                self.square9.color = [0, 1, 0, 1]
-                self.buttonlist.append(9)
-            else:
-                self.square9.text = 'O'
-                self.square9.color = [0, 1, 1, 1]
-                self.buttonlist.append(9)
+
     
     def secondlast(self):
         pass
+    
     def last(self):
         pass
-
-    
 
