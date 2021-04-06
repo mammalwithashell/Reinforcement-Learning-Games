@@ -17,9 +17,11 @@ def select_difficulty():
         None: 
     """
     x = 0
-    diffdict = {1: r'game_logic\\dotsandboxesAI\\qtables\\easy.txt',
-                2: r'game_logic\\dotsandboxesAI\\qtables\\medium.txt',
-                3: r'game_logic\\dotsandboxesAI\\qtables\\hard.txt'}
+    diffdict = {
+        1: r'game_logic\\dotsandboxesAI\\qtables\\easy.txt',
+        2: r'game_logic\\dotsandboxesAI\\qtables\\medium.txt',
+        3: r'game_logic\\dotsandboxesAI\\qtables\\hard.txt'
+        }
     while(x > 3 or x < 1):
         print("Select a difficulty:")
         print("1: Easy")

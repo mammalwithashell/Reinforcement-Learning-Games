@@ -52,6 +52,13 @@ def select_difficulty(auto=False):
 
     return diffdict[x]
 
+class Dot(Image):
+    button_number = NumericProperty()
+    def __init__(self, **kwargs):
+        super(Dot, self).__init__(**kwargs)
+        self.source = get_path("images\dotsandboxes\dot.png")
+
+
 class DotsAndBoxesScreen(Screen):
     score = NumericProperty()
     ai_score = NumericProperty()
@@ -99,7 +106,13 @@ class DotsAndBoxesScreen(Screen):
     }
     
     def on_pre_enter(self, *args):
+        """Kivy Screen event listener that is run before the screen is entered
+
+        Returns:
+            None: Used to reset the board before entering the screen
+        """
         self.board_env.reset()
+        self.clear_screen()
         return super().on_pre_enter(*args)
     
     def load_settings(self, diff, match):
@@ -156,7 +169,6 @@ class DotsAndBoxesScreen(Screen):
                 child.size_hint_y = None
                 child.height = 200
 
-        
     def menu(self):
         """Swap screen back to title screen
         """
@@ -164,8 +176,7 @@ class DotsAndBoxesScreen(Screen):
         self.clear_game_screen()
         self.manager.transition = SlideTransition(direction="right")
         self.manager.current = "title"
-        
-    
+
     def restart(self):  
         """This function is run whenever the "Restart Game" Button is pressed
         """
@@ -176,10 +187,19 @@ class DotsAndBoxesScreen(Screen):
         self.board_env.print_board()
         self.score, self.ai_score = 0, 0
         
-        
     def on_touch_down(self, touch):
+        """Kivy event listener that is called when the user clicks in the Window
+
+        Args:
+            touch (kivy.MotionEvent): https://kivy.org/doc/stable/api-kivy.input.motionevent.html#kivy.input.motionevent.MotionEvent
+            
+            This function checks if any dot was clicked
+
+        Returns:
+            [type]: [description]
+        """
         # find what dot the mouse was over and save it to the start_dot property
-        for i, dot in enumerate(self.dots):
+        for i, _ in enumerate(self.dots):
             # if touch is within a box twice the radius of the dot, we draw
             if self.dots[i].collide_point(*touch.pos):
                 self.start_dot = i
@@ -187,6 +207,16 @@ class DotsAndBoxesScreen(Screen):
         return super().on_touch_down(touch)
     
     def on_touch_up(self, touch):
+        """kivy event listener that is called when the user lets go of the mouse or their touch
+
+        Args:
+            touch (kivy.MotionEvent): https://kivy.org/doc/stable/api-kivy.input.motionevent.html#kivy.input.motionevent.MotionEvent
+            
+            This function checks if any dot was clicked
+
+        Returns:
+            [type]: [description]
+        """
         # find what dot the mouse is over on mouse release and draw the appropriate line
         turn = self.board_env.turn
         for dot_index, dot_obj in enumerate(self.dots):
@@ -210,14 +240,7 @@ class DotsAndBoxesScreen(Screen):
                 # let ai move if user doesn't score
                 if not self.board_env.play_game_turn(choice):
                     # Let AI think
-                    content = Label(text="AI is thinking...")
-                    thinking_pop = Popup(content = content, size=(40, 60))
-                    def think(instance):
-                        # think for a spell
-                        sleep(0.2)
-                        instance.dismiss()
-                    thinking_pop.bind(on_open=think)
-                    thinking_pop.open()
+                    sleep(.5)
                     
                     if not self.board_env.is_full():
                         # Add AI move

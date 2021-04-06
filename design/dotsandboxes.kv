@@ -2,8 +2,6 @@
 #:set dot_right_bound .95
 #:set dot_left_bound .05
 
-
-
 <DotsAndBoxesScreen>:
     id: d&b_screen
     game_grid: game_grid
@@ -33,9 +31,6 @@
             Button:
                 text: "Restart Game"
                 on_press: root.restart()
-
-        
-        
         GridLayout:
             id: game_grid
             rows: 3
@@ -44,57 +39,30 @@
             GridLayout:
                 id:row2
                 rows:1
-                Image:
+                Dot:
                     id: dot6
-                    source: "images\dotsandboxes\dot.png"
-
-                    
-                Image:
+                Dot:
                     id: dot7
-                    source: "images\dotsandboxes\dot.png"
-
-
-                Image:
+                Dot:
                     id: dot8
-                    source: "images\dotsandboxes\dot.png"
-
-
             GridLayout:
                 id:row1
                 rows:1
-                Image:
+                Dot:
                     id: dot3
-                    source: "images\dotsandboxes\dot.png"
-
-
-
-                Image:
+                Dot:
                     id: dot4
-                    source: "images\dotsandboxes\dot.png"
-
-
-                Image:
+                Dot:
                     id: dot5
-                    source: "images\dotsandboxes\dot.png"
-
             GridLayout:
                 rows:1
                 id: row0
-                Image:
+                Dot:
                     id: dot0
-                    source: "images\dotsandboxes\dot.png"
-
-
-                Image:
+                Dot:
                     id: dot1
-                    source: "images\dotsandboxes\dot.png"
-
-
-                Image:
+                Dot:
                     id: dot2
-                    source: "images\dotsandboxes\dot.png"
-
-            
         GridLayout:
             id: scoreboard
             cols: 2

@@ -5,13 +5,13 @@ from kivy_deps import sdl2, glew
 block_cipher = None
 
 added_files = [
-	( 'design/*', './design/' ),
+	( 'design/*.kv', './design/' ),
 
 	( 'game_logic/connect4AI/qtables/*', './game_logic/connect4AI/qtables/' ),
 	( 'game_logic/dotsandboxesAI/qtables/*', './game_logic/dotsandboxesAI/qtables/' ),
-	#( 'game_logic/tiktactoeAI/qtables/*', './game_logic/tiktactoeAI/qtables/' ),
+	( 'game_logic/tictactoeAI/qtables/*', './game_logic/tictactoeAI/qtables/' ),
 
-    # ( 'images/tiktactoe/*', './images/tiktactoe' ),
+    ( 'images/tictactoe/*', './images/tictactoe' ),
     ( 'images/connect4/*', './images/connect4' ),
     ( 'images/dotsandboxes/*', './images/dotsandboxes' )
 

@@ -1,14 +1,14 @@
 import random as rand
 from os import system
 from collections import defaultdict
-
+from ..utils import get_path
 class Agent:
     def __init__(self, environment, difficulty, policy = 'max'):
         self.environment = environment
         self.policy = policy
         self.Q = ''
         if policy == 'max':
-            with open(f"game_logic\\tictactoeAI\\qtables\\{difficulty.lower()}.txt", 'r') as f:
+            with open(get_path(f"game_logic\\tictactoeAI\\qtables\\{difficulty.lower()}.txt"), 'r') as f:
                 for i in f.readlines():
                     self.Q = i
             self.Q = eval(self.Q)
