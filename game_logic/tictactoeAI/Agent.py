@@ -19,8 +19,8 @@ class Agent:
         self.past_action = None
         self.past_state = None
 
-    def select_action(self, first):
-        available_actions = self.environment.available_actions(first)
+    def select_action(self):
+        available_actions = self.environment.available_actions()
         if(self.policy == 'random'):
             choice = rand.choice(available_actions)
         else:
