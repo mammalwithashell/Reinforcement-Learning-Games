@@ -30,6 +30,7 @@ if platform in ["win", "macosx", "linux"]:
 if platform in ["ios","android"]:
     pass
     
+# print("We are at", os.getcwd())
 # Load in gui 
 Builder.load_file(get_path("design/gui.kv"))
 Builder.load_file(get_path("design/tiktactoe.kv"))
@@ -74,7 +75,7 @@ class GameApp(App):
         return RootWidget()
 
 if __name__ == '__main__':
-    # this is fore building the app
+    # this is for building the app
     if hasattr(sys, '_MEIPASS'):
         resource_add_path(os.path.join(sys._MEIPASS))
     GameApp().run()
