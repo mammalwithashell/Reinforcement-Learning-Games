@@ -3,10 +3,6 @@ name: Package exe with PyInstaller - Windows
 on:
   push:
     branches: [ staging ]
-    tags:
-      - '*'
-  pull_request:
-    branches: [ staging, main ]
 
 jobs:
   build:
@@ -15,20 +11,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: PyInstaller Windows
+    - name: Build Windows with PyInstaller
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: .
         spec: reinforcement.spec
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: reinforcement learning app
-        path: dist/windows/
 
-    - uses: ncipollo/release-action@v1
-      with:
-        artifacts: "dist/windows/*"
-        name: "reinforcement_learning_gui"
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit: staging
+    - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: dist/windows/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
