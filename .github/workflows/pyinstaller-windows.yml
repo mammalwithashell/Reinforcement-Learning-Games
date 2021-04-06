@@ -24,8 +24,9 @@ jobs:
         name: reinforcement learning app
         path: dist/windows/
 
-    - uses: actions/checkout@master
-    - name: ncipollo/release-action@v1
+    - uses: actions/checkout@v1
+    - uses: ncipollo/release-action@v1
+    - name: release
       with:
         artifacts: "dist/windows/*"
         name: "reinforcement_learning_gui"
