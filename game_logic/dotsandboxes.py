@@ -342,7 +342,9 @@ class DotsAndBoxesScreen(Screen):
             
         # clear captured boxes
         for box in self.captured_boxes:
+            # clear them visually
             box.parent.remove_widget(box)
+        # clear them in memory
         self.captured_boxes = []
         
     def is_full(self):
@@ -380,7 +382,7 @@ class DotsAndBoxesScreen(Screen):
         for option in options:
             content.add_widget(Button(text=option))
         # creating a popup with 'message' and 'content'
-        option_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+        option_popup = Popup(title=message, content=content, size_hint=(.8, .5), auto_dismiss=False)
         # function that will be called when a button is clicked
         def option_button(inner_self):
             # dismiss popup
