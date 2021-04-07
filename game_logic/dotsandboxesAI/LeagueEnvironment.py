@@ -5,6 +5,7 @@ class LeagueEnvironment:
         # saving kivy screen object and board environment
         self.kivy_obj = parent
         self.board = board_env
+       
 
     '''
         description
@@ -41,9 +42,9 @@ class LeagueEnvironment:
 
         # setting initial conditions for betting
         self.AI_wins = 0
-        self.AI_boxes = 4
+        self.AI_boxes = 0
         self.Player_wins = 0
-        self.Player_boxes = 4
+        self.Player_boxes = 0
         self.ties = 0
         self.state_perspective = 'A'
         self.line_mul = 1
@@ -133,6 +134,7 @@ class LeagueEnvironment:
                     You had {self.Player_boxes} boxes captured\n
                     AI had {self.AI_boxes} boxes captured
                     '''
+            self.series_end = None
             # calling 'series_end' in kivy screen object
             self.kivy_obj.series_end(message)
             return
@@ -183,6 +185,7 @@ class LeagueEnvironment:
 
         # if a player runs out of lines, end the league series
         if self.AI_boxes <= 0 or self.Player_boxes <= 0:
+            self.series_end = None
             message = f'''
                 {'AI' if self.AI_boxes <= 0 else 'You'} ran out of lines\n
                 You had {self.Player_boxes} boxes captured\n
