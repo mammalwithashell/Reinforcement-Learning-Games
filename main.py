@@ -34,7 +34,7 @@ Builder.load_file("design/tiktactoe.kv")
 #Builder.load_file("design/dotsandboxes.kv")
 
 # Import the Screens for the individual games
-from game_logic.tiktactoe import TicTacToeScreen
+from game_logic.tictactoe import TicTacToeScreen
 #from game_logic.connect4 import Connect4Screen
 #from game_logic.dotsandboxes import DotsAndBoxesScreen
 
