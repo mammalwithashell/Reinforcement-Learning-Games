@@ -18,6 +18,7 @@ class Agent:
         self.Q = defaultdict(lambda: 0.0, tempdict)
         self.learning_rate = learning_rate
         self.discount_factor = discount_factor
+        self.first = None
         self.epsilon = epsilon # Fraction of time making a random choice for epsilon policy
         self.reset_past()
 
@@ -25,9 +26,9 @@ class Agent:
         self.past_action = None
         self.past_state = None
 
-    def select_action(self, first=None):
+    def select_action(self, first):
         print("selecting action...")
-        available_actions = self.environment.available_actions()
+        available_actions = self.environment.available_actions(first)
         Q_vals = [self.Q[(self.environment.get_state(), x)] for x in available_actions]
         #randomly pick one of the maximum values
         max_val = max(Q_vals) # will often be 0 in the beginning
