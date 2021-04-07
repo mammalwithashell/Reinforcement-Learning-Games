@@ -31,16 +31,6 @@ if platform in ["ios","android"]:
     pass
     
 # print("We are at", os.getcwd())
-# Load in gui 
-Builder.load_file(get_path("design/gui.kv"))
-Builder.load_file(get_path("design/tiktactoe.kv"))
-Builder.load_file(get_path("design/connect4.kv"))
-Builder.load_file(get_path("design/dotsandboxes.kv"))
-
-# Import the Screens for the individual games
-from game_logic.dotsandboxes import DotsAndBoxesScreen
-from game_logic.tiktactoe import TicTacToeScreen
-from game_logic.connect4 import Connect4Screen
 
 # Main window screen
 class TitleScreen(Screen):
@@ -78,4 +68,15 @@ if __name__ == '__main__':
     if hasattr(sys, '_MEIPASS'):
         # This if statement adds the temporary file location to the relative path of the resources (images, .kv, etc)
         resource_add_path(os.path.join(sys._MEIPASS))
+    # Load in gui 
+    Builder.load_file(resource_find("design/gui.kv"))
+    Builder.load_file(get_path("design/tiktactoe.kv"))
+    Builder.load_file(get_path("design/connect4.kv"))
+    Builder.load_file(get_path("design/dotsandboxes.kv"))
+    
+    # Import the Screens for the individual games
+    from game_logic.dotsandboxes import DotsAndBoxesScreen
+    from game_logic.tiktactoe import TicTacToeScreen
+    from game_logic.connect4 import Connect4Screen
+
     GameApp().run()
