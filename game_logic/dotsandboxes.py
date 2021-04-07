@@ -358,12 +358,11 @@ class DotsAndBoxesScreen(Screen):
         """
         
         
-        winner_popup = Popup(size_hint=(0.5, 0.3))
+        winner_popup = Popup(size_hint=(0.5, 0.3), title="Winner Popup")
         # self.board.score_board is a dictionary of str:int with keys "X" and "O"
-        other_piece = "X" if self.piece == "O" else "O"
-        if self.board_env.score_board[self.piece] > self.board_env.score_board[other_piece]:
+        if self.score > self.ai_score:
             content = Button(text=f"You are the winner")
-        elif self.board_env.score_board[self.piece] < self.board_env.score_board[other_piece]:
+        elif self.ai_score > self.score:
             content = Button(text=f"Computer is the winner")
         else:# it's a tie
             content = Button(text=f"There was a tie!")
