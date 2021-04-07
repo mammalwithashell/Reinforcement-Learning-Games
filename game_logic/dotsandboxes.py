@@ -7,7 +7,6 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
-
 import random as rand
 
 
@@ -16,6 +15,7 @@ import random as rand
 from .dotsandboxesAI.BoardEnvironment import BoardEnvironment
 from .dotsandboxesAI.Agent import Agent
 from .dotsandboxesAI.LeagueEnvironment import LeagueEnvironment
+from .utils import get_path
 
 from time import sleep
 
@@ -51,6 +51,13 @@ def select_difficulty(auto=False):
         x = rand.randint(1, 3)
 
     return diffdict[x]
+
+class Dot(Image):
+    button_number = NumericProperty()
+    def __init__(self, **kwargs):
+        super(Dot, self).__init__(**kwargs)
+        self.source = get_path("images\dotsandboxes\dot.png")
+
 
 class DotsAndBoxesScreen(Screen):
     score = NumericProperty()
@@ -99,7 +106,13 @@ class DotsAndBoxesScreen(Screen):
     }
     
     def on_pre_enter(self, *args):
+        """Kivy Screen event listener that is run before the screen is entered
+
+        Returns:
+            None: Used to reset the board before entering the screen
+        """
         self.board_env.reset()
+        self.clear_game_screen()
         return super().on_pre_enter(*args)
     
     def load_settings(self, diff, match):
@@ -113,7 +126,7 @@ class DotsAndBoxesScreen(Screen):
         
         self.difficulty_setting = diff
         self.match = match
-        agent = Agent(f"game_logic/dotsandboxesAI/qtables/{self.difficulty_setting.lower()}.txt")
+        agent = Agent(get_path(f"game_logic/dotsandboxesAI/qtables/{self.difficulty_setting.lower()}.txt"))
         self.board_env = BoardEnvironment(self, agent)   
         self.scoreboard.size_hint_y = None
 
@@ -124,6 +137,7 @@ class DotsAndBoxesScreen(Screen):
             # self.board_env.set_players(agent)
             self.board_env.print_board()
             self.scoreboard.height = 0
+            self.ai_data.text, self.user_data.text = "", ""
         else:
             # League Match
             self.first_league_run = True
@@ -134,8 +148,8 @@ class DotsAndBoxesScreen(Screen):
             league_agents = []
 
             player_names.append('learning strategy and tactics')
-            board_agents.append(Agent(select_difficulty(True), self.board_env))
-            league_agents.append(Agent('game_logic/dotsandboxesAI/qtables/league.txt', league))
+            board_agents.append(Agent(get_path(select_difficulty(True)), self.board_env))
+            league_agents.append(Agent(get_path('game_logic/dotsandboxesAI/qtables/league.txt'), league))
 
             #player_names.append('learning tactics only')
             #board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
@@ -156,7 +170,6 @@ class DotsAndBoxesScreen(Screen):
                 child.size_hint_y = None
                 child.height = 200
 
-        
     def menu(self):
         """Swap screen back to title screen
         """
@@ -164,8 +177,7 @@ class DotsAndBoxesScreen(Screen):
         self.clear_game_screen()
         self.manager.transition = SlideTransition(direction="right")
         self.manager.current = "title"
-        
-    
+
     def restart(self):  
         """This function is run whenever the "Restart Game" Button is pressed
         """
@@ -176,10 +188,19 @@ class DotsAndBoxesScreen(Screen):
         self.board_env.print_board()
         self.score, self.ai_score = 0, 0
         
-        
     def on_touch_down(self, touch):
+        """Kivy event listener that is called when the user clicks in the Window
+
+        Args:
+            touch (kivy.MotionEvent): https://kivy.org/doc/stable/api-kivy.input.motionevent.html#kivy.input.motionevent.MotionEvent
+            
+            This function checks if any dot was clicked
+
+        Returns:
+            [type]: [description]
+        """
         # find what dot the mouse was over and save it to the start_dot property
-        for i, dot in enumerate(self.dots):
+        for i, _ in enumerate(self.dots):
             # if touch is within a box twice the radius of the dot, we draw
             if self.dots[i].collide_point(*touch.pos):
                 self.start_dot = i
@@ -187,6 +208,16 @@ class DotsAndBoxesScreen(Screen):
         return super().on_touch_down(touch)
     
     def on_touch_up(self, touch):
+        """kivy event listener that is called when the user lets go of the mouse or their touch
+
+        Args:
+            touch (kivy.MotionEvent): https://kivy.org/doc/stable/api-kivy.input.motionevent.html#kivy.input.motionevent.MotionEvent
+            
+            This function checks if any dot was clicked
+
+        Returns:
+            [type]: [description]
+        """
         # find what dot the mouse is over on mouse release and draw the appropriate line
         turn = self.board_env.turn
         for dot_index, dot_obj in enumerate(self.dots):
@@ -210,14 +241,7 @@ class DotsAndBoxesScreen(Screen):
                 # let ai move if user doesn't score
                 if not self.board_env.play_game_turn(choice):
                     # Let AI think
-                    content = Label(text="AI is thinking...")
-                    thinking_pop = Popup(content = content, size=(40, 60))
-                    def think(instance):
-                        # think for a spell
-                        sleep(0.2)
-                        instance.dismiss()
-                    thinking_pop.bind(on_open=think)
-                    thinking_pop.open()
+                    sleep(.5)
                     
                     if not self.board_env.is_full():
                         # Add AI move
@@ -335,12 +359,11 @@ class DotsAndBoxesScreen(Screen):
         """
         
         
-        winner_popup = Popup(size_hint=(0.5, 0.3))
+        winner_popup = Popup(size_hint=(0.5, 0.3), title="Winner Popup")
         # self.board.score_board is a dictionary of str:int with keys "X" and "O"
-        other_piece = "X" if self.piece == "O" else "O"
-        if self.board_env.score_board[self.piece] > self.board_env.score_board[other_piece]:
+        if self.score > self.ai_score:
             content = Button(text=f"You are the winner")
-        elif self.board_env.score_board[self.piece] < self.board_env.score_board[other_piece]:
+        elif self.ai_score > self.score:
             content = Button(text=f"Computer is the winner")
         else:# it's a tie
             content = Button(text=f"There was a tie!")
