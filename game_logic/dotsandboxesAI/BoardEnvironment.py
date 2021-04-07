@@ -119,7 +119,7 @@ class BoardEnvironment:
         # note, returns other player even if agent is playing itself
         return not self.agent_turn
 
-    def available_actions(self):
+    def available_actions(self, first=None):
         return [ind for ind, val in enumerate(self.board[:12]) if val == '-']
 
     def other_turn(self):

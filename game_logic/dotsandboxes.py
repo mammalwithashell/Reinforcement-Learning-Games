@@ -74,6 +74,7 @@ class DotsAndBoxesScreen(Screen):
     scoreboard = ObjectProperty(None)                      
     user_data = ObjectProperty(None)
     ai_data = ObjectProperty(None)
+    line_width = 5
     
     
     # a dictionary mapping dot numbers to acceptable dots to be paired with
@@ -226,10 +227,10 @@ class DotsAndBoxesScreen(Screen):
             if self.check_for_dot_click(touch, dot_index, dot_obj):
                 with self.game_grid.canvas:
                     # save line to lines property to be updated on_size
-                    points = list(self.dots[self.start_dot].center) + list(dot_obj.center)
-                    # add half dot radius to x and y for the line because the dot position is measured from bottom left corner of dots (the radius of the dot is 10)
+                    # points = list(self.dots[self.start_dot].center) + list(dot_obj.center)
+                    
                     Color(1, 0, 0) if self.board_env.turn == "X" else Color(0,0,1)
-                    self.lines.append((Line(points=points, width=3), self.start_dot, dot_index))
+                    (Line(points=self.dots[self.start_dot].center + dot_obj.center, width=self.line_width, group="lines"), self.start_dot, dot_index)
                 
                 # Add line to board environment
                 # try except pairs to return line choice
@@ -300,17 +301,15 @@ class DotsAndBoxesScreen(Screen):
         
         # Reverse the dictionary of lines and dots and find the dots based on the ai choice
         line_choice_dots = {value:key for key, value in actual_lines.items()}
-        dots = line_choice_dots[choice] # get the entry in the dictionary that maps the line indexes to the dot indexes
+        dot0, dot1 = line_choice_dots[choice] # get the entry in the dictionary that maps the line indexes to the dot indexes
         
         with self.game_grid.canvas:
             # save line to lines property to be updated on_size
-            points = list(self.dots[dots[0]].center) + list(self.dots[dots[1]].center)
-            # add half dot radius to x and y for the line because the dot position is measured from bottom left corner of dots (the radius of the dot is 10)
-            # The amount added to i should be half of the dot_size set in the dotsandboxes.kv file
+            # points = list(self.dots[dots[0]].center) + list(self.dots[dots[1]].center)
+            
             Color(1, 0, 0) if turn == "X" else Color(0,0,1)
 
-            line = Line(points=points, width=3)
-            self.lines.append((line, dots[0], dots[1]))
+            Line(points=self.dots[dot0].center + self.dots[dot1].center, width=self.line_width, group="lines")
             
     def draw_captured_box(self, box_index, turn):
         
@@ -339,9 +338,7 @@ class DotsAndBoxesScreen(Screen):
         """Remove caputured box icons from screen to
         """ 
         # clear lines
-        if self.lines:
-            for line, _, _ in self.lines:
-                self.game_grid.canvas.remove(line)
+        self.game_grid.canvas.remove_group("lines")
             
         # clear captured boxes
         for box in self.captured_boxes:
