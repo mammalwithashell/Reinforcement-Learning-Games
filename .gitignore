@@ -15,3 +15,5 @@ build/*
 dist/*
 game_logic/dotsandboxesAI/__pycache__/*
 game_logic/tictactoeAI/__pycache__/*
+game_logic/tictactoeAI/__pycache__/Agent.cpython-39.pyc
+game_logic/tictactoeAI/__pycache__/BoardEnvironment.cpython-39.pyc
