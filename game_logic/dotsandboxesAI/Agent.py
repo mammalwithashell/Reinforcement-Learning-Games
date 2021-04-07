@@ -25,9 +25,9 @@ class Agent:
         self.past_action = None
         self.past_state = None
 
-    def select_action(self, first=None):
+    def select_action(self, first):
         print("selecting action...")
-        available_actions = self.environment.available_actions()
+        available_actions = self.environment.available_actions(first)
         Q_vals = [self.Q[(self.environment.get_state(), x)] for x in available_actions]
         #randomly pick one of the maximum values
         max_val = max(Q_vals) # will often be 0 in the beginning
