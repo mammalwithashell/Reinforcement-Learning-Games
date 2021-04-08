@@ -35,24 +35,26 @@
                 text: "Reset"
                 on_press: root.load_settings(reset=True)
         GridLayout:
-            cols: 5
-            size_hint_y: None
-            height: 150
-            Button:
-                id: button_one
-                on_press: root.place_piece(0)
-            Button:
-                id: button_two
-                on_press: root.place_piece(1)
-            Button:
-                id: button_three
-                on_press: root.place_piece(2)
-            Button:
-                id: button_four
-                on_press: root.place_piece(3)
-            Button:
-                id: button_five
-                on_press: root.place_piece(4)
-        GridLayout:
-            id: board_grid
-            cols: 5
+            cols: 1
+            GridLayout:
+                cols: 5
+                size_hint_y: None
+                height: 150
+                Button:
+                    id: button_one
+                    on_press: root.place_piece(0)
+                Button:
+                    id: button_two
+                    on_press: root.place_piece(1)
+                Button:
+                    id: button_three
+                    on_press: root.place_piece(2)
+                Button:
+                    id: button_four
+                    on_press: root.place_piece(3)
+                Button:
+                    id: button_five
+                    on_press: root.place_piece(4)
+            GridLayout:
+                id: board_grid
+                cols: 5

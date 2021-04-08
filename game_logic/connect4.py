@@ -60,7 +60,7 @@ class Connect4Screen(Screen):
     '''
     def bet_options(self, options, message, func, AI_choice, cols=1):
         # creating grid for popup menu
-        content = GridLayout(cols=cols)
+        content = GridLayout(cols=cols, padding=100, spacing=50)
         # returning early if no options were passed to this function
         if len(options) == 0:
             return False
@@ -318,7 +318,7 @@ class Connect4Screen(Screen):
             message: message sent by LeageEnvironment with final betting info
     '''
     def series_end(self, message):
-        content = GridLayout(cols=1)
+        content = GridLayout(cols=1, padding=100, spacing=50)
         content.add_widget(Button(text="Play again"))
         content.add_widget(Button(text="Return to menu"))
         series_end_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
@@ -339,7 +339,7 @@ class Connect4Screen(Screen):
             tie: will be true if this is a tie game
     '''
     def game_end(self, tie=False):
-        content = GridLayout(cols=1)
+        content = GridLayout(cols=1, padding=100, spacing=50)
         if self.match_type != 'League Match':
             content.add_widget(Button(text="Play again"))
             content.add_widget(Button(text="Return to menu"))
