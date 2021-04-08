@@ -139,11 +139,11 @@ class LeagueEnvironment:
 
         # formatting scoreboard data
         self.kivy_obj.user_data.text = f''' 
-        User chips: {self.Player_chips}\n
+        User chips: {self.Player_chips} 
         User bet: {player_choice}
         '''
         self.kivy_obj.ai_data.text = f''' 
-        AI chips: {self.A_chips}\n
+        AI chips: {self.A_chips} 
         AI bet: {AI_choice}
         '''
 
