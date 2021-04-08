@@ -1,12 +1,12 @@
 from kivy.uix.screenmanager import Screen, SlideTransition
-from kivy.graphics import Ellipse, Line, Color
+from kivy.graphics import Line, Color
 from kivy.properties import NumericProperty, ObjectProperty, StringProperty, BooleanProperty, ListProperty
-from kivy.core.window import Window
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup 
-from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
+from kivy.resources import resource_find
+
 import random as rand
 
 
@@ -15,7 +15,6 @@ import random as rand
 from .dotsandboxesAI.BoardEnvironment import BoardEnvironment
 from .dotsandboxesAI.Agent import Agent
 from .dotsandboxesAI.LeagueEnvironment import LeagueEnvironment
-from .utils import get_path
 
 from time import sleep
 
@@ -56,7 +55,7 @@ class Dot(Image):
     button_number = NumericProperty()
     def __init__(self, **kwargs):
         super(Dot, self).__init__(**kwargs)
-        self.source = get_path("images\dotsandboxes\dot.png")
+        self.source = resource_find("images\dotsandboxes\dot.png")
 
 
 class DotsAndBoxesScreen(Screen):
@@ -126,13 +125,12 @@ class DotsAndBoxesScreen(Screen):
         
         self.difficulty_setting = diff
         self.match = match
-        agent = Agent(get_path(f"game_logic/dotsandboxesAI/qtables/{self.difficulty_setting.lower()}.txt"))
+        agent = Agent(resource_find(f"game_logic/dotsandboxesAI/qtables/{self.difficulty_setting.lower()}.txt"))
         self.board_env = BoardEnvironment(self, agent)   
         self.scoreboard.size_hint_y = None
 
         # Load different settings based on game type
         if self.match == "Single Match":
-
             self.piece = self.board_env.turn
             # self.board_env.set_players(agent)
             self.board_env.print_board()
@@ -148,8 +146,8 @@ class DotsAndBoxesScreen(Screen):
             league_agents = []
 
             player_names.append('learning strategy and tactics')
-            board_agents.append(Agent(get_path(select_difficulty(True)), self.board_env))
-            league_agents.append(Agent(get_path('game_logic/dotsandboxesAI/qtables/league.txt'), league))
+            board_agents.append(Agent(resource_find(select_difficulty(True)), self.board_env))
+            league_agents.append(Agent(resource_find('game_logic/dotsandboxesAI/qtables/league.txt'), league))
 
             #player_names.append('learning tactics only')
             #board_agents.append(Agent(self.board_env, select_difficulty(True), 'max'))
