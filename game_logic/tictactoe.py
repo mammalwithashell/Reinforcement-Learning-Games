@@ -84,15 +84,7 @@ class TicTacToeScreen(Screen):
         
         if self.match == "Single Match":
             self.board_env.set_players(agent)
-            self.bet1.disabled = True
-            self.bet1.background_color = [0, 0, 0, 1]
-            self.bet1.color = [0, 0, 0, 1]
-            self.bet2.disabled = True
-            self.bet2.background_color = [0, 0, 0, 1]
-            self.bet2.color = [0, 0, 0, 1]
-            self.bet3.disabled = True
-            self.bet3.background_color = [0, 0, 0, 1]
-            self.bet3.color = [0, 0, 0, 1]            
+         
             
         else:
             self.reset_betbtns()
