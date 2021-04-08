@@ -55,7 +55,7 @@ class Dot(Image):
     button_number = NumericProperty()
     def __init__(self, **kwargs):
         super(Dot, self).__init__(**kwargs)
-        self.source = resource_find("images\dotsandboxes\dot.png")
+        self.source = resource_find("images/dotsandboxes/dot.png")
 
 
 class DotsAndBoxesScreen(Screen):
@@ -110,8 +110,9 @@ class DotsAndBoxesScreen(Screen):
         Returns:
             None: Used to reset the board before entering the screen
         """
-        self.board_env.reset()
+
         self.clear_game_screen()
+        self.board_env.reset()
         return super().on_pre_enter(*args)
     
     def load_settings(self, diff, match):

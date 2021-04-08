@@ -27,7 +27,7 @@ if platform in ["win", "macosx", "linux"]:
     Config.set('graphics', 'resizable', False)
     # fix the width and height of the window  
     Config.set('graphics', 'width', '600') 
-    Config.set('graphics', 'height', '800') 
+    Config.set('graphics', 'height', '700') 
     
 # Mobile config
 if platform in ["ios","android"]:
@@ -81,7 +81,7 @@ class TitleScreen(Screen):
         """Function to swap to the game screen and pass the game variables to the appropriate screen. Displays an error message if any of the settings are not selected
         """
         # Show error message if any of the toggles are not picked        
-        if not self.diff_choice or not self.game_choice or not self.match_style:
+        if not self.diff_choice or not self.game_choice or not self.match_style or (self.game_choice != "Connect 4" and self.match_style == "League Match"):
             content = Button(text="Dismiss")
             error = Popup(title="Select one of each option", content=content, size_hint=(.6, .3))
             content.bind(on_press=error.dismiss)
