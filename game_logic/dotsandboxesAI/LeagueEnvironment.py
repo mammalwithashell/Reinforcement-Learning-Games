@@ -124,26 +124,26 @@ class LeagueEnvironment:
     '''
     
     def play_pair_pt_1_5(self, player_choice, AI_choice=''):
-        # getting AI's capture if AI_choice is an empty string
+        # getting AI's bet if AI_choice is an empty string
         if AI_choice == '':
             AI_choice = self.league_agents[self.Ai].select_action(False)
-        # handling case where user or AI quits
+        # handling case where user or AI quit
         if AI_choice == 'quit' or player_choice == 'quit':
             message = f'''
-                    {'You' if player_choice == 'quit' else 'AI'} quit\n
-                    You had {self.Player_boxes} boxes captured\n
-                    AI had {self.AI_boxes} boxes captured
-                    '''
+                {'You' if player_choice == 'quit' else 'AI'} quit\n
+                You had {self.Player_boxes} chips\n
+                AI had {self.AI_boxes} chips
+            '''
             # calling 'series_end' in kivy screen object
-            #self.kivy_obj.series_end(message)
+            self.kivy_obj.series_end(message)
             return
-        # handling case where user or AI made a bet and other player is called
-        elif AI_choice == 'single capture' or player_choice == 'single capture':
-            self.boxes_mul = 1
-        elif AI_choice == 'double capture' or player_choice == 'double capture':
-            self.boxes_mul = 2
-        elif AI_choice == 'triple capture' or player_choice == 'triple capture':
-            self.boxes_mul = 3
+        # handling case where user or AI made a bet and other player called
+        elif AI_choice == 'single bet' or player_choice == 'single bet':
+            self.chip_mul=1
+        elif AI_choice == 'double bet' or player_choice == 'double bet':
+            self.chip_mul=2
+        elif AI_choice == 'triple bet' or player_choice == 'triple bet':
+            self.chip_mul=3
 
         # formatting the scoreboard data
         self.kivy_obj.user_data.text = f'''
@@ -184,6 +184,7 @@ class LeagueEnvironment:
 
         # if a player runs out of lines, end the league series
         if self.AI_boxes <= 0 or self.Player_boxes <= 0:
+    
             message = f'''
                 {'AI' if self.AI_boxes <= 0 else 'You'} ran out of lines\n
                 You had {self.Player_boxes} boxes captured\n
