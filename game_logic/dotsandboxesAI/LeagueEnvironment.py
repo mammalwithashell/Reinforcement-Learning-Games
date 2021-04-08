@@ -134,9 +134,8 @@ class LeagueEnvironment:
                     You had {self.Player_boxes} boxes captured\n
                     AI had {self.AI_boxes} boxes captured
                     '''
-            self.series_end = None
             # calling 'series_end' in kivy screen object
-            self.kivy_obj.series_end(message)
+            #self.kivy_obj.series_end(message)
             return
         # handling case where user or AI made a bet and other player is called
         elif AI_choice == 'single capture' or player_choice == 'single capture':
@@ -185,7 +184,6 @@ class LeagueEnvironment:
 
         # if a player runs out of lines, end the league series
         if self.AI_boxes <= 0 or self.Player_boxes <= 0:
-            self.series_end = None
             message = f'''
                 {'AI' if self.AI_boxes <= 0 else 'You'} ran out of lines\n
                 You had {self.Player_boxes} boxes captured\n
