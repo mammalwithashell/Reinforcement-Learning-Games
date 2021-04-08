@@ -1,6 +1,7 @@
 import random as rand
 from os import system
 from collections import defaultdict
+from kivy.resources import resource_find
 
 class Agent:
     def __init__(self, environment, difficulty, policy = 'max'):
@@ -9,7 +10,7 @@ class Agent:
         self.Q = ''
         self.first = None
         if policy == 'max':
-            with open(f"game_logic\\tictactoeAI\\qtables\\medium.txt", 'r') as f:
+            with open(resource_find(f"game_logic\\tictactoeAI\\qtables\\medium.txt"), 'r') as f:
                 for i in f.readlines():
                     self.Q = i
             self.Q = eval(self.Q)
