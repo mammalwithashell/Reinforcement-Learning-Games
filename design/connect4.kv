@@ -13,33 +13,48 @@
     GridLayout:
         cols: 1
         GridLayout:
-            cols: 5
+            cols: 3
             size_hint_y: None
-            height: 200
+            height: 150
             Button:
-                id: button_one
-                on_press: root.place_piece(0)
+                text: "Menu"
+                on_press: root.menu()
+            BoxLayout:
+                orientation: 'vertical'
+                id: scoreboard
+                size_hint_x: None
+                width: 350
+                Label:
+                    id: user_data
+                    text: "Left side"
+                Label:
+                    id: ai_data
+                    text: "Right side"
+
             Button:
-                id: button_two
-                on_press: root.place_piece(1)
-            Button:
-                id: button_three
-                on_press: root.place_piece(2)
-            Button:
-                id: button_four
-                on_press: root.place_piece(3)
-            Button:
-                id: button_five
-                on_press: root.place_piece(4)
+                text: "Reset"
+                on_press: root.load_settings(reset=True)
         GridLayout:
-            id: board_grid
-            cols: 5
-        GridLayout:
-            id: scoreboard
-            cols: 2
-            Label:
-                id: user_data
-                text: "Left side"
-            Label:
-                id: ai_data
-                text: "Right side"
+            cols: 1
+            GridLayout:
+                cols: 5
+                size_hint_y: None
+                height: 150
+                Button:
+                    id: button_one
+                    on_press: root.place_piece(0)
+                Button:
+                    id: button_two
+                    on_press: root.place_piece(1)
+                Button:
+                    id: button_three
+                    on_press: root.place_piece(2)
+                Button:
+                    id: button_four
+                    on_press: root.place_piece(3)
+                Button:
+                    id: button_five
+                    on_press: root.place_piece(4)
+            GridLayout:
+                id: board_grid
+                cols: 5
