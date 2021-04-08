@@ -79,7 +79,7 @@ class TitleScreen(Screen):
         # Show error message if any of the toggles are not picked        
         if not self.diff_choice or not self.game_choice or not self.match_style:
             content = Button(text="Dismiss")
-            error = Popup(title="Select one of each option", content=content, size=(40, 60))
+            error = Popup(title="Select one of each option", content=content, size_hint=(.6, .3))
             content.bind(on_press=error.dismiss)
             error.open()
             return
@@ -115,13 +115,13 @@ def main():
         
     # Load in gui 
     Builder.load_file(resource_find("design/gui.kv"))
-    Builder.load_file(resource_find("design/tiktactoe.kv"))
+    Builder.load_file(resource_find("design/tictactoe.kv"))
     Builder.load_file(resource_find("design/connect4.kv"))
     Builder.load_file(resource_find("design/dotsandboxes.kv"))
     
     # Import the Screens for the individual games
     from game_logic.dotsandboxes import DotsAndBoxesScreen
-    from game_logic.tiktactoe import TicTacToeScreen
+    from game_logic.tictactoe import TicTacToeScreen
     from game_logic.connect4 import Connect4Screen
 
     GameApp().run()

@@ -3,8 +3,9 @@ from os import system
 from collections import defaultdict
 
 class LeagueEnvironment:
-    def __init__(self, board_environment):
-        self.board = board_environment    
+    def __init__(self, board_env, kivy_obj):
+        self.kivy_obj = kivy_obj
+        self.board = board_env    
 
     def set_players(self, player_names, league_agents, board_agents):
         self.player_names = player_names
@@ -30,7 +31,7 @@ class LeagueEnvironment:
         self.min_bid=5
         self.game_counter=1
 
-    def get_state(self):  ### how to tell who is calling get_state?
+    def get_state(self):  
         return (self.A_chips,self.A_wins,self.ties,self.Player_chips,self.Player_wins,self.player_names[self.Ai],'learning strategy and tactics')
 
     def pair_games_played(self):
@@ -67,7 +68,7 @@ class LeagueEnvironment:
             elif AI_choice == 'triple bet' or player_choice == 'triple bet':
                 self.chip_mul=3
 
-            winner = self.board.play_game()
+            winner = self.board.play_game_turn(self.square_number)
             self.first = not self.first
 
             if winner == True:
@@ -106,29 +107,10 @@ class LeagueEnvironment:
         print("You currently have", self.Player_chips, "chips and", self.Player_wins, "wins.")
         if AI_choice:
             print("Opponent chose", AI_choice)
-        print('Select a choice from the list:')
+        print('Select Bet 1, Bet 2, or Bet 3:')
         for choice in choice_list:
             print(i, choice)
             i += 1
         while p_input < 0 or p_input > len(choice_list):
-            p_input = int(input())
+            p_input = self.kivy_obj.player_bet_amount
         return choice_list[p_input]
-
-
-""" def select_difficulty(select = False):
-    x = 0
-    diffdict = {1 : r'easy.txt',
-                2 : r'medium.txt',
-                3 : r'hard.txt'}
-    if select:
-        while(x > 3 or x < 1):
-            print("Select a difficulty:")
-            print("1: Easy")
-            print("2: Medium")
-            print("3: Hard")
-            x = int(input())
-    
-    else:
-        x = rand.randint(1, 3)
-
-    return diffdict[x] """

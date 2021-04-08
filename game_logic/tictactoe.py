@@ -61,9 +61,9 @@ class TicTacToeScreen(Screen):
     square8 = ObjectProperty(None)
     square9 = ObjectProperty(None)
     square_list = ListProperty(None)
-    secondlast_button = ObjectProperty(None)
-    massage_box = ObjectProperty(None)
-    last_button = ObjectProperty(None)
+    bet1 = ObjectProperty(None)
+    bet2 = ObjectProperty(None)
+    bet3 = ObjectProperty(None)
 
     buttonlist = set()
     piece = StringProperty(None)
@@ -71,19 +71,26 @@ class TicTacToeScreen(Screen):
 
 #----------------------------------------------------------------------------------------------------------
     
+
     def load_settings(self, diff, match):
 
         self.difficulty_setting = diff
         self.match = match
         self.board_env = BoardEnvironment(self)
+        agent = Agent(self.board_env, diff)
+        self.league = LeagueEnvironment(self.board_env, self)
+   
 
+        
         if self.match == "Single Match":
-            # Set agent difficulty and assign agent to board
-            agent = Agent(self.board_env, diff)
             self.board_env.set_players(agent)
+         
+            
         else:
+            self.reset_betbtns()
             self.first_league_run = True
-            league = LeagueEnvironment(self.board_env, self)
+            self.board_env.set_players(agent)
+
 
 
             player_names = []
@@ -92,24 +99,28 @@ class TicTacToeScreen(Screen):
 
             player_names.append('learning strategy and tactics')
             board_agents.append(Agent(self.board_env, get_path(select_difficulty(True)), 'max'))
-            league_agents.append(Agent(league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'max'))
+            league_agents.append(Agent(self.league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'max'))
 
             player_names.append('learning tactics only')
             board_agents.append(Agent(self.board_env, get_path(select_difficulty(True)), 'max'))
-            league_agents.append(Agent(league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'random'))
+            league_agents.append(Agent(self.league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'random'))
 
             player_names.append('learning strategy only')
             board_agents.append(Agent(self.board_env, get_path(select_difficulty(True)), 'random'))
-            league_agents.append(Agent(league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'max'))
+            league_agents.append(Agent(self.league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'max'))
 
             player_names.append('no learning')
             board_agents.append(Agent(self.board_env, get_path(select_difficulty(True)), 'random'))
-            league_agents.append(Agent(league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'random'))
+            league_agents.append(Agent(self.league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'random'))
 
-            league.set_players(player_names, league_agents, board_agents)
+            self.league.set_players(player_names, league_agents, board_agents)
+            
+
+
 
 #----------------------------------------------------------------------------------------------------------
     def press_main(self):
+        self.match = ''
         self.manager.transition = SlideTransition(direction="right")
         self.manager.current = "title"
         self.reset_game()
@@ -119,8 +130,22 @@ class TicTacToeScreen(Screen):
         #can't press button if square number in buttonlist
         if num not in self.buttonlist:
             self.buttonlist.add(num)
-            
             self.board_env.play_game_turn(num)
+    
+    def press_bet1(self):
+        self.player_bet = 'single bet'
+        self.player_bet_amount = 1
+        self.league.play_pair()
+    
+    def press_bet2(self):
+        self.player_bet = 'double bet'
+        self.player_bet_amount = 2
+        self.league.play_pair()
+    
+    def press_bet3(self):
+        self.player_bet = 'triple bet'
+        self.player_bet_amount = 3
+        self.league.play_pair()
     
     def reset_game(self):
         self.board_env.reset()
@@ -128,6 +153,8 @@ class TicTacToeScreen(Screen):
             button.source = get_path("images\\tictactoe\\blank.png")
         self.board_env.print_board()
         self.buttonlist.clear()
+        if (self.match == "League Match"):
+            self.league.reset_pair()
     
     def draw_turn(self, num):
         """Updates the screen based on the user or ai choice
@@ -140,6 +167,19 @@ class TicTacToeScreen(Screen):
                     self.buttonlist.add(num)
                     break
 
+   
+    
+    def reset_betbtns(self):
+        self.bet1.disabled = False
+        self.bet1.background_color = [0.9, 0.9, 0.9, 1]
+        self.bet1.color = [1, 1, 1, 1]
+        self.bet2.disabled = False
+        self.bet2.background_color = [0.9, 0.9, 0.9, 1]
+        self.bet2.color = [1, 1, 1, 1]
+        self.bet3.disabled = False
+        self.bet3.background_color = [0.9, 0.9, 0.9, 1]
+        self.bet3.color = [1, 1, 1, 1]
+        
     """def winner(self):
         popup = Popup(title="Winner")
         if """
