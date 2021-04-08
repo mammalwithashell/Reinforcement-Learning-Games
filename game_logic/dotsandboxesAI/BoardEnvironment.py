@@ -132,8 +132,8 @@ class BoardEnvironment:
                 # Let AI play
                 # self.agent_turn = True
                 ai = True
-                if self.agent.past_state is None:
-                    self.kivy_obj.piece = self.other_turn()
+                """if self.agent.past_state is None:
+                    self.kivy_obj.piece = self.other_turn()"""
                 choice = self.agent.select_action()
 
 

@@ -11,12 +11,16 @@
     ai_data: ai_data
     GridLayout:
         cols: 1
+        spacing: 20, 10
+        padding: 10, 10
         GridLayout:
             cols: 3
             size_hint_y: None
             height: 150
+            spacing: 5, 0
             Button:
                 text: "Menu"
+                font_size: 50
                 on_press: root.menu()
             BoxLayout:
                 orientation: 'vertical'
@@ -32,6 +36,7 @@
 
             Button:
                 text: "Reset"
+                font_size: 50
                 on_press: root.load_settings(reset=True)
         GridLayout:
             cols: 1
@@ -39,6 +44,7 @@
                 cols: 5
                 size_hint_y: None
                 height: 150
+                spacing: 10, 0
                 Button:
                     id: button_one
                     on_press: root.place_piece(0)
@@ -57,3 +63,5 @@
             GridLayout:
                 id: board_grid
                 cols: 5
+                padding: 5, 5
+                spacing: 5, 5

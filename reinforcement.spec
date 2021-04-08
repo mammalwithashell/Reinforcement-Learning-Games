@@ -29,11 +29,13 @@ a = Analysis(['main.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
+             
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
+
 exe = EXE(pyz,
           a.scripts,
-          [('W ignore', None, 'OPTION')], # suppossedly stops the virus warning
+          [('W ignore', None, 'OPTION')], # supposedly stops the virus warning
           a.binaries,
           a.zipfiles,
           a.datas,
@@ -45,4 +47,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False )
+          console=True)

@@ -17,6 +17,7 @@
             height: 100
             Button:
                 text: "Menu"
+                font_size: 50
                 on_press: root.menu()
             BoxLayout:
                 orientation: 'vertical'
@@ -29,7 +30,8 @@
                 Label:
                     text: "Your Piece is " + root.piece
             Button:
-                text: "Restart Game"
+                text: "Reset"
+                font_size: 50
                 on_press: root.restart()
         GridLayout:
             id: game_grid

@@ -84,6 +84,7 @@ class TicTacToeScreen(Screen):
         
         if self.match == "Single Match":
             self.board_env.set_players(agent)
+            self.board_env.reset()
          
             
         else:
@@ -120,10 +121,11 @@ class TicTacToeScreen(Screen):
 
 #----------------------------------------------------------------------------------------------------------
     def press_main(self):
+        self.reset_game()
         self.match = ''
         self.manager.transition = SlideTransition(direction="right")
         self.manager.current = "title"
-        self.reset_game()
+        
 
     
     def press(self, num):
@@ -148,13 +150,15 @@ class TicTacToeScreen(Screen):
         self.league.play_pair()
     
     def reset_game(self):
-        self.board_env.reset()
         for button in self.square_list:
             button.source = get_path("images\\tictactoe\\blank.png")
         self.board_env.print_board()
+        # clear list of set squares
         self.buttonlist.clear()
         if (self.match == "League Match"):
             self.league.reset_pair()
+        self.board_env.reset()
+
     
     def draw_turn(self, num):
         """Updates the screen based on the user or ai choice
@@ -180,10 +184,14 @@ class TicTacToeScreen(Screen):
         self.bet3.background_color = [0.9, 0.9, 0.9, 1]
         self.bet3.color = [1, 1, 1, 1]
         
-    def winner(self):
+    def winner(self, tie = False):
         print("Winner Piece: ", self.piece)
         popup = Popup(title="Winner Popup", size_hint=(.6, .4))
-        if self.board_env.turn == self.piece:
+        
+        if tie:
+            content = Button(text="Tie Game")
+        
+        elif self.board_env.turn == self.piece:
             # Player is the winner
             content = Button(text="You won!")
         else:

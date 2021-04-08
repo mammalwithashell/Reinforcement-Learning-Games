@@ -9,6 +9,8 @@ from kivy.uix.button import Button
 from kivy.resources import resource_add_path, resource_find
 # resource_add_path changes where resource_find looks for a file
 
+from game_logic.utils import get_path
+
 import os, sys
 import cProfile
 from mmap import mmap
@@ -31,18 +33,20 @@ if platform in ["win", "macosx", "linux"]:
 if platform in ["ios","android"]:
     pass
     
-def load_qtable(path:str) -> bytes:
-    """Read the qtable into memory
-
-    Args:
-        path (str): The path to the qtable
-
-    Returns:
-        mmap: A readable filepointer that allows us to read faster
-    """
-    with open(resource_find(path), "r+b") as f:
+"""def load_qtable(path:str) -> bytes:
+    #Read the qtable into memory
+    #
+    #Args:
+    #    path (str): The path to the qtable
+    #
+    #Returns:
+    #    mmap: A readable filepointer that allows us to read faster
+    #
+    # get_path works the same as resourse_find but resource_find has to be set after this is called
+    path = get_path(path)
+    with open(path, "r+b") as f:
         mm = mmap(f.fileno(), 0)
-        return mm.readline().decode('utf-8')
+        return mm.readline().decode('utf-8')"""
     
     
 # Main window screen
@@ -51,26 +55,26 @@ class TitleScreen(Screen):
     game_choice = StringProperty()
     match_style = StringProperty()
     
-    # Dict of dicts mapping possible game states to appropriate qtable
+    """# Dict of dicts mapping possible game states to appropriate qtable
     qtables = {
         "Tic-Tac-Toe": {
-            "Easy": load_qtable("game_logic\\tictactoeAI\\qtables\\easy.txt"),
-            "Medium": load_qtable("game_logic\\tictactoeAI\\qtables\\medium.txt"), 
-            "Hard": load_qtable("game_logic\\tictactoeAI\\qtables\\hard.txt")
+            "Easy": resource_find("game_logic\\tictactoeAI\\qtables\\easy.txt"),
+            "Medium": resource_find("game_logic\\tictactoeAI\\qtables\\medium.txt"), 
+            "Hard": resource_find("game_logic\\tictactoeAI\\qtables\\hard.txt")
         },
         
         "Connect 4": {
-            "Easy": load_qtable("game_logic\connect4AI\qtables\easy.txt"),
-            "Medium": load_qtable("game_logic\connect4AI\qtables\medium.txt"), 
-            "Hard": load_qtable("game_logic\connect4AI\qtables\hard.txt")
+            "Easy": resource_find("game_logic\connect4AI\qtables\easy.txt"),
+            "Medium": resource_find("game_logic\connect4AI\qtables\medium.txt"), 
+            "Hard": resource_find("game_logic\connect4AI\qtables\hard.txt")
         }, 
         
         "Dots and Boxes": {
-            "Easy": load_qtable("game_logic\dotsandboxesAI\qtables\easy.txt"),
-            "Medium": load_qtable("game_logic\dotsandboxesAI\qtables\medium.txt"), 
-            "Hard": load_qtable("game_logic\dotsandboxesAI\qtables\hard.txt")
+            "Easy": resource_find("game_logic\dotsandboxesAI\qtables\easy.txt"),
+            "Medium": resource_find("game_logic\dotsandboxesAI\qtables\medium.txt"), 
+            "Hard": resource_find("game_logic\dotsandboxesAI\qtables\hard.txt")
         }
-    }
+    }"""
     
     
     def load_game(self):

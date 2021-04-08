@@ -132,6 +132,10 @@ class DotsAndBoxesScreen(Screen):
         # Load different settings based on game type
         if self.match == "Single Match":
             self.piece = self.board_env.turn
+            if self.piece == "O":
+                choice = [i for i, char in enumerate(self.board_env.board) if char == "X"][0]
+                self.draw_ai_turn(choice, self.board_env.turn)
+                
             # self.board_env.set_players(agent)
             self.board_env.print_board()
             self.scoreboard.height = 0
