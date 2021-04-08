@@ -66,7 +66,7 @@ class Connect4Screen(Screen):
         for option in options:
             content.add_widget(Button(text=option))
         # creating a popup with 'message' and 'content'
-        option_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+        option_popup = Popup(title=message, content=content, size_hint=(.8, .9), auto_dismiss=False)
         # function that will be called when a button is clicked
         def option_button(inner_self):
             # dismiss popup
