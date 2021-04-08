@@ -1,10 +1,8 @@
 from kivy.uix.screenmanager import Screen, SlideTransition
-from kivy.graphics import Ellipse, Line, Color
+from kivy.graphics import Line, Color
 from kivy.properties import NumericProperty, ObjectProperty, StringProperty, BooleanProperty, ListProperty
-from kivy.core.window import Window
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup 
-from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
 import random as rand
@@ -69,6 +67,7 @@ class DotsAndBoxesScreen(Screen):
     piece = StringProperty("")
     lines = []
     dots = ListProperty()
+    
     # dictionary mapping box scores to their image widget
     captured_boxes = []            
     scoreboard = ObjectProperty(None)                      
