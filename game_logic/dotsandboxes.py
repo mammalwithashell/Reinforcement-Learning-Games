@@ -373,19 +373,14 @@ class DotsAndBoxesScreen(Screen):
         winner_popup.open()
 
     def series_end(self, message):
-        content = GridLayout(cols=1, padding=100, spacing=50)
-        content.add_widget(Button(text="Play again"))
+        content = GridLayout(cols=1)
         content.add_widget(Button(text="Return to menu"))
         series_end_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
-        def play_again_button(inner_self):
-            series_end_popup.dismiss()
-            self.load_settings(reset=True)
         def end_game_button(inner_self):
             series_end_popup.dismiss()
             self.menu()
-        content.children[1].bind(on_press=play_again_button)
         content.children[0].bind(on_press=end_game_button)
-        series_end_popup.open()    
+        series_end_popup.open() 
     
     def bet_options(self, options, message, func, AI_choice, cols=1):                                 
         # creating grid for popup menu
