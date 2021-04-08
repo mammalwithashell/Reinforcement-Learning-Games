@@ -140,6 +140,7 @@ class DotsAndBoxesScreen(Screen):
             self.board_env.print_board()
             self.scoreboard.height = 0
             self.ai_data.text, self.user_data.text = "", ""
+            self.board_env.reset()
         else:
             # League Match
             self.first_league_run = True

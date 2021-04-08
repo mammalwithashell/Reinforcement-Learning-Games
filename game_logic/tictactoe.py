@@ -79,13 +79,13 @@ class TicTacToeScreen(Screen):
         self.board_env = BoardEnvironment(self)
         agent = Agent(self.board_env, diff)
         self.league = LeagueEnvironment(self.board_env, self)
-   
 
         
         if self.match == "Single Match":
             self.board_env.set_players(agent)
             self.board_env.reset()
-         
+            self.scorebox.size_hint_x = 0
+            # self.scorebox.text += f"Difficulty Setting: {diff}"
             
         else:
             self.reset_betbtns()

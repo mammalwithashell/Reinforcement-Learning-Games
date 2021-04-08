@@ -15,7 +15,6 @@ class BoardEnvironment:
     def reset(self):
         self.turn = 'X'
         self.kivy_obj.piece = "X"
-
         self.board = list('---------')
         self.current_player = rand.random() < 0.5
         if not self.current_player:
@@ -25,7 +24,7 @@ class BoardEnvironment:
             self.kivy_obj.draw_turn(choice+1)
             self.turn = "O"
             self.kivy_obj.piece = "O"
-        print("New Game")
+        
         self.print_board()
         return self.current_player
 
