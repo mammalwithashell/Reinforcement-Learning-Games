@@ -141,8 +141,8 @@ class Connect4Screen(Screen):
                 # saving 'league' to this class
                 self.league_env = league
             # making betting scoreboard visible
-            '''self.scoreboard.size_hint_y = None
-            self.scoreboard.height = 200'''
+            self.scoreboard.size_hint_x = None
+            self.scoreboard.width = '2in'
             '''for child in self.scoreboard.children:
                 child.size_hint_y = None
                 child.height = 200'''
@@ -153,8 +153,8 @@ class Connect4Screen(Screen):
             self.scoreboard.width = 0
             
             for child in self.scoreboard.children:
-                child.size_hint_y = None
-                child.height = 0
+                '''child.size_hint_y = None
+                child.height = 0'''
                 child.text = ""
 
         # 2D array that holds the location of connect4 pieces
