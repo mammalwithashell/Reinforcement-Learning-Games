@@ -180,6 +180,15 @@ class TicTacToeScreen(Screen):
         self.bet3.background_color = [0.9, 0.9, 0.9, 1]
         self.bet3.color = [1, 1, 1, 1]
         
-    """def winner(self):
-        popup = Popup(title="Winner")
-        if """
+    def winner(self):
+        print("Winner Piece: ", self.piece)
+        popup = Popup(title="Winner Popup", size_hint=(.6, .4))
+        if self.board_env.turn == self.piece:
+            # Player is the winner
+            content = Button(text="You won!")
+        else:
+            content = Button(text="You Lost!")
+            
+        content.bind(on_press=popup.dismiss)
+        popup.add_widget(content)
+        popup.open()

@@ -14,15 +14,19 @@ class BoardEnvironment:
 
     def reset(self):
         self.turn = 'X'
+        self.kivy_obj.piece = "X"
 
         self.board = list('---------')
         self.current_player = rand.random() < 0.5
         if not self.current_player:
-            # if the current_player value is false, then the AI should go first
+            # if the current_player value is false, then its the AI turn
             choice = self.AI.select_action()
             self.board[choice] = self.turn
-            self.kivy_obj.draw_turn(choice)
+            self.kivy_obj.draw_turn(choice+1)
             self.turn = "O"
+            self.kivy_obj.piece = "O"
+        print("New Game")
+        self.print_board()
         return self.current_player
 
     def print_board(self, board_string = None):
@@ -33,6 +37,9 @@ class BoardEnvironment:
         print(B[3] if B[3] in check_for else 4,'|', B[4] if B[4] in check_for else 5,'|', B[5] if B[5] in check_for else 6, sep='')
         print('-----')
         print(B[6] if B[6] in check_for else 7,'|', B[7] if B[7] in check_for else 8,'|', B[8] if B[8] in check_for else 9, sep='')
+        print()
+        print('-----')
+        
 
     def get_state(self):
         return "".join(self.board)
@@ -85,41 +92,46 @@ class BoardEnvironment:
         #user press button to assign X/O to board in board_env
         self.board[square_number - 1] = self.turn
         self.kivy_obj.draw_turn(square_number)
-        self.turn = "X" if self.turn == "O" else "O"
         
-        if self.winner(self.turn):
+        if self.winner():
             # print winner message
             self.print_board()
-            
+            self.kivy_obj.winner()
             return
+        self.turn = "X" if self.turn == "O" else "O"
         
         # let AI go
         if not self.is_full():
             choice = self.AI.select_action()
             self.kivy_obj.draw_turn(choice + 1)
             self.board[choice] = self.turn
-            self.turn = "X" if self.turn == "O" else "O"
 
             self.print_board()
 
-            if self.winner(self.turn):
+            if self.winner():
+                self.kivy_obj.winner()
                 return
             if self.is_full():
                 # There is a tie
                 return
+            self.turn = "X" if self.turn == "O" else "O"
+            
 
 
 
 
     #returns true if there's a winner or false for no winner but not who is winner
-    def winner(self, choice):
-        straight_lines = ((0,1,2),(3,4,5),(6,7,8),(0,3,6),
-                          (1,4,7),(2,5,8),(0,4,8),(2,4,6))
-        
-        for line in straight_lines:
-            if all(x == self.turn for x in (self.board[i] for i in line)):
-                    return True
-        return False
+    def winner(self):
+        straight_lines = (
+            (0,1,2),(3,4,5),(6,7,8),(0,3,6),
+            (1,4,7),(2,5,8),(0,4,8),(2,4,6)
+        )
+
+        # if any of the straight lines on the board are set, return true
+        return any(
+            all(x == self.turn for x in (self.board[i] for i in line))
+            for line in straight_lines
+        )
 
     def is_full(self):
         return('-' not in self.board)
