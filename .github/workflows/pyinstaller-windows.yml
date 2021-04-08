@@ -1,0 +1,27 @@
+name: Package exe with PyInstaller - Windows
+
+on:
+  push:
+    branches: [ staging ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build for Windows with PyInstaller
+      uses: JackMcKew/pyinstaller-action-windows@main
+      with:
+        path: .
+        spec: reinforcement.spec
+
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: dist/windows/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

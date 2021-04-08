@@ -1,1 +1,67 @@
 <Connect4Screen>
+    id: title_screen
+    board_grid: board_grid
+    button_one: button_one
+    button_two: button_two
+    button_three: button_three
+    button_four: button_four
+    button_five: button_five
+    scoreboard: scoreboard
+    user_data: user_data
+    ai_data: ai_data
+    GridLayout:
+        cols: 1
+        spacing: 20, 10
+        padding: 10, 10
+        GridLayout:
+            cols: 3
+            size_hint_y: None
+            height: 150
+            spacing: 5, 0
+            Button:
+                text: "Menu"
+                font_size: 50
+                on_press: root.menu()
+            BoxLayout:
+                orientation: 'vertical'
+                id: scoreboard
+                size_hint_x: None
+                width: '2in'
+                Label:
+                    id: user_data
+                    text: "Left side"
+                Label:
+                    id: ai_data
+                    text: "Right side"
+
+            Button:
+                text: "Reset"
+                font_size: 50
+                on_press: root.load_settings(reset=True)
+        GridLayout:
+            cols: 1
+            GridLayout:
+                cols: 5
+                size_hint_y: None
+                height: 150
+                spacing: 10, 0
+                Button:
+                    id: button_one
+                    on_press: root.place_piece(0)
+                Button:
+                    id: button_two
+                    on_press: root.place_piece(1)
+                Button:
+                    id: button_three
+                    on_press: root.place_piece(2)
+                Button:
+                    id: button_four
+                    on_press: root.place_piece(3)
+                Button:
+                    id: button_five
+                    on_press: root.place_piece(4)
+            GridLayout:
+                id: board_grid
+                cols: 5
+                padding: 5, 5
+                spacing: 5, 5

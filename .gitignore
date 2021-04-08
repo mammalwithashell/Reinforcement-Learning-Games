@@ -3,3 +3,14 @@ __pycache__/*
 game_logic/__pycache__/*
 .vscode/*
 workspace.code-workspace
+kivy_env/*
+*/__pycache__/*
+*/*/__pycache__/*
+game_logic/connect4AI/__pycache__/*
+game_logic/dotsandboxesAI/__pycache__/*
+easy.txt
+hard.txt
+medium.txt
+build/*
+dist/*
+game_logic/dotsandboxesAI/__pycache__/*

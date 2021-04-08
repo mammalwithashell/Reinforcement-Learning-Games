@@ -1,2 +1,80 @@
-<DotsAndBoxesScreen>:
+#:set dot_size 30
+#:set dot_right_bound .95
+#:set dot_left_bound .05
 
+<DotsAndBoxesScreen>:
+    id: d&b_screen
+    game_grid: game_grid
+    scoreboard: scoreboard
+    user_data: user_data
+    ai_data: ai_data
+    dots: [dot0, dot1, dot2, dot3, dot4, dot5, dot6, dot7, dot8]
+    GridLayout:
+        cols: 1
+        spacing: 10, 10
+        padding: 10, 10
+        GridLayout:
+            cols: 3
+            size_hint_y: None
+            height: 100
+            Button:
+                text: "Menu"
+                font_size: 50
+                on_press: root.menu()
+            BoxLayout:
+                orientation: 'vertical'
+                Label:
+                    text: "Difficulty Setting: " + root.difficulty_setting
+                Label:
+                    text: "Your Score: " + str(root.score)
+                Label:
+                    text: "AI Score: " + str(root.ai_score)
+                Label:
+                    text: "Your Piece is " + root.piece
+            Button:
+                text: "Reset"
+                font_size: 50
+                on_press: root.restart()
+        GridLayout:
+            id: game_grid
+            rows: 3
+            padding: [10, 10, 10, 10]
+            spacing: [10, 10]
+            GridLayout:
+                id:row2
+                rows:1
+                Dot:
+                    id: dot6
+                Dot:
+                    id: dot7
+                Dot:
+                    id: dot8
+            GridLayout:
+                id:row1
+                rows:1
+                Dot:
+                    id: dot3
+                Dot:
+                    id: dot4
+                Dot:
+                    id: dot5
+            GridLayout:
+                rows:1
+                id: row0
+                Dot:
+                    id: dot0
+                Dot:
+                    id: dot1
+                Dot:
+                    id: dot2
+        GridLayout:
+            id: scoreboard
+            cols: 2
+            size_hint_y: None
+            height: 50
+            Label:
+                id: user_data
+                text: "Player"
+            Label:
+                id: ai_data
+                text: "AI"

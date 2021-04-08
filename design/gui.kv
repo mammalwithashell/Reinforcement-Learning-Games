@@ -1,11 +1,16 @@
 <GameButton@ToggleButton>:
     group: "game"
+    font_size: 20
 
 <MatchButton@ToggleButton>:
     group: "match"
+    font_size: 20
+
 
 <DifficultyButton@ToggleButton>:
     group: "difficulty"
+    font_size: 20
+
     
 
 
@@ -13,11 +18,16 @@
     id: title_screen
     GridLayout:
         cols: 1
+        spacing: 30, 10
+        padding: 10, 10
         Label: 
             id: game_label
             text: "Games"
+            font_size: 30
         GridLayout:
             cols: 3
+            # spacing_x, spacing_y
+            spacing: 10, 10
             GameButton:
                 id: ttt
                 text: "Tic-Tac-Toe"
@@ -33,20 +43,26 @@
         Label: 
             id: match_label
             text: "Match Type"
+            font_size: 30
         GridLayout:
             cols: 2
+            spacing: 10, 10
             MatchButton:
                 text: "Single Match"
                 on_press: title_screen.match_style = "" if self.state == "normal" else self.text
             MatchButton:
                 text: "League Match"
                 on_press: title_screen.match_style = "" if self.state == "normal" else self.text
+                # Currently disabled because the functionality isnt working. Just set disabled field to False when ready
+                disabled: True if title_screen.game_choice != "Connect 4" else False
 
         Label:
             id: diff
             text: "Difficulty"
+            font_size: 30
         GridLayout:
             cols: 3
+            spacing: 10, 10
             DifficultyButton: 
                 text: "Easy"
                 on_press: title_screen.diff_choice = "" if self.state == "normal" else self.text
@@ -58,6 +74,7 @@
                 on_press: title_screen.diff_choice = "" if self.state == "normal" else self.text
         Button:
             text: "Play Game"
+            font_size: 30
             on_press: root.load_game()
 <RootWidget>:
     TitleScreen:
