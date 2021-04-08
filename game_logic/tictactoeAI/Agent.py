@@ -7,8 +7,9 @@ class Agent:
         self.environment = environment
         self.policy = policy
         self.Q = ''
+        self.first = None
         if policy == 'max':
-            with open(f"game_logic\\tictactoeAI\\qtables\\{difficulty.lower()}.txt", 'r') as f:
+            with open(f"game_logic\\tictactoeAI\\qtables\\medium.txt", 'r') as f:
                 for i in f.readlines():
                     self.Q = i
             self.Q = eval(self.Q)
@@ -19,8 +20,8 @@ class Agent:
         self.past_action = None
         self.past_state = None
 
-    def select_action(self):
-        available_actions = self.environment.available_actions()
+    def select_action(self, first = None):
+        available_actions = self.environment.available_actions(first)
         if(self.policy == 'random'):
             choice = rand.choice(available_actions)
         else:

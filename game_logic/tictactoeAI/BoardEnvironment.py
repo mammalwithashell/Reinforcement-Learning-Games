@@ -40,7 +40,7 @@ class BoardEnvironment:
     def other_player(self):
         return not self.current_player
 
-    def available_actions(self):
+    def available_actions(self, first = None):
         return [ind for ind, val in enumerate(self.board) if val == '-']
 
     def play_game(self):
@@ -87,7 +87,7 @@ class BoardEnvironment:
         self.kivy_obj.draw_turn(square_number)
         self.turn = "X" if self.turn == "O" else "O"
         
-        if self.winner():
+        if self.winner(self.turn):
             # print winner message
             self.print_board()
             
@@ -102,7 +102,7 @@ class BoardEnvironment:
 
             self.print_board()
 
-            if self.winner():
+            if self.winner(self.turn):
                 return
             if self.is_full():
                 # There is a tie
@@ -112,7 +112,7 @@ class BoardEnvironment:
 
 
     #returns true if there's a winner or false for no winner but not who is winner
-    def winner(self):
+    def winner(self, choice):
         straight_lines = ((0,1,2),(3,4,5),(6,7,8),(0,3,6),
                           (1,4,7),(2,5,8),(0,4,8),(2,4,6))
         
