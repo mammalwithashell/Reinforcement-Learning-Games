@@ -1,15 +1,13 @@
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen, SlideTransition
 from kivy.properties import ObjectProperty
-from kivy.uix.button import Button, ButtonBehavior
+from kivy.uix.button import Button
 from kivy.graphics import *
 from kivy.uix.popup import Popup 
-from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
 
-import os, sys
-from kivy.resources import resource_add_path, resource_find
-from .utils import get_path
+from kivy.resources import resource_find
+# from .utils import get_path
 
 import random as rand
 import copy
@@ -120,22 +118,22 @@ class Connect4Screen(Screen):
                 league_agents = []
 
                 league_qtable = 'game_logic/connect4AI/qtables/league.txt'
-                league_qtable = get_path(league_qtable)
+                league_qtable = resource_find(league_qtable)
 
                 player_names.append('learning strategy and tactics')
-                board_agents.append(Agent(self.board_env, get_path(self.select_difficulty(diff)), 'max'))
+                board_agents.append(Agent(self.board_env, resource_find(self.select_difficulty(diff)), 'max'))
                 league_agents.append(Agent(league, league_qtable, 'max'))
 
                 '''player_names.append('learning tactics only')
-                board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'max'))
+                board_agents.append(Agent(self.board_env, resource_find(self.auto_select_difficulty()), 'max'))
                 league_agents.append(Agent(league, league_qtable, 'random'))
 
                 player_names.append('learning strategy only')
-                board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'random'))
+                board_agents.append(Agent(self.board_env, resource_find(self.auto_select_difficulty()), 'random'))
                 league_agents.append(Agent(league, league_qtable, 'max'))
 
                 player_names.append('no learning')
-                board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'random'))
+                board_agents.append(Agent(self.board_env, resource_find(self.auto_select_difficulty()), 'random'))
                 league_agents.append(Agent(league, league_qtable, 'random'))'''
 
                 # saving names, league agents, and board agents to 'league'
@@ -151,11 +149,12 @@ class Connect4Screen(Screen):
         # setting up single game
         else:
             # hiding betting scoreboard
-            '''self.scoreboard.size_hint_y = None
-            self.scoreboard.height = 0'''
+            self.scoreboard.size_hint_x = None
+            self.scoreboard.width = 0
+            
             for child in self.scoreboard.children:
-                '''child.size_hint_y = None
-                child.height = 0'''
+                child.size_hint_y = None
+                child.height = 0
                 child.text = ""
 
         # 2D array that holds the location of connect4 pieces
@@ -228,7 +227,7 @@ class Connect4Screen(Screen):
 
         # creating gameplay agent with difficulty 'diff'
         if not reset:
-            A = Agent(self.board_env, get_path(self.select_difficulty(diff)))
+            A = Agent(self.board_env, resource_find(self.select_difficulty(diff)))
             self.gameplay_agent = A
         else:
             self.gameplay_agent.reset_past()
@@ -303,10 +302,10 @@ class Connect4Screen(Screen):
             for i in range(0, 5):
                 # adding yellow piece if current space belongs to user
                 if self.board[4-j][i] == self.piece:
-                    self.board_grid.add_widget(Image(source=get_path("images/connect4/bestchipyellow.png")))
+                    self.board_grid.add_widget(Image(source=resource_find("images/connect4/bestchipyellow.png")))
                 # adding red piece if current space belongs to AI
                 elif self.board[4-j][i] == self.opponent:
-                    self.board_grid.add_widget(Image(source=get_path("images/connect4/bestchipred.png")))
+                    self.board_grid.add_widget(Image(source=resource_find("images/connect4/bestchipred.png")))
                 # adding blank image for empty space
                 else:
                     self.board_grid.add_widget(Image(source="", color=(0,0,0)))
@@ -349,12 +348,12 @@ class Connect4Screen(Screen):
         message = "You won!" if self.piece == self.board_env.turn else "You lost :("
         if tie:
             message = "Tie game."
-        game_end_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+        game_end_popup = Popup(title=message, content=content, size_hint=(.8, .6), auto_dismiss=False)
 
         # resets the single game
         def play_again_button(inner_self):
             game_end_popup.dismiss()
-            self.load_settings(reset=True)
+            # self.load_settings(reset=True)
         # returns user to main menu
         def end_game_button(inner_self):
             game_end_popup.dismiss()
@@ -382,4 +381,5 @@ class Connect4Screen(Screen):
             game_end_popup.open()
 
     def menu(self):
+        self.manager.transition = SlideTransition(direction="right")
         self.manager.current = "title"
