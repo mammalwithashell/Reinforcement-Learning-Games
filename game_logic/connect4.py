@@ -90,64 +90,72 @@ class Connect4Screen(Screen):
             diff: the difficulty selected at the main menu
             match: the type of game being played (single or league)
     '''
-    def load_settings(self, diff, match):
+    def load_settings(self, diff=None, match=None, reset=False):
+        if not diff and not match:
+            diff = self.chosen_difficulty
+            match = self.match_type
+
         self.match_type = match
 
         # creating and saving board environment that will be used for the
         # duration of the game
-        self.board_env = BoardEnvironment(self)
+        if reset:
+            self.board_env.reset()
+        else:
+            self.board_env = BoardEnvironment(self)
 
         # setting up league match
         if self.match_type == 'League Match':
             self.first_league_run = True
 
-            # creating league environment that will be used for the duration of 
-            # the game
-            league = LeagueEnvironment(self.board_env, self)
+            if reset == False:
+                # creating league environment that will be used for the duration of 
+                # the game
+                league = LeagueEnvironment(self.board_env, self)
 
-            # these three arrays will hold the four possible sets of agents
-            # each set has a name, board agent, and league agent
-            player_names = []
-            board_agents = []
-            league_agents = []
+                # these three arrays will hold the four possible sets of agents
+                # each set has a name, board agent, and league agent
+                player_names = []
+                board_agents = []
+                league_agents = []
 
-            league_qtable = 'game_logic/connect4AI/qtables/league.txt'
-            league_qtable = get_path(league_qtable)
+                league_qtable = 'game_logic/connect4AI/qtables/league.txt'
+                league_qtable = get_path(league_qtable)
 
-            player_names.append('learning strategy and tactics')
-            board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'max'))
-            league_agents.append(Agent(league, league_qtable, 'max'))
+                player_names.append('learning strategy and tactics')
+                board_agents.append(Agent(self.board_env, get_path(self.select_difficulty(diff)), 'max'))
+                league_agents.append(Agent(league, league_qtable, 'max'))
 
-            player_names.append('learning tactics only')
-            board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'max'))
-            league_agents.append(Agent(league, league_qtable, 'random'))
+                '''player_names.append('learning tactics only')
+                board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'max'))
+                league_agents.append(Agent(league, league_qtable, 'random'))
 
-            player_names.append('learning strategy only')
-            board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'random'))
-            league_agents.append(Agent(league, league_qtable, 'max'))
+                player_names.append('learning strategy only')
+                board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'random'))
+                league_agents.append(Agent(league, league_qtable, 'max'))
 
-            player_names.append('no learning')
-            board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'random'))
-            league_agents.append(Agent(league, league_qtable, 'random'))
+                player_names.append('no learning')
+                board_agents.append(Agent(self.board_env, get_path(self.auto_select_difficulty()), 'random'))
+                league_agents.append(Agent(league, league_qtable, 'random'))'''
 
-            # saving names, league agents, and board agents to 'league'
-            league.set_players(player_names, league_agents, board_agents)
-            # saving 'league' to this class
-            self.league_env = league
+                # saving names, league agents, and board agents to 'league'
+                league.set_players(player_names, league_agents, board_agents)
+                # saving 'league' to this class
+                self.league_env = league
             # making betting scoreboard visible
-            self.scoreboard.size_hint_y = None
-            self.scoreboard.height = 200
-            for child in self.scoreboard.children:
+            '''self.scoreboard.size_hint_y = None
+            self.scoreboard.height = 200'''
+            '''for child in self.scoreboard.children:
                 child.size_hint_y = None
-                child.height = 200
+                child.height = 200'''
         # setting up single game
         else:
             # hiding betting scoreboard
-            self.scoreboard.size_hint_y = None
-            self.scoreboard.height = 0
+            '''self.scoreboard.size_hint_y = None
+            self.scoreboard.height = 0'''
             for child in self.scoreboard.children:
-                child.size_hint_y = None
-                child.height = 0
+                '''child.size_hint_y = None
+                child.height = 0'''
                 child.text = ""
 
         # 2D array that holds the location of connect4 pieces
@@ -160,7 +168,7 @@ class Connect4Screen(Screen):
         ]
 
         # starting connect4 gameplay
-        self.start_game(diff)
+        self.start_game(diff, reset)
 
     '''
         description
@@ -209,7 +217,7 @@ class Connect4Screen(Screen):
         parameters
             diff: difficulty of game
     '''
-    def start_game(self, diff):
+    def start_game(self, diff, reset=False):
         # saving difficulty of game
         self.chosen_difficulty = diff
 
@@ -219,11 +227,15 @@ class Connect4Screen(Screen):
             self.first_league_run = False
 
         # creating gameplay agent with difficulty 'diff'
-        A = Agent(self.board_env, get_path(self.select_difficulty(diff)))
+        if not reset:
+            A = Agent(self.board_env, get_path(self.select_difficulty(diff)))
+            self.gameplay_agent = A
+        else:
+            self.gameplay_agent.reset_past()
 
         # 'set_players' will return True if AI has the first turn
         # if True, allowing AI to make first move
-        if self.board_env.set_players(A):
+        if self.board_env.set_players(self.gameplay_agent):
             self.piece = 'O'
             self.opponent = 'X'
             self.play_game()
@@ -307,11 +319,16 @@ class Connect4Screen(Screen):
     '''
     def series_end(self, message):
         content = GridLayout(cols=1)
+        content.add_widget(Button(text="Play again"))
         content.add_widget(Button(text="Return to menu"))
         series_end_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+        def play_again_button(inner_self):
+            series_end_popup.dismiss()
+            self.load_settings(reset=True)
         def end_game_button(inner_self):
             series_end_popup.dismiss()
             self.menu()
+        content.children[1].bind(on_press=play_again_button)
         content.children[0].bind(on_press=end_game_button)
         series_end_popup.open()
 
@@ -324,6 +341,7 @@ class Connect4Screen(Screen):
     def game_end(self, tie=False):
         content = GridLayout(cols=1)
         if self.match_type != 'League Match':
+            content.add_widget(Button(text="Play again"))
             content.add_widget(Button(text="Return to menu"))
         else:
             content.add_widget(Button(text="Continue"))
@@ -333,6 +351,10 @@ class Connect4Screen(Screen):
             message = "Tie game."
         game_end_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
 
+        # resets the single game
+        def play_again_button(inner_self):
+            game_end_popup.dismiss()
+            self.load_settings(reset=True)
         # returns user to main menu
         def end_game_button(inner_self):
             game_end_popup.dismiss()
@@ -349,12 +371,13 @@ class Connect4Screen(Screen):
                 [None, None, None, None, None],
                 [None, None, None, None, None],
             ]
-            self.start_game(self.chosen_difficulty)
+            self.start_game(self.chosen_difficulty, reset=True)
 
         if self.match_type == 'League Match':
             content.children[0].bind(on_press=play_on)
             game_end_popup.open()
         else:
+            content.children[1].bind(on_press=play_again_button)
             content.children[0].bind(on_press=end_game_button)
             game_end_popup.open()
 
