@@ -7,7 +7,7 @@ from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
 
 from kivy.resources import resource_find
-# from .utils import get_path
+from .utils import get_path
 
 import random as rand
 import copy
@@ -118,7 +118,7 @@ class Connect4Screen(Screen):
                 league_agents = []
 
                 league_qtable = 'game_logic/connect4AI/qtables/league.txt'
-                league_qtable = resource_find(league_qtable)
+                league_qtable = get_path(league_qtable)
 
                 player_names.append('learning strategy and tactics')
                 board_agents.append(Agent(self.board_env, resource_find(self.select_difficulty(diff)), 'max'))

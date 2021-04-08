@@ -54,7 +54,7 @@
                 text: "League Match"
                 on_press: title_screen.match_style = "" if self.state == "normal" else self.text
                 # Currently disabled because the functionality isnt working. Just set disabled field to False when ready
-                disabled: True
+                disabled: True if title_screen.game_choice != "Connect 4" else False
 
         Label:
             id: diff
