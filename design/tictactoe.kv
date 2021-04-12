@@ -21,13 +21,11 @@
             id: main_menu
             text: "Menu"
             font_size: 50
-            on_press: root.press_main()
-         
+            on_press: root.press_main()         
          Label:
             id: scorebox
             text: ""
-            font_size: 20
-         
+            font_size: 20         
          Button:
             id: exit_button
             text: "Reset"
@@ -41,6 +39,7 @@
                pos: self.pos
                size: self.size
                source: "images\tictactoe\white.png"
+               
          TicTacToeSquare:
             id: square1
             button_number: 1
@@ -83,14 +82,12 @@
             font_size: 50
             on_press: root.press(self.button_number)
 
-         
          TicTacToeSquare:
             id: square8
             button_number:8
             font_size: 50
             on_press: root.press(self.button_number)
 
-         
          TicTacToeSquare:
             id: square9
             button_number: 9
@@ -113,11 +110,9 @@
             id: massage_box
             text: ""
             font_size: 20
-         
          Button:
             id: last_button
             text: ""
             font_size: 50
             disabled: True
             on_press: root.last()
-

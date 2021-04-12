@@ -9,11 +9,11 @@ from kivy.uix.button import Button
 from kivy.resources import resource_add_path, resource_find
 # resource_add_path changes where resource_find looks for a file
 
-from game_logic.utils import get_path
+# from game_logic.utils import get_path
 
 import os, sys
 import cProfile
-from mmap import mmap
+# from mmap import mmap
 
 """ 
 Builder is used to load in the design .kv files
@@ -42,7 +42,7 @@ if platform in ["ios","android"]:
     #Returns:
     #    mmap: A readable filepointer that allows us to read faster
     #
-    # get_path works the same as resourse_find but resource_find has to be set after this is called
+    # get_path works the same as resource_find but resource_find has to be set after this is called
     path = get_path(path)
     with open(path, "r+b") as f:
         mm = mmap(f.fileno(), 0)
@@ -55,24 +55,27 @@ class TitleScreen(Screen):
     game_choice = StringProperty()
     match_style = StringProperty()
     
-    """# Dict of dicts mapping possible game states to appropriate qtable
+    """
+    This was setup to try and load the qtables into memory faster
+    
+    # Dict of dicts mapping possible game states to appropriate qtable
     qtables = {
         "Tic-Tac-Toe": {
-            "Easy": resource_find("game_logic\\tictactoeAI\\qtables\\easy.txt"),
-            "Medium": resource_find("game_logic\\tictactoeAI\\qtables\\medium.txt"), 
-            "Hard": resource_find("game_logic\\tictactoeAI\\qtables\\hard.txt")
+            "Easy": load_qtable("game_logic\\tictactoeAI\\qtables\\easy.txt"),
+            "Medium": load_qtable("game_logic\\tictactoeAI\\qtables\\medium.txt"), 
+            "Hard": load_qtable("game_logic\\tictactoeAI\\qtables\\hard.txt")
         },
         
         "Connect 4": {
-            "Easy": resource_find("game_logic\connect4AI\qtables\easy.txt"),
-            "Medium": resource_find("game_logic\connect4AI\qtables\medium.txt"), 
-            "Hard": resource_find("game_logic\connect4AI\qtables\hard.txt")
+            "Easy": load_qtable("game_logic\connect4AI\qtables\easy.txt"),
+            "Medium": load_qtable("game_logic\connect4AI\qtables\medium.txt"), 
+            "Hard": load_qtable("game_logic\connect4AI\qtables\hard.txt")
         }, 
         
         "Dots and Boxes": {
-            "Easy": resource_find("game_logic\dotsandboxesAI\qtables\easy.txt"),
-            "Medium": resource_find("game_logic\dotsandboxesAI\qtables\medium.txt"), 
-            "Hard": resource_find("game_logic\dotsandboxesAI\qtables\hard.txt")
+            "Easy": load_qtable("game_logic\dotsandboxesAI\qtables\easy.txt"),
+            "Medium": load_qtable("game_logic\dotsandboxesAI\qtables\medium.txt"), 
+            "Hard": load_qtable("game_logic\dotsandboxesAI\qtables\hard.txt")
         }
     }"""
     
@@ -99,6 +102,9 @@ class RootWidget(ScreenManager):
     pass
 
 class GameApp(App):
+    """Main application class. This controls the window and event loop
+
+    """
     title = "Reinforcement Learning Game"
     
     def on_start(self):

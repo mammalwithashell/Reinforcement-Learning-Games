@@ -1,0 +1,1 @@
+# Image assets go in this folder

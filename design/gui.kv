@@ -2,6 +2,7 @@
     group: "game"
     font_size: 20
 
+# custom widget class and properties
 <MatchButton@ToggleButton>:
     group: "match"
     font_size: 20
@@ -10,9 +11,6 @@
 <DifficultyButton@ToggleButton>:
     group: "difficulty"
     font_size: 20
-
-    
-
 
 <TitleScreen>
     id: title_screen
@@ -76,6 +74,7 @@
             text: "Play Game"
             font_size: 30
             on_press: root.load_game()
+            
 <RootWidget>:
     TitleScreen:
         name: "title"
