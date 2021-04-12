@@ -1,4 +1,5 @@
-# WJNKCW
+# Reinforcement learning model for Tic-Tac-Toe, Dots and Boxes and Connect 4
+## WJNKCW
 
 Senior Capstone Course
 
@@ -9,6 +10,7 @@ kyl3p3 - Kyle Petrie
 mammalwithashell - James Peters
 NikkiM9788 - Nikki Meyer
 WafiHussain - Wafi Hussain
+
 Project Structure:
 
 The design folder has the markup files that outline the user interface
