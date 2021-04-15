@@ -11,6 +11,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty, Strin
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.popup import Popup
+from kivy.resources import resource_find
 
 import random as rand
 from os import system
@@ -18,7 +19,7 @@ from collections import defaultdict
 from .tictactoeAI.BoardEnvironment import BoardEnvironment
 from .tictactoeAI.Agent import Agent
 from .tictactoeAI.LeagueEnvironment import LeagueEnvironment
-from .utils import get_path
+
 
 def select_difficulty(auto=False):
     x = 0
@@ -43,7 +44,7 @@ class TicTacToeSquare(ButtonBehavior, Image):
     button_number = NumericProperty()
     def __init__(self, **kwargs):
         super(TicTacToeSquare, self).__init__(**kwargs)
-        self.source = get_path("images/tictactoe/blank.png")
+        self.source = resource_find("images/tictactoe/blank.png")
 
 
 
@@ -70,7 +71,9 @@ class TicTacToeScreen(Screen):
     
 
 #----------------------------------------------------------------------------------------------------------
-    
+    def on_pre_leave(self, *args):
+        self.reset_game()
+        return super().on_pre_leave(*args)
 
     def load_settings(self, diff, match):
 
@@ -99,20 +102,20 @@ class TicTacToeScreen(Screen):
             league_agents = []
 
             player_names.append('learning strategy and tactics')
-            board_agents.append(Agent(self.board_env, get_path(select_difficulty(True)), 'max'))
-            league_agents.append(Agent(self.league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'max'))
+            board_agents.append(Agent(self.board_env, resource_find(select_difficulty(True)), 'max'))
+            league_agents.append(Agent(self.league, resource_find('game_logic/tictactoeAI/qtables/league.txt'), 'max'))
 
             player_names.append('learning tactics only')
-            board_agents.append(Agent(self.board_env, get_path(select_difficulty(True)), 'max'))
-            league_agents.append(Agent(self.league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'random'))
+            board_agents.append(Agent(self.board_env, resource_find(select_difficulty(True)), 'max'))
+            league_agents.append(Agent(self.league, resource_find('game_logic/tictactoeAI/qtables/league.txt'), 'random'))
 
             player_names.append('learning strategy only')
-            board_agents.append(Agent(self.board_env, get_path(select_difficulty(True)), 'random'))
-            league_agents.append(Agent(self.league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'max'))
+            board_agents.append(Agent(self.board_env, resource_find(select_difficulty(True)), 'random'))
+            league_agents.append(Agent(self.league, resource_find('game_logic/tictactoeAI/qtables/league.txt'), 'max'))
 
             player_names.append('no learning')
-            board_agents.append(Agent(self.board_env, get_path(select_difficulty(True)), 'random'))
-            league_agents.append(Agent(self.league, get_path('game_logic/tictactoeAI/qtables/league.txt'), 'random'))
+            board_agents.append(Agent(self.board_env, resource_find(select_difficulty(True)), 'random'))
+            league_agents.append(Agent(self.league, resource_find('game_logic/tictactoeAI/qtables/league.txt'), 'random'))
 
             self.league.set_players(player_names, league_agents, board_agents)
             
@@ -151,7 +154,7 @@ class TicTacToeScreen(Screen):
     
     def reset_game(self):
         for button in self.square_list:
-            button.source = get_path("images\\tictactoe\\blank.png")
+            button.source = resource_find("images\\tictactoe\\blank.png")
         self.board_env.print_board()
         # clear list of set squares
         self.buttonlist.clear()
@@ -166,7 +169,7 @@ class TicTacToeScreen(Screen):
         for square_button in self.square_list:
                 # if i is 
                 if square_button.button_number == num:
-                    square_button.source = get_path("images\\tictactoe\\X.png") if self.board_env.turn is "X" else get_path("images\\tictactoe\\O.png")
+                    square_button.source = resource_find("images\\tictactoe\\X.png") if self.board_env.turn is "X" else resource_find("images\\tictactoe\\O.png")
                     square_button.color = [0, 1, 0, 1] if self.board_env.turn == "O" else [0, 1, 1, 1]
                     self.buttonlist.add(num)
                     break

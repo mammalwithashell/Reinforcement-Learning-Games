@@ -118,6 +118,7 @@ class GameApp(App):
     def build(self):
         return RootWidget()
 
+
 def main():
     if hasattr(sys, '_MEIPASS'):
         # This if statement adds the temporary file location to the relative path of the resources (images, .kv, etc)

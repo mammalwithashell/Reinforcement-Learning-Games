@@ -3,9 +3,6 @@
    scorebox: scorebox
    exit_button: exit_button
 
-   secondlast_button: secondlast_button
-   massage_box: massage_box
-   last_button: last_button
    square_list: [ square1, square2, square3, square4, square5, square6, square7, square8, square9]
    GridLayout:
       rows: 3
@@ -95,24 +92,3 @@
             font_size: 50
             on_press: root.press(self.button_number)
 
-      GridLayout:
-         rows: 1
-         size_hint_y: None
-         height: 100
-         Button:
-            id: secondlast_button
-            text: ""
-            font_size: 50
-            disabled: True
-            on_press: root.secondlast()
-
-         Label:
-            id: massage_box
-            text: ""
-            font_size: 20
-         Button:
-            id: last_button
-            text: ""
-            font_size: 50
-            disabled: True
-            on_press: root.last()

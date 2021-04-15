@@ -115,6 +115,17 @@ class DotsAndBoxesScreen(Screen):
         self.board_env.reset()
         return super().on_pre_enter(*args)
     
+    def on_leave(self, *args):
+        """Kivy Screen event listener that is run as the screen is left
+
+        Returns:
+            None:
+        """
+        self.clear_game_screen()
+        self.board_env.reset()
+        self.score, self.ai_score = 0, 0
+        return super().on_leave(*args)
+    
     def load_settings(self, diff, match):
         """ 
         Called whenever this screen is loaded

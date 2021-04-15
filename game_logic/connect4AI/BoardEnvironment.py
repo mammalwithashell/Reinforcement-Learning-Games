@@ -27,10 +27,11 @@ class BoardEnvironment:
 	#return board state
 	def get_state(self):
 		return "".join(self.board)
+
 	#return the lowest board piece available for the selected column
 	def get_lowest_column(self, i):
-		if(self.board[i] == '-'):
-			while(i + 5 < 25):
+		if (self.board[i] == '-'):
+			while i < 20:
 				if(self.board[i+5] == '-'):
 					i = i + 5
 				else:
@@ -38,13 +39,16 @@ class BoardEnvironment:
 		else:
 			return -1
 		return i
+
 	#select the chosen piece at the board level and flip the turn
 	def select_piece(self, choice, turn):
 		self.board[choice] = turn
 		self.turn = 'X' if (turn == 'O') else 'O'
+
 	def other_player(self):
 		# note, returns other player even if playerA is playing itself
 		return not self.current_player
+
 	#return all of the columns available for selection
 	def available_actions(self, change_buttons=False):
 		movelist = []
@@ -67,6 +71,7 @@ class BoardEnvironment:
 					buttons[i].disabled = True
 				continue
 		return movelist
+
 	#determine if there is a winner based on the pre-calculated win states
 	def winner(self, check_for = ['X', 'O']):
 		straight_lines = (

@@ -67,6 +67,14 @@ class LeagueEnvironment:
     '''
 
     def available_actions(self, first):
+        """Returns the list of actions available to the user dependent on the player betting first or the ai betting first or
+
+        Args:
+            first (bool): True if player bets first in this round of betting
+
+        Returns:
+            list: list of actions, player can only quit or call if they are not first
+        """
         if first:
             return ['quit', 'single capture', 'double capture', 'triple capture']
         else:
