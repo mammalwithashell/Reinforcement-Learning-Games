@@ -15,23 +15,7 @@ import random as rand
 from .dotsandboxesAI.BoardEnvironment import BoardEnvironment
 from .dotsandboxesAI.Agent import Agent
 from .dotsandboxesAI.LeagueEnvironment import LeagueEnvironment
-
 from time import sleep
-
-"""
-TODO
-
-* Fix multiple turn error (player and ai should be able to go again if they score)
-* Done Fix character change for ai after score
-
-* Clean up UI & include scores for player and ai
-
-* Fix order of turn calls making the ai choose on full board
-* Draw "X" or "O" in box on score
-
-
-* League Functionality by Wafi
-"""
 
 def select_difficulty(auto=False):
     x = 0
@@ -59,6 +43,13 @@ class Dot(Image):
 
 
 class DotsAndBoxesScreen(Screen):
+    """Screen object to be managed by ScreenManager object
+
+    Args:
+        Screen (kivy.uix.screenmanager.Screen): This inherits from kivy.relativelayout.RelativeLayout and uses that object's placement system. In the design file we used a gridlayout overwrite that placement system.
+        
+        The Object Property type lets kivy objects share variable names with the .kv files. 
+    """
     score = NumericProperty()
     ai_score = NumericProperty()
     game_grid = ObjectProperty(None)

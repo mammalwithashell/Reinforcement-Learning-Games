@@ -1,12 +1,6 @@
 #Authors: Nikki Meyer and Brian Little
-import kivy
 from kivy.uix.screenmanager import Screen, SlideTransition
-from kivy.core.window import Window
-from kivy.uix.label import Label
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
-from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
@@ -14,8 +8,6 @@ from kivy.uix.popup import Popup
 from kivy.resources import resource_find
 
 import random as rand
-from os import system
-from collections import defaultdict
 from .tictactoeAI.BoardEnvironment import BoardEnvironment
 from .tictactoeAI.Agent import Agent
 from .tictactoeAI.LeagueEnvironment import LeagueEnvironment
@@ -41,6 +33,12 @@ def select_difficulty(auto=False):
 
 
 class TicTacToeSquare(ButtonBehavior, Image):
+    """Custom widget inheriting from both ButtonBehavior and Image objects. These are placed in the design/tictactoe.kv file
+
+    Args:
+        ButtonBehavior (kivy.uix.ButtonBehavior): Adds on_press and on_release behavior to other widgets
+        Image (kivy.uix.Image): Image widget
+    """
     button_number = NumericProperty()
     def __init__(self, **kwargs):
         super(TicTacToeSquare, self).__init__(**kwargs)
@@ -49,6 +47,13 @@ class TicTacToeSquare(ButtonBehavior, Image):
 
 
 class TicTacToeScreen(Screen):
+    """Screen object to be managed by ScreenManager object
+
+    Args:
+        Screen (kivy.uix.screenmanager.Screen): This inherits from kivy.relativelayout.RelativeLayout and uses that object's placement system. In the design file we used a gridlayout overwrite that placement system.
+        
+        The Object Property type lets kivy objects share variable names with the .kv files. 
+    """
     main_menu = ObjectProperty(None)
     scorebox = ObjectProperty(None)
     exit_button = ObjectProperty(None)
@@ -188,6 +193,11 @@ class TicTacToeScreen(Screen):
         self.bet3.color = [1, 1, 1, 1]
         
     def winner(self, tie = False):
+        """Display winner
+
+        Args:
+            tie (bool, optional): Show winner popup. Defaults to False.
+        """
         print("Winner Piece: ", self.piece)
         popup = Popup(title="Winner Popup", size_hint=(.6, .4))
         

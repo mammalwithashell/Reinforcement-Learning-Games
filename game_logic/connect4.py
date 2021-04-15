@@ -24,6 +24,13 @@ from .connect4AI.LeagueEnvironment import LeagueEnvironment
 
 # Kivy class that manages Connect4 visuals
 class Connect4Screen(Screen):
+    """Screen object to be managed by ScreenManager object
+
+    Args:
+        Screen (kivy.uix.screenmanager.Screen): This inherits from kivy.relativelayout.RelativeLayout and uses that object's placement system. In the design file we used a gridlayout overwrite that placement system.
+        
+        The Object Property type lets kivy objects share variable names with the .kv files. 
+    """
 
     # Kivy objects
     # Grid that holds connect4 pieces
