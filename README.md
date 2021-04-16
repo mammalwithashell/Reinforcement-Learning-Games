@@ -1,6 +1,11 @@
-# WJNKCW
+# Reinforcement Learning Games
+
+![Title Screen](https://github.com/mammalwithashell/WJNKCW/screenshots/title_screen.png)
+
+![Connect 4](https://github.com/mammalwithashell/WJNKCW/screenshots/connect4.png)
 
 Senior Capstone Course
+Team WJNKCW
 
 Project Structure:
 
