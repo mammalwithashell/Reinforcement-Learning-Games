@@ -9,9 +9,6 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.resources import resource_find
 
 import random as rand
-import copy
-import time
-import threading
 
 # Gameplay opponent
 from .connect4AI.Agent import Agent
