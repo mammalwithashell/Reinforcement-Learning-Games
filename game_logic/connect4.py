@@ -294,7 +294,7 @@ class Connect4Screen(Screen):
     '''
     def update_board(self):
         board_str = self.board_env.board
-        for i in range(0, len(board_str)):
+        for i in range(len(board_str)):
             self.board[4 - int(i / 5)][i % 5] = None if board_str[i] == '-' else board_str[i]
 
     '''
@@ -304,8 +304,8 @@ class Connect4Screen(Screen):
         self.update_board()
         # clearing out widgets that made up the previous board display
         self.board_grid.clear_widgets()
-        for j in range(0, 5):
-            for i in range(0, 5):
+        for j in range(5):
+            for i in range(5):
                 # adding yellow piece if current space belongs to user
                 if self.board[4-j][i] == self.piece:
                     self.board_grid.add_widget(Image(source=resource_find("images/connect4/bestchipyellow.png")))

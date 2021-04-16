@@ -36,6 +36,11 @@ def select_difficulty(auto=False):
     return diffdict[x]
 
 class Dot(Image):
+    """Custom widget inheriting from Image object. These are placed in the design/dotsandboxes.kv file
+
+    Args:
+        Image (kivy.uix.Image): Image widget
+    """
     button_number = NumericProperty()
     def __init__(self, **kwargs):
         super(Dot, self).__init__(**kwargs)
@@ -203,7 +208,6 @@ class DotsAndBoxesScreen(Screen):
             This function checks if any dot was clicked
 
         Returns:
-            [type]: [description]
         """
         # find what dot the mouse was over and save it to the start_dot property
         for i, _ in enumerate(self.dots):
@@ -222,7 +226,6 @@ class DotsAndBoxesScreen(Screen):
             This function checks if any dot was clicked
 
         Returns:
-            [type]: [description]
         """
         # find what dot the mouse is over on mouse release and draw the appropriate line
         turn = self.board_env.turn
@@ -341,7 +344,7 @@ class DotsAndBoxesScreen(Screen):
         self.add_widget(captured_box)
     
     def clear_game_screen(self):
-        """Remove caputured box icons from screen to
+        """Remove caputured box icons from screen
         """ 
         # clear lines
         if self.lines:
