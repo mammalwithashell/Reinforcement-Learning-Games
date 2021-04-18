@@ -4,12 +4,22 @@
 Senior Capstone Course
 
 Team Members:
+
 Balkito - Brian Little
+
 calebhalter - Caleb Halter
+
 kyl3p3 - Kyle Petrie
+
 mammalwithashell - James Peters
+
 NikkiM9788 - Nikki Meyer
+
 WafiHussain - Wafi Hussain
+
+
+User guides, installation guides, and developer resources can be found in the /docs folder of this repository. These guides provide information on various aspects of the project and should be the first resource used.
+
 
 Project Structure:
 
