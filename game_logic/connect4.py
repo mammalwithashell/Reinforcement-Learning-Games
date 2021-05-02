@@ -253,7 +253,8 @@ class Connect4Screen(Screen):
     '''
         returns qtable for input difficulty 'diff'
     '''
-    def select_difficulty(self, diff):
+    @staticmethod
+    def select_difficulty(diff):
         diffdict = {'Easy': r'game_logic/connect4AI/qtables/easy.txt',
                     'Medium': r'game_logic/connect4AI/qtables/medium.txt',
                     'Hard': r'game_logic/connect4AI/qtables/hard.txt'}
@@ -320,10 +321,10 @@ class Connect4Screen(Screen):
             message: message sent by LeageEnvironment with final betting info
     '''
     def series_end(self, message):
-        content = GridLayout(cols=1, padding=100, spacing=50)
+        content = GridLayout(cols=1, padding=50, spacing=50)
         content.add_widget(Button(text="Play again"))
         content.add_widget(Button(text="Return to menu"))
-        series_end_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+        series_end_popup = Popup(title=message, content=content, size_hint=(.8,.9 ), auto_dismiss=False)
         def play_again_button(inner_self):
             series_end_popup.dismiss()
             self.load_settings(reset=True)

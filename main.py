@@ -84,7 +84,7 @@ class TitleScreen(Screen):
         """Function to swap to the game screen and pass the game variables to the appropriate screen. Displays an error message if any of the settings are not selected
         """
         # Show error message if any of the toggles are not picked        
-        if not self.diff_choice or not self.game_choice or not self.match_style or (self.game_choice != "Connect 4" and self.match_style == "League Match"):
+        if not self.diff_choice or not self.game_choice or not self.match_style:
             content = Button(text="Dismiss")
             error = Popup(title="Select one of each option", content=content, size_hint=(.6, .3))
             content.bind(on_press=error.dismiss)
