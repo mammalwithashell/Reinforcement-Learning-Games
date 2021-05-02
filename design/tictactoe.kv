@@ -3,9 +3,6 @@
    scorebox: scorebox
    exit_button: exit_button
 
-   secondlast_button: secondlast_button
-   massage_box: massage_box
-   last_button: last_button
    square_list: [ square1, square2, square3, square4, square5, square6, square7, square8, square9]
    GridLayout:
       rows: 3
@@ -16,17 +13,16 @@
          rows: 1
          size_hint_y: None
          height: 100
+         spacing: 10
          Button:
             id: main_menu
             text: "Menu"
             font_size: 50
-            on_press: root.press_main()
-         
+            on_press: root.press_main()         
          Label:
             id: scorebox
             text: ""
-            font_size: 20
-         
+            font_size: 20         
          Button:
             id: exit_button
             text: "Reset"
@@ -40,6 +36,7 @@
                pos: self.pos
                size: self.size
                source: "images\tictactoe\white.png"
+               
          TicTacToeSquare:
             id: square1
             button_number: 1
@@ -82,41 +79,16 @@
             font_size: 50
             on_press: root.press(self.button_number)
 
-         
          TicTacToeSquare:
             id: square8
             button_number:8
             font_size: 50
             on_press: root.press(self.button_number)
 
-         
          TicTacToeSquare:
             id: square9
             button_number: 9
             text: "Monkey"
             font_size: 50
             on_press: root.press(self.button_number)
-
-      GridLayout:
-         rows: 1
-         size_hint_y: None
-         height: 100
-         Button:
-            id: secondlast_button
-            text: ""
-            font_size: 50
-            disabled: True
-            on_press: root.secondlast()
-
-         Label:
-            id: massage_box
-            text: ""
-            font_size: 20
-         
-         Button:
-            id: last_button
-            text: ""
-            font_size: 50
-            disabled: True
-            on_press: root.last()
 

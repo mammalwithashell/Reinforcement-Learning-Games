@@ -25,14 +25,18 @@
             BoxLayout:
                 orientation: 'vertical'
                 id: scoreboard
-                size_hint_x: None
-                width: '2in'
+                
                 Label:
                     id: user_data
                     text: "Left side"
+                    halign: "center"
+                    pos: self.pos
                 Label:
                     id: ai_data
                     text: "Right side"
+                    halign: "center"
+                    pos: self.pos
+
 
             Button:
                 text: "Reset"

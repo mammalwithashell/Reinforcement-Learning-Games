@@ -1,6 +1,4 @@
 import random
-import copy
-
 from . import Agent
 # Import the agent object
 
@@ -100,8 +98,10 @@ class BoardEnvironment:
             self.agent_turn = True
             if self.kivy_obj is not None:
                 self.play_game_turn()
+            return True
         else:
             self.agent_turn = False
+            return False
 
     def print_board(self, board_string=None):
         "print more readable board either from supplied board string or the current board"
@@ -119,7 +119,7 @@ class BoardEnvironment:
         # note, returns other player even if agent is playing itself
         return not self.agent_turn
 
-    def available_actions(self):
+    def available_actions(self, first=None):
         return [ind for ind, val in enumerate(self.board[:12]) if val == '-']
 
     def other_turn(self):
@@ -138,7 +138,7 @@ class BoardEnvironment:
 
 
                 self.kivy_obj.draw_ai_turn(choice, self.turn)
-                print("Choice", choice)
+                # print("Choice", choice)
             else:
                 ai = False
                 # self.print_board()
@@ -220,10 +220,11 @@ class BoardEnvironment:
                 score.append(boxes[quad])
                 if self.kivy_obj is not None:
                     self.kivy_obj.draw_captured_box(box_index, self.turn)
-        if self.turn == self.kivy_obj.piece:
-            self.kivy_obj.score += len(score)
-        else:
-            self.kivy_obj.ai_score += len(score)
+        if self.kivy_obj:
+            if self.turn == self.kivy_obj.piece:
+                self.kivy_obj.score += len(score)
+            else:
+                self.kivy_obj.ai_score += len(score)
         return score
 
     def is_full(self):

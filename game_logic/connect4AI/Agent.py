@@ -1,12 +1,19 @@
 import random as rand
 from collections import defaultdict
 
-from ..utils import get_path
-
+from kivy.resources import resource_find
 class Agent:
 	#constructor to create the agent. Environment is either board or league class, difficulty is the file to load in the Q table (if applicable)
-	#policy is either max or random (determines if using the Q table or not), Q is an optional pre-loaded Q table (put in to reduce load times significantly)
+	#
 	def __init__(self, environment, difficulty, policy = 'max', Q = ''):
+		"""policy is either max or random (determines if using the Q table or not), Q is an optional pre-loaded Q table (put in to reduce load times significantly)
+
+		Args:
+			environment (BoardEnvironment/LeagueEnvironment): [description]
+			difficulty ([type]): [description]
+			policy (str, optional): [description]. Defaults to 'max'.
+			Q (str, optional): [description]. Defaults to ''.
+		"""
 		self.environment = environment
 		self.policy = policy
 		self.difficulty = difficulty
@@ -23,17 +30,29 @@ class Agent:
 		else:
 			self.Q = tempdict
 		self.reset_past()
+
 	#reset state references
 	def reset_past(self):
 		self.past_action = None
 		self.past_state = None
+
 	#select an action to perform on either the board or league level
 	def select_action(self, first):
+		"""[summary]
+
+		Args:
+			first ([type]): [description]
+
+		Returns:
+			[type]: [description]
+		"""
 		#get available actions for the current environment. If on league level, the first boolean will determine the returned list
 		available_actions = self.environment.available_actions(first)
+
 		#if policy is random, choose a random choice from the returned list
 		if(self.policy == 'random'):
 			choice = rand.choice(available_actions)
+
 		#if policy is max, choose a value in the Q-table that corresponds to the current state
 		else:
 			Q_vals = [self.Q[(self.environment.get_state(), x)] for x in available_actions]
@@ -43,8 +62,9 @@ class Agent:
 			max_indices = [available_actions[x] for x in max_pos]
 			choice = rand.choice(max_indices)
 		self.past_state = self.environment.get_state()
-		#only do this on the board level, returns the lowest available board piece for the selected column
-		if(self.difficulty != get_path('game_logic/connect4AI/qtables/league.txt')):
+
+		#only do this on the Board, returns the lowest available board piece for the selected column
+		if(self.difficulty != resource_find('game_logic/connect4AI/qtables/league.txt')):
 			choice = self.environment.get_lowest_column(choice)
 		self.past_action = choice
 		return choice

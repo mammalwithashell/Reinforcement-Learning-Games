@@ -7,12 +7,8 @@ from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
 
 from kivy.resources import resource_find
-from .utils import get_path
 
 import random as rand
-import copy
-import time
-import threading
 
 # Gameplay opponent
 from .connect4AI.Agent import Agent
@@ -25,6 +21,13 @@ from .connect4AI.LeagueEnvironment import LeagueEnvironment
 
 # Kivy class that manages Connect4 visuals
 class Connect4Screen(Screen):
+    """Screen object to be managed by ScreenManager object
+
+    Args:
+        Screen (kivy.uix.screenmanager.Screen): This inherits from kivy.relativelayout.RelativeLayout and uses that object's placement system. In the design file we used a gridlayout overwrite that placement system.
+        
+        The Object Property type lets kivy objects share variable names with the .kv files. 
+    """
 
     # Kivy objects
     # Grid that holds connect4 pieces
@@ -118,7 +121,7 @@ class Connect4Screen(Screen):
                 league_agents = []
 
                 league_qtable = 'game_logic/connect4AI/qtables/league.txt'
-                league_qtable = get_path(league_qtable)
+                league_qtable = resource_find(league_qtable)
 
                 player_names.append('learning strategy and tactics')
                 board_agents.append(Agent(self.board_env, resource_find(self.select_difficulty(diff)), 'max'))
@@ -250,7 +253,8 @@ class Connect4Screen(Screen):
     '''
         returns qtable for input difficulty 'diff'
     '''
-    def select_difficulty(self, diff):
+    @staticmethod
+    def select_difficulty(diff):
         diffdict = {'Easy': r'game_logic/connect4AI/qtables/easy.txt',
                     'Medium': r'game_logic/connect4AI/qtables/medium.txt',
                     'Hard': r'game_logic/connect4AI/qtables/hard.txt'}
@@ -288,7 +292,7 @@ class Connect4Screen(Screen):
     '''
     def update_board(self):
         board_str = self.board_env.board
-        for i in range(0, len(board_str)):
+        for i in range(len(board_str)):
             self.board[4 - int(i / 5)][i % 5] = None if board_str[i] == '-' else board_str[i]
 
     '''
@@ -298,8 +302,8 @@ class Connect4Screen(Screen):
         self.update_board()
         # clearing out widgets that made up the previous board display
         self.board_grid.clear_widgets()
-        for j in range(0, 5):
-            for i in range(0, 5):
+        for j in range(5):
+            for i in range(5):
                 # adding yellow piece if current space belongs to user
                 if self.board[4-j][i] == self.piece:
                     self.board_grid.add_widget(Image(source=resource_find("images/connect4/bestchipyellow.png")))
@@ -317,10 +321,10 @@ class Connect4Screen(Screen):
             message: message sent by LeageEnvironment with final betting info
     '''
     def series_end(self, message):
-        content = GridLayout(cols=1, padding=100, spacing=50)
+        content = GridLayout(cols=1, padding=50, spacing=50)
         content.add_widget(Button(text="Play again"))
         content.add_widget(Button(text="Return to menu"))
-        series_end_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+        series_end_popup = Popup(title=message, content=content, size_hint=(.8,.9 ), auto_dismiss=False)
         def play_again_button(inner_self):
             series_end_popup.dismiss()
             self.load_settings(reset=True)

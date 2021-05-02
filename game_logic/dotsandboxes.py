@@ -9,29 +9,11 @@ from kivy.resources import resource_find
 
 import random as rand
 
-
-
 # Import AI stuff
 from .dotsandboxesAI.BoardEnvironment import BoardEnvironment
 from .dotsandboxesAI.Agent import Agent
 from .dotsandboxesAI.LeagueEnvironment import LeagueEnvironment
-
 from time import sleep
-
-"""
-TODO
-
-* Fix multiple turn error (player and ai should be able to go again if they score)
-* Done Fix character change for ai after score
-
-* Clean up UI & include scores for player and ai
-
-* Fix order of turn calls making the ai choose on full board
-* Draw "X" or "O" in box on score
-
-
-* League Functionality by Wafi
-"""
 
 def select_difficulty(auto=False):
     x = 0
@@ -52,6 +34,11 @@ def select_difficulty(auto=False):
     return diffdict[x]
 
 class Dot(Image):
+    """Custom widget inheriting from Image object. These are placed in the design/dotsandboxes.kv file
+
+    Args:
+        Image (kivy.uix.Image): Image widget
+    """
     button_number = NumericProperty()
     def __init__(self, **kwargs):
         super(Dot, self).__init__(**kwargs)
@@ -59,6 +46,13 @@ class Dot(Image):
 
 
 class DotsAndBoxesScreen(Screen):
+    """Screen object to be managed by ScreenManager object
+
+    Args:
+        Screen (kivy.uix.screenmanager.Screen): This inherits from kivy.relativelayout.RelativeLayout and uses that object's placement system. In the design file we used a gridlayout overwrite that placement system.
+        
+        The Object Property type lets kivy objects share variable names with the .kv files. 
+    """
     score = NumericProperty()
     ai_score = NumericProperty()
     game_grid = ObjectProperty(None)
@@ -73,6 +67,7 @@ class DotsAndBoxesScreen(Screen):
     scoreboard = ObjectProperty(None)                      
     user_data = ObjectProperty(None)
     ai_data = ObjectProperty(None)
+    first_league_run = True
     
     
     # a dictionary mapping dot numbers to acceptable dots to be paired with
@@ -104,7 +99,9 @@ class DotsAndBoxesScreen(Screen):
         (6, 7): 0
     }
     
-    def on_pre_enter(self, *args):
+    start_dot = None
+    
+    def on_enter(self, *args):
         """Kivy Screen event listener that is run before the screen is entered
 
         Returns:
@@ -113,7 +110,16 @@ class DotsAndBoxesScreen(Screen):
 
         self.clear_game_screen()
         self.board_env.reset()
-        return super().on_pre_enter(*args)
+        return super().on_enter(*args)
+    
+    def on_leave(self, *args):
+        """Kivy Screen event listener that is run as the screen is left
+
+        Returns:
+            None:
+        """
+        self.restart()
+        return super().on_leave(*args)
     
     def load_settings(self, diff, match):
         """ 
@@ -152,7 +158,7 @@ class DotsAndBoxesScreen(Screen):
             league_agents = []
 
             player_names.append('learning strategy and tactics')
-            board_agents.append(Agent(resource_find(select_difficulty(True)), self.board_env))
+            board_agents.append(agent)
             league_agents.append(Agent(resource_find('game_logic/dotsandboxesAI/qtables/league.txt'), league))
 
             #player_names.append('learning tactics only')
@@ -173,6 +179,9 @@ class DotsAndBoxesScreen(Screen):
             for child in self.scoreboard.children:
                 child.size_hint_y = None
                 child.height = 200
+            
+            league.play_pair(self.first_league_run)
+            self.first_league_run = False
 
     def menu(self):
         """Swap screen back to title screen
@@ -183,11 +192,23 @@ class DotsAndBoxesScreen(Screen):
         self.manager.current = "title"
 
     def restart(self):  
-        """This function is run whenever the "Restart Game" Button is pressed
+        """This function is run whenever the "Restart Game" Button is pressed. Also used elsewhere
         """
         self.clear_game_screen()
         self.lines = []    
         self.board_env.reset()
+        self.piece = self.board_env.turn
+        self.board_env.print_board()
+        self.score, self.ai_score = 0, 0
+    
+    def league_restart(self):
+        """This function is run whenever the "Restart Game" Button is pressed and the league environment is active
+        """
+        self.clear_game_screen()
+        self.lines = []    
+        self.board_env.reset()
+        self.league_env.reset_pair()
+        self.league_env.play_pair(True)
         self.piece = self.board_env.turn
         self.board_env.print_board()
         self.score, self.ai_score = 0, 0
@@ -201,7 +222,6 @@ class DotsAndBoxesScreen(Screen):
             This function checks if any dot was clicked
 
         Returns:
-            [type]: [description]
         """
         # find what dot the mouse was over and save it to the start_dot property
         for i, _ in enumerate(self.dots):
@@ -220,10 +240,12 @@ class DotsAndBoxesScreen(Screen):
             This function checks if any dot was clicked
 
         Returns:
-            [type]: [description]
         """
         # find what dot the mouse is over on mouse release and draw the appropriate line
         turn = self.board_env.turn
+        if self.start_dot is None:
+            return super().on_touch_up(touch)
+
         for dot_index, dot_obj in enumerate(self.dots):
             # if touch is within a box twice the radius of the dot, we draw
             if self.check_for_dot_click(touch, dot_index, dot_obj):
@@ -232,32 +254,32 @@ class DotsAndBoxesScreen(Screen):
                     points = list(self.dots[self.start_dot].center) + list(dot_obj.center)
                     # add half dot radius to x and y for the line because the dot position is measured from bottom left corner of dots (the radius of the dot is 10)
                     Color(1, 0, 0) if self.board_env.turn == "X" else Color(0,0,1)
-                    self.lines.append((Line(points=points, width=3), self.start_dot, dot_index))
-                
+                    self.lines.append((Line(points=points, width=3, group="lines"), self.start_dot, dot_index))
+
                 # Add line to board environment
                 # try except pairs to return line choice
                 try:
                     choice = self.actual_lines[(self.start_dot, dot_index)]
                 except KeyError:
                     choice = self.actual_lines[(dot_index, self.start_dot)]
-                
+
                 # play_game_turn returns true if the user scores
                 # let ai move if user doesn't score
                 if not self.board_env.play_game_turn(choice):
                     # Let AI think
                     sleep(.5)
-                    
+
                     if not self.board_env.is_full():
                         # Add AI move
                         self.board_env.play_game_turn()
                         self.board_env.print_board()
                     else:
                         self.is_full()
-                        
+
                 # if the board is full, display the winner popup
                 if self.board_env.is_full():
                     self.is_full()
-                
+
                 # change turn bool
                 # self.turn = not self.turn
                 self.start_dot = None
@@ -312,7 +334,7 @@ class DotsAndBoxesScreen(Screen):
             # The amount added to i should be half of the dot_size set in the dotsandboxes.kv file
             Color(1, 0, 0) if turn == "X" else Color(0,0,1)
 
-            line = Line(points=points, width=3)
+            line = Line(points=points, width=3, group="lines")
             self.lines.append((line, dots[0], dots[1]))
             
     def draw_captured_box(self, box_index, turn):
@@ -337,19 +359,6 @@ class DotsAndBoxesScreen(Screen):
         captured_box = Image(source=f"./images/dotsandboxes/{color}_{turn}.png", pos_hint={"center_x": avg_x/self.width, "center_y": avg_y/self.height})
         self.captured_boxes.append(captured_box)         
         self.add_widget(captured_box)
-    
-    def clear_game_screen(self):
-        """Remove caputured box icons from screen to
-        """ 
-        # clear lines
-        if self.lines:
-            for line, _, _ in self.lines:
-                self.game_grid.canvas.remove(line)
-            
-        # clear captured boxes
-        for box in self.captured_boxes:
-            box.parent.remove_widget(box)
-        self.captured_boxes = []
         
     def is_full(self):
         """Display pop up when the board fills
@@ -361,24 +370,44 @@ class DotsAndBoxesScreen(Screen):
             lose
             tie
         """
+        tie = self.ai_score == self.score
         
-        
-        winner_popup = Popup(size_hint=(0.5, 0.3), title="Winner Popup")
+        winner_popup = Popup(size_hint=(0.8, 0.9), title="Winner Popup")
         # self.board.score_board is a dictionary of str:int with keys "X" and "O"
         if self.score > self.ai_score:
-            content = Button(text=f"You are the winner")
+            text = "You are the winner"
+            winner = True
         elif self.ai_score > self.score:
-            content = Button(text=f"Computer is the winner")
+            text = "Computer is the winner"
+            winner = False
         else:# it's a tie
-            content = Button(text=f"There was a tie!")
-        self.board_env.print_board()
-        content.bind(on_press=winner_popup.dismiss)
+            text = "There was a tie!"
+            winner = None
+        if self.match != "League Match":
+            content = Button(text=text)
+            self.board_env.print_board()
+            content.bind(on_press=winner_popup.dismiss)
+        else:
+            content = Button(text=text)
+            
+            def play_on(pop_up_self):
+                """functionality of button that shows at the end of a league Game
+
+                Args:
+                    pop_up_self (Button): This argument is the "self" call for the button we are binding the function to
+                """
+                self.league_env.play_pair_pt_2(winner, tie=tie)
+                self.restart()
+                self.league_env.play_pair(self.first_league_run)
+                winner_popup.dismiss()
+                
+            content.bind(on_press=play_on)
         winner_popup.add_widget(content)
         winner_popup.open()
     
     def bet_options(self, options, message, func, AI_choice, cols=1):                                 
         # creating grid for popup menu
-        content = GridLayout(cols=cols)                                                                                                                                        
+        content = GridLayout(cols=cols, padding=50, spacing=50)                                                                                                                                        
         # returning early if no options were passed to this function
         if len(options) == 0:
             return False
@@ -386,7 +415,7 @@ class DotsAndBoxesScreen(Screen):
         for option in options:
             content.add_widget(Button(text=option))
         # creating a popup with 'message' and 'content'
-        option_popup = Popup(title=message, content=content, size=(40, 60), auto_dismiss=False)
+        option_popup = Popup(title=message, content=content, size_hint=(.8, .9), auto_dismiss=False)
         # function that will be called when a button is clicked
         def option_button(inner_self):
             # dismiss popup
@@ -394,7 +423,7 @@ class DotsAndBoxesScreen(Screen):
             # grabbing the selected option
             result = inner_self.text
             # calling 'func' with the selected option and the AI's option
-            func(result, AI_choice)
+            self.league_env.play_pair_pt_1_5(result, AI_choice)
         # binding option_button button to each option
         for child in content.children:
             child.bind(on_press=option_button)
@@ -416,3 +445,36 @@ class DotsAndBoxesScreen(Screen):
         except KeyError:
             return self.actual_lines[(end, start)]
     
+    def clear_game_screen(self):
+        """Remove caputured box icons from screen
+        """ 
+        # clear lines
+        self.game_grid.canvas.remove_group("lines")
+            
+        # clear captured boxes
+        for box in self.captured_boxes:
+            box.parent.remove_widget(box)
+        self.captured_boxes = []
+
+    def series_end(self, message):
+        """Called when league series ends and displays final league betting information
+
+        Args:
+            message (str): Message sent by LeagueEnvironment with final betting info
+        """
+        content = GridLayout(cols=1, padding=50, spacing=50)
+        content.add_widget(Button(text="Play again"))
+        content.add_widget(Button(text="Return to menu"))
+        series_end_popup = Popup(title=message, content=content, size_hint=(.8,.6 ), auto_dismiss=False)
+        def play_again_button(inner_self):
+            series_end_popup.dismiss()
+            self.restart()
+            self.clear_game_screen()
+            self.league_env.play_pair(True)
+        def end_game_button(inner_self):
+            series_end_popup.dismiss()
+            self.menu()
+        content.children[1].bind(on_press=play_again_button)
+        content.children[0].bind(on_press=end_game_button)
+        series_end_popup.open()
+        

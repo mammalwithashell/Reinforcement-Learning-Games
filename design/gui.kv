@@ -2,6 +2,7 @@
     group: "game"
     font_size: 20
 
+# custom widget class and properties
 <MatchButton@ToggleButton>:
     group: "match"
     font_size: 20
@@ -10,9 +11,6 @@
 <DifficultyButton@ToggleButton>:
     group: "difficulty"
     font_size: 20
-
-    
-
 
 <TitleScreen>
     id: title_screen
@@ -53,8 +51,6 @@
             MatchButton:
                 text: "League Match"
                 on_press: title_screen.match_style = "" if self.state == "normal" else self.text
-                # Currently disabled because the functionality isnt working. Just set disabled field to False when ready
-                disabled: True if title_screen.game_choice != "Connect 4" else False
 
         Label:
             id: diff
@@ -76,6 +72,7 @@
             text: "Play Game"
             font_size: 30
             on_press: root.load_game()
+            
 <RootWidget>:
     TitleScreen:
         name: "title"

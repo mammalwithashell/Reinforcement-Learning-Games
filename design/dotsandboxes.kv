@@ -34,7 +34,7 @@
             Button:
                 text: "Reset"
                 font_size: 50
-                on_press: root.restart()
+                on_press: root.restart() if root.match != "League Match" else root.league_restart()
         GridLayout:
             id: game_grid
             rows: 3

@@ -10,7 +10,7 @@ class Agent:
         self.Q = ''
         self.first = None
         if policy == 'max':
-            with open(resource_find(f"game_logic\\tictactoeAI\\qtables\\medium.txt"), 'r') as f:
+            with open(resource_find(f"game_logic\\tictactoeAI\\qtables\\{difficulty}.txt"), 'r') as f:
                 for i in f.readlines():
                     self.Q = i
             self.Q = eval(self.Q)
