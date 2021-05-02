@@ -1,7 +1,4 @@
 # Reinforcement learning model for Tic-Tac-Toe, Dots and Boxes and Connect 4
-## WJNKCW
-
-Senior Capstone Course
 
 Team Members:
 
