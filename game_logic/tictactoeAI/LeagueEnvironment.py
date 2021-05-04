@@ -102,15 +102,13 @@ class LeagueEnvironment:
 
     def league_choice(self, first, AI_choice = ''):
         choice_list = self.available_actions(first)
-        i = 0
         p_input = -1
         print("You currently have", self.Player_chips, "chips and", self.Player_wins, "wins.")
         if AI_choice:
             print("Opponent chose", AI_choice)
         print('Select Bet 1, Bet 2, or Bet 3:')
-        for choice in choice_list:
+        for i, choice in enumerate(choice_list):
             print(i, choice)
-            i += 1
         while p_input < 0 or p_input > len(choice_list):
             p_input = self.kivy_obj.player_bet_amount
         return choice_list[p_input]
