@@ -1,8 +1,10 @@
 # Reinforcement Learning Games
 
-![Title Screen](https://github.com/mammalwithashell/WJNKCW/screenshots/title_screen.png)
+![Title Screen](https://github.com/mammalwithashell/WJNKCW/blob/main/screenshots/title_screen.png)
 
-![Connect 4](https://github.com/mammalwithashell/WJNKCW/screenshots/connect4.png)
+![Connect 4](https://github.com/mammalwithashell/WJNKCW/blob/main/screenshots/connect4.png)
+
+![Betting League](https://github.com/mammalwithashell/WJNKCW/blob/main/screenshots/League_Betting.png)
 
 Senior Capstone Course
 Team WJNKCW

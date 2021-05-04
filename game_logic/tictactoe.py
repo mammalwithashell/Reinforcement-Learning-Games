@@ -1,4 +1,3 @@
-#Authors: Nikki Meyer and Brian Little
 from kivy.uix.screenmanager import Screen, SlideTransition
 from kivy.uix.button import Button
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
@@ -110,7 +109,7 @@ class TicTacToeScreen(Screen):
             board_agents.append(Agent(self.board_env, resource_find(select_difficulty(True)), 'max'))
             league_agents.append(Agent(self.league, resource_find('game_logic/tictactoeAI/qtables/league.txt'), 'max'))
 
-            player_names.append('learning tactics only')
+            """player_names.append('learning tactics only')
             board_agents.append(Agent(self.board_env, resource_find(select_difficulty(True)), 'max'))
             league_agents.append(Agent(self.league, resource_find('game_logic/tictactoeAI/qtables/league.txt'), 'random'))
 
@@ -120,7 +119,7 @@ class TicTacToeScreen(Screen):
 
             player_names.append('no learning')
             board_agents.append(Agent(self.board_env, resource_find(select_difficulty(True)), 'random'))
-            league_agents.append(Agent(self.league, resource_find('game_logic/tictactoeAI/qtables/league.txt'), 'random'))
+            league_agents.append(Agent(self.league, resource_find('game_logic/tictactoeAI/qtables/league.txt'), 'random'))"""
 
             self.league.set_players(player_names, league_agents, board_agents)
             

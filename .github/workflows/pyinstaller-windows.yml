@@ -7,8 +7,9 @@ on:
       - '*'
 
 jobs:
-  build:
-
+  # Build job. Builds app for Windows with Pyinstaller
+  build-windows:
+    name: Build for Windows
     runs-on: ubuntu-latest
 
     steps:
@@ -27,3 +28,33 @@ jobs:
         files: dist/windows/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Build job. Builds app for Android with Buildozer
+  build-android:
+    name: Build for Android
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          workdir: test_app
+          buildozer_version: stable
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: ${{ steps.buildozer.outputs.filename }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: bin/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
