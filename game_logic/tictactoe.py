@@ -7,6 +7,7 @@ from kivy.properties import (
     NumericProperty,
     StringProperty,
 )
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.popup import Popup
@@ -51,6 +52,7 @@ class TicTacToeSquare(ButtonBehavior, Image):
 
     def __init__(self, **kwargs):
         super(TicTacToeSquare, self).__init__(**kwargs)
+        # this could have been done in the kv file and kinda violates mvc
         self.source = resource_find("images/tictactoe/blank.png")
 
 
@@ -64,7 +66,7 @@ class TicTacToeScreen(Screen):
     """
 
     main_menu = ObjectProperty(None)
-    scorebox = ObjectProperty(None)
+    scoreboard = ObjectProperty(None)
     exit_button = ObjectProperty(None)
     square1 = ObjectProperty(None)
     square2 = ObjectProperty(None)
@@ -82,6 +84,8 @@ class TicTacToeScreen(Screen):
 
     buttonlist = set()
     piece = StringProperty(None)
+    user_data = ObjectProperty(None)
+    ai_data = ObjectProperty(None)
 
     # ----------------------------------------------------------------------------------------------------------
     def on_pre_leave(self, *args):
@@ -95,7 +99,7 @@ class TicTacToeScreen(Screen):
         self.board_env = BoardEnvironment(self)
         agent = Agent(self.board_env, diff)
         self.league = LeagueEnvironment(self.board_env, self)
-
+        self.first_league_run = True
         if self.match == "Single Match":
             self.board_env.set_players(agent)
             self.board_env.reset()
@@ -103,7 +107,6 @@ class TicTacToeScreen(Screen):
             # self.scorebox.text += f"Difficulty Setting: {diff}"
 
         else:
-            self.reset_betbtns()
             self.first_league_run = True
             self.board_env.set_players(agent)
 
@@ -132,8 +135,10 @@ class TicTacToeScreen(Screen):
             player_names.append('no learning')
             board_agents.append(Agent(self.board_env, resource_find(select_difficulty(True)), 'random'))
             league_agents.append(Agent(self.league, resource_find('game_logic/tictactoeAI/qtables/league.txt'), 'random'))"""
-
             self.league.set_players(player_names, league_agents, board_agents)
+            self.reset_game()
+            self.league.play_pair(self.first_league_run)
+            self.first_league_run = False
 
     # ----------------------------------------------------------------------------------------------------------
     def press_main(self):
@@ -143,6 +148,11 @@ class TicTacToeScreen(Screen):
         self.manager.current = "title"
 
     def press(self, num):
+        """Function called by the Buttons that act as cells of the tictactoe board. The
+
+        Args:
+            num ([type]): [description]
+        """
         # can't press button if square number in buttonlist
         if num not in self.buttonlist:
             self.buttonlist.add(num)
@@ -169,8 +179,10 @@ class TicTacToeScreen(Screen):
         self.board_env.print_board()
         # clear list of set squares
         self.buttonlist.clear()
-        if self.match == "League Match":
+        if self.first_league_run:
             self.league.reset_pair()
+            self.first_league_run = False
+
         self.board_env.reset()
 
     def draw_turn(self, num):
@@ -189,9 +201,6 @@ class TicTacToeScreen(Screen):
                 self.buttonlist.add(num)
                 break
 
-    def reset_betbtns(self):
-        pass
-
     def winner(self, tie=False):
         """Display winner
 
@@ -202,14 +211,99 @@ class TicTacToeScreen(Screen):
         popup = Popup(title="Winner Popup", size_hint=(0.6, 0.4))
 
         if tie:
-            content = Button(text="Tie Game")
-
+            text = "Tie Game"
+            winner = True
         elif self.board_env.turn == self.piece:
             # Player is the winner
-            content = Button(text="You won!")
+            winner = True
+            text = "You won!"
         else:
-            content = Button(text="You Lost!")
+            winner = False
+            text = "You Lost!"
 
-        content.bind(on_press=popup.dismiss)
+        # if not league match, display winner and move on
+        if self.match != "League Match":
+            content = Button(text=text)
+            self.board_env.print_board()
+            content.bind(on_press=popup.dismiss)
+        else:
+            content = Button(text=text)
+
+            def play_on(pop_up_self):
+                """functionality of button that shows at the end of a league Game
+
+                Args:
+                    pop_up_self (Button): This argument is the "self" call for the button we are binding the function to
+                """
+                self.league.play_pair_pt_2(winner, tie=tie)
+                self.reset_game()
+                self.league.play_pair(self.first_league_run)
+                popup.dismiss()
+
+            content.bind(on_press=play_on)
         popup.add_widget(content)
         popup.open()
+
+    def bet_options(self, options, message, AI_choice, cols=1):
+        """Function to display betting options in the league Game
+
+        Args:
+            options (list): [description]
+            message (str): [description]
+            AI_choice (int): [description]
+            cols (int, optional): [description]. Defaults to 1.
+
+        """
+        # creating grid for popup menu
+        content = GridLayout(cols=cols, padding=50, spacing=50)
+        # returning early if no options were passed to this function
+        if len(options) == 0:
+            return False
+        # adding a button for each option with the option's text
+        for option in options:
+            content.add_widget(Button(text=option))
+        # creating a popup with 'message' and 'content'
+        option_popup = Popup(
+            title=message, content=content, size_hint=(0.8, 0.9), auto_dismiss=False
+        )
+        # function that will be called when a button is clicked
+        def option_button(inner_self):
+            # dismiss popup
+            option_popup.dismiss()
+            # grabbing the selected option
+            result = inner_self.text
+            # calling 'func' with the selected option and the AI's option
+            self.league.play_pair_pt_1_5(result, AI_choice)
+
+        # binding option_button button to each option
+        for child in content.children:
+            child.bind(on_press=option_button)
+        # opening popup
+        option_popup.open()
+
+    def series_end(self, message):
+        """Called when league series ends and displays final league betting information
+
+        Args:
+            message (str): Message sent by LeagueEnvironment with final betting info
+        """
+        content = GridLayout(cols=1, padding=50, spacing=50)
+        content.add_widget(Button(text="Play again"))
+        content.add_widget(Button(text="Return to menu"))
+        series_end_popup = Popup(
+            title=message, content=content, size_hint=(0.8, 0.6), auto_dismiss=False
+        )
+        self.first_league_run = True
+
+        def play_again_button(inner_self):
+            series_end_popup.dismiss()
+            self.reset_game()
+            self.league.play_pair(True)
+
+        def end_game_button(inner_self):
+            series_end_popup.dismiss()
+            self.press_main()
+
+        content.children[1].bind(on_press=play_again_button)
+        content.children[0].bind(on_press=end_game_button)
+        series_end_popup.open()

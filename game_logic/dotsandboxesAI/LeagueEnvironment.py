@@ -222,7 +222,5 @@ class LeagueEnvironment:
             message += "\nSelect your next move"
 
         # calling function in kivy screen object that will display popup to user and get their input
-        self.kivy_obj.bet_options(
-            choice_list, message, self.play_pair_pt_1_5, AI_choice
-        )
+        self.kivy_obj.bet_options(choice_list, message, AI_choice)
         return

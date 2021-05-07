@@ -1,7 +1,9 @@
 <TicTacToeScreen>:
    main_menu: main_menu
-   scorebox: scorebox
+   scoreboard: scoreboard
    exit_button: exit_button
+   user_data: user_data
+   ai_data: ai_data
 
    square_list: [ square1, square2, square3, square4, square5, square6, square7, square8, square9]
 
@@ -20,10 +22,20 @@
             text: "Menu"
             font_size: 50
             on_press: root.press_main()         
-         Label:
-            id: scorebox
-            text: ""
-            font_size: 20         
+         BoxLayout:
+            orientation: 'vertical'
+            id: scoreboard
+            spacing: 10
+            Label:
+               id: user_data
+               text: "Left side"
+               halign: "center"
+               pos: self.pos
+            Label:
+               id: ai_data
+               text: "Right side"
+               halign: "center"
+               pos: self.pos   
          Button:
             id: exit_button
             text: "Reset"
